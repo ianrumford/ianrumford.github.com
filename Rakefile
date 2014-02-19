@@ -9,10 +9,10 @@ ssh_port       = "22"
 document_root  = "~/website.com/"
 rsync_delete   = false
 rsync_args     = ""  # Any extra arguments to pass to rsync
-deploy_default = "rsync"
+deploy_default = "push"
 
 # This will be configured for you when you run config_deploy
-deploy_branch  = "gh-pages"
+deploy_branch  = "master"
 
 ## -- Misc Configs -- ##
 
@@ -74,6 +74,23 @@ task :watch do
   }
 
   [jekyllPid, compassPid].each { |pid| Process.wait(pid) }
+end
+
+desc "start the site in a web browser - o wtahc"
+task :website do
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
+  system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
+  ###jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
+  ###compassPid = Process.spawn("compass watch")
+  rackupPid = Process.spawn("rackup --port #{server_port}")
+
+  trap("INT") {
+    [rackupPid].each { |pid| Process.kill(9, pid) rescue Errno::ESRCH }
+    exit 0
+  }
+
+  [rackupPid].each { |pid| Process.wait(pid) }
 end
 
 desc "preview the site in a web browser"
