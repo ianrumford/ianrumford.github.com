@@ -136,27 +136,25 @@ The jar is on [Clojars][ClojarsClojureContractsSugar]:
 ## Repo is on Github
 
 The [repo][ClojureContractsSugarGithub] is  on [github][ClojureContractsSugarGithub].
-As is common with Clojure code bases, its organised as a [Leiningen][LeiningenHome]
-project so you'll need Leiningen [installed][LeiningenGithub] to work.
+As you might expect, its organised as a [Leiningen][LeiningenHome]
+project so you'll want Leiningen [installed][LeiningenGithub].
 
-The project structure is Maven style but there is only Clojure today:
+The project structure is Maven-style but there is only Clojure today:
 _./src/main/clojure_ and _./src/test/clojure_.
 
 The code uses another of my other new libraries
 [clojure-carp][ClojureCarpGithub] for some utility functions,  exceptions, diagnostics and
-other miscellany.
+other miscellany. 
 
-## Overview
+## Documentation
 
-The repo's _./doc_ folder contains the source of this post: it is an
+The repo's _./doc_ folder contains the source of this post: its an
 [emacs][emacshome] [org][orgmodehome] file
 [tangled][orgmodemanualextractsourcecode] to generate the examples below
 in a [Leiningen][LeiningenHome] project.
 
-It also contains an (org and html) file _code-notes_ offering a brief
-high-level overview.
-
-> NEED TO WORTK ON THE CODE OVERVIEW SOME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+The folder also contains an (org and html) file _code-notes_ offering a _brief_
+high-level overview of the main code artefacts.
 
 ## Tests
 
@@ -211,12 +209,14 @@ catches the **AssertionError** expected to be thrown.
 
 # Using Contract Aspects - Apply v Update
 
-The libary has two main aspect contract  macros: _apply-contract-aspects_ and
-_update-contract-aspects_.  
+The libary has two main aspect contract macros:
+_apply-contract-aspects_ and _update-contract-aspects_.
 
-The majority of examples below  use _apply-contract-aspects_ but _update-contract-aspects_ could be used just as well.
+The majority of examples below use _apply-contract-aspects_ but
+_update-contract-aspects_ could be used just as well.
 
-A couple of very simple examples follow to give a _flavour_ of their usage and details will be expanded upon in the following sections.
+A couple of very simple examples follow to give a _flavour_ of their
+usage with  the details  expanded upon in the following sections.
 
 ## Using apply-contract-aspects
 
@@ -284,8 +284,6 @@ Similarly, to suck a vector:
 (will-fail suck-vector-fn1 99)
 ```
 
-> Built-in mnemonics provide a simple way of applying the same  assertion to both the input argument and return value - see later.
-
 ### Example - applying your own custom predicate
 
 You can of course create and  use your own **custom** predicate function, returning true or false as
@@ -293,7 +291,7 @@ decided.  You can constrain multiple input arguments and/or the return
 value in a custom predicate.
 
 A simple way to create a custom predicate would be to use [:pre and post assertions][FogusBlogClojurePreandPost] 
-in an identity function.
+in an "identity" function.
 
 ```clojure
 ;; Example - applying your own custom predicate
@@ -327,12 +325,12 @@ in an identity function.
 
 ## Using update-contract-aspects
 
-The second macro, _update-contract-aspect_, "changes" (using
+The second macro, _update-contract-aspects_, "changes" (using
 _alter-var-root_) an existing function.  
 
 ### Example - updating a function with a built-in predicate
 
-Essentially the same example as above except the source function but _any-fn_ is "changed" to **only** suck a map.
+Essentially the same example as above except the source function but _any-fn_ is changed to **only** suck a map.
 
 ```clojure
 ;; Example - updating a function with a built-in predicate
@@ -397,7 +395,7 @@ Some notes:
 -   assertions are matched positionally to their arguments
 
 The _map?_ constrains **only** the first argument (arg0) and the
-_keyword?_ constrains **only** the second argument (arg1); and the returned value must be a _vector?_.
+_keyword?_ constrains **only** the second argument (arg1); the returned value must be a _vector?_.
 
 -   if there is only one argument, the enclosing vector is not needed
 
@@ -450,22 +448,22 @@ positions and the values the assertion list to apply to that argument.
 The example below is a variant of the map and keyword example above but the keyword
 is the first argument (key 0) and the map the second (key 1). The map
 must have  keyword keys and
-numeric values.
-
-> Note the use of _arg0_ to refer to the input map in the _every?_
-> clauses **even though** the map is the second argument (and will
-> therefore be _arg1_ in the contract).
-> 
-> That's because the _every?_ forms will be rewritten **automatically** to
-> reflect the map's argument position i.e. its _arg1_. The point is that the
-> map assertion list does not change no matter where the map appears in
-> the argument order.
-> 
-> This is similar to when mnemonics are composed - see later.
+numeric values as before.
 
 ```clojure
 {:suck {0 :keyword 1 [:map (every? keyword? (keys arg0)) (every? number? (vals arg0))]} :spit :number}
 ```
+
+> Note the use of _arg0_ to refer to the input map in the _every?_
+> clauses **even though** the map is the **second** argument (and will
+> therefore be _arg1_ in the contract).
+> 
+> That's because the _every?_ forms will be rewritten **automatically** to
+> reflect the map's  position in the argument order i.e. its _arg1_. The point is that the
+> map assertion does not change no matter where the map appears in
+> the argument order.
+> 
+> This is similar to when mnemonics are composed - see later.
 
 ```clojure
 ;; Example - specifying argument order explicitly
@@ -485,7 +483,7 @@ numeric values.
 (will-fail explicit-argument-order-fn1 :c {"x" 1 :b 2 :c 3})
 ```
 
-BTW The contract looks like this:
+BTW The contract looks like this. Note the map is _arg1_.
 
 ```clojure
 (clojure.core.contracts/contract ctx-aspect3000 "\"ctx-aspect3000\"" [arg0 arg1] [(keyword? arg0) (map? arg1) (every? keyword? (keys arg1)) (every? number? (vals arg1)) => (number? %)])
@@ -530,15 +528,7 @@ Or, additionally, to ensure the map's keys are all keywords:
 (will-fail suck-map-keyword-keys-fn1 {"x" 1 :b 2 :c 1})
 ```
 
-The example below will fail becuase the keys of _test-map2_ are not keywords:
-
-```clojure
-;; Example - this will fail as test-map2's keys are not keywords
-
-;;(suck-map-keyword-keys-fn1 test-map2)
-```
-
-## Example - using CCC's format with a rich assertions
+## Example - using CCC's format with rich assertions
 
 **CCC**  supports the specification of rich
 assertions. For a two argument function (map, keyword), where the map's
@@ -552,7 +542,7 @@ unconstrained, in CCC's format, the full contract would look like this:
 An example:
 
 ```clojure
-;; Example - using CCC's format to specify multiple assertions
+;; Example - using CCC's format with rich assertions
 
 ;; In this example, the assertion constrains the function to suck a map,
 ;; with keywords keys and numeric values, and a keyword.
@@ -601,8 +591,8 @@ At their simplest, **mnemonic** are (Clojure) keyword "short-hands" for a contra
 ## Using Mnemonics for Built-in Predicates
 
 So far the assertions used have used Clojure's built-in predicates such as _map?_,
-_number?_ and _vector?_ but we could have used their keyword mnemonics
-_:map_, _:number_ or _:vector_.  In fact any predicate of the form
+_keyword?_ and _vector?_ but we could have used their keyword mnemonics
+_:map_, _:keyword_ or _:vector_.  In fact any predicate of the form
 _name?_ can be replaced by its keyword form _:name_ (as long as the
 symbol can be **resolved**).
 
@@ -610,7 +600,7 @@ symbol can be **resolved**).
 
 To repeat the example above using _map?_ but with _:map_:
 
-> Note: using a built-in mnemonic as the full contract definition will apply the assertion(s) to both the input argument and also return value.
+
 
 ```clojure
 ;; Example - using a built-in mnemonic
@@ -629,15 +619,13 @@ To repeat the example above using _map?_ but with _:map_:
 (will-fail mnemonic-suck-and-spit-map-fn1 [1 2 3])
 ```
 
+> Note: using a built-in mnemonic as the full contract definition will apply the assertion(s) to **both** the input argument and also return value.
+
 ### Example - applying built-in mnemonics to individual arguments and the result
 
 Repeating one of the examples above sucking a map and keyword and
 returning a vector, all that has changed is the
 assertions now  use keywords.
-
-> Note: built-in mnemonics in the map form of a contract
-> definition apply the assertion only to the mnemonic's corresponding
-> argument.
 
 ```clojure
 ;; Example - applying built-in mnemonics to individual arguments and the result
@@ -656,6 +644,10 @@ assertions now  use keywords.
 (will-fail suck-map-keyword-spit-vector-fn1 {:a 1 :b 2 :c 3} :c)
 (will-fail suck-map-keyword-spit-vector-fn1 {:a 1 :b 2 :c 3} :d)
 ```
+
+> Note: built-in mnemonics in the map form of a contract
+> definition apply the assertion **only** to the mnemonic's corresponding
+> argument.
 
 ## Changing a Built-in Mnemonic Contract Definition
 
@@ -857,7 +849,7 @@ mnemonics is transparent.
 
 ;; In this example, the three level mnemonic packages the complete assertion
 
-(def mnemonic-suck-map-special-keyword-spit-number-fn1 (apply-contract-aspects (fn [m k] (k m)) :contract-suck-map-special-and-keyword-spit-number ))
+(def mnemonic-suck-map-special-keyword-spit-number-fn1 (apply-contract-aspects (fn [m k] (k m)) :contract-suck-map-special-and-keyword-spit-number))
 
 ;; Exactly the same tests as above
 
@@ -926,7 +918,7 @@ this:
 
 Some notes:
 
--   The _arg0_ in the canonical definition of the :map-special mnemonic has been automatically rewritten in the final contract to be _arg1_ i.e. the second argument. _argo_ refers to the :keyword (first) argument.
+-   The _arg0_ in the canonical definition of the _:map-special_ mnemonic has been automatically rewritten in the final contract to be _arg1_ i.e. the second argument. _argo_ refers to the _:keyword_ (first) argument.
 
 -   More generally, explicitly specified arguments in a mnemonic are automatically **shifted right** to whatever position the mnemonic has in the assertion clause. This applies recursively for composed mnemonics.
 
@@ -986,7 +978,7 @@ _:keyword-in-first-argument-map_ mnemonic has been rewritten to _arg2_.
 
 The code tries to be as aggressive as possible to catch
 inconsistencies and ensure your get what
-you want. But there are some things to be aware of
+you want. But there are some things to be aware of.
 
 #### Beware mnemonic gotchas - infinite recursion
 
@@ -994,15 +986,15 @@ Because mnemonics can use other mnemonic in their definition there is the
 ability to create an infinite loop if a "downstream" mnemonic refers to
 an "upstream" one.
 
-_It would be possible to "remember" used mnemonics during evaluation
-but not done so yet._
+_Its possible to "remember" used mnemonics during evaluation
+but not done so yet - on the list of improvments._
 
 #### Beware mnemonic gotchas - incompatible argument assertions
 
 If a custom mnemonic's argument assertions conflict with an explicit predicate,
 built-in mnemonic (e.g. :map) or another custom mnemonic, the contract
-will include more than one, but potentially different,
-assertions for the same argument.  Which will fail miserably.
+will include more than one, but potentially incompatible,
+assertions for the same argument.  Which may fail miserably.
 
 Note though that duplicate assertions for the same argument will be **distinct**-ified and cause no issue. 
 
@@ -1097,25 +1089,25 @@ or map form; they can be mixed as well.
 
 # Final Words
 
-**CHUGAR** is part of a larger project (other parts to be published soon). 
+**CHUGAR's** genesis was as part of a larger project (other parts to be published soon). 
 
 Writing the project has taught me a lot about 
 [Clojure][ClojureHome] (notably macros and protocols) and its
 ecosystem (testing, profiling, Clojars and suchlike)  but I still have lots to learn.
 
-I'm sure more experienced Clojurians will have some head-scratching moments if they
+I'm sure more experienced Clojurians would have some head-scratching moments if they
 looked at the code.  As I tweeted recently, I think the biggest challenge
 to learning a new language is to design idiomatically and well in it.
 All advice on that subject gratefully received and acknowledged.
 
 The whole point of **CHUGAR** was/is to make using the rich features of
 **CCC** as easy  as possible.  I hope it (begins to) succeed on that
-criterion and I believe  _mnemonics_ offers an original contribution
+criterion and believe  _mnemonics_ offers an original contribution
 and productivity aid for defining, re-using and composing contract aspects.
 
-I already have another project article in the works on the practical use of
-**CHUGAR** to apply aspect contracts to the value of map keys.
-Coming soon!
+I already have another article  in the works (part of the same project)
+on the practical and concrete use of **CHUGAR** to apply aspect contracts to the
+values of map keys. Coming soon!
 
 # Final Final Words
 
@@ -1125,18 +1117,10 @@ code in a functional language.
 
 > In all my time writing software, I
 > can't ever remember learning a new language that just gets out of the
-> way when I'm rattling along, but gets in the way when I get stuck and
-> need some help overcoming an implementation or design issue.
-
-# HOLD
-
-This may seems a bit dry, even academic ("Where the beef?",
-"What does this offer over Core Contracts?" and "Why would I
-bother?"), so I'll follow up with posts giving practical examples of
-the library's usage (one of which will be about the need that made
-me build out **CHUGAR** in the first place).
-
-
+> way when I'm rattling along, but gets in the way when I'm stuck and
+> need some help overcoming an implementation or design issue, offering
+> a (new to me) feature to use, or an approach to apply, to elide the
+> obstacle.  Clojure, as many acknowledge, rocks!
 
 
 [ClojureHome]: http:///clojure.org
