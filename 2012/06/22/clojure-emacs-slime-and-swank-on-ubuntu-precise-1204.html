@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Clojure, Emacs, SLIME and Swank on Ubuntu Precise 12.04">
+<title>Clojure, Emacs, SLIME and Swank on Ubuntu Precise 12.04</title>
+<meta property="og:description" content="Why this combo?I’ve been using jEdit for some time as my general purpose editor and “IDE” (especially for Ruby on Windows) so it was natural to start there f...">
+<meta property="og:url" content="http://www.rumford.name/2012/06/22/clojure-emacs-slime-and-swank-on-ubuntu-precise-1204.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Clojure, Emacs, SLIME and Swank on Ubuntu Precise 12.04">
+<meta name="twitter:description" content="Why this combo?I’ve been using jEdit for some time as my general purpose editor and “IDE” (especially for Ruby on Windows) so it was natural to start there f...">
+<meta name="twitter:url" content="http://www.rumford.name/2012/06/22/clojure-emacs-slime-and-swank-on-ubuntu-precise-1204.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/2012/06/22/clojure-emacs-slime-and-swank-on-ubuntu-precise-1204.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Clojure, Emacs, SLIME and Swank on Ubuntu Precise 12.04</h1>
+    <meta itemprop="keywords" content="clojure,leinginen,emacs,slime,swank,ubuntu,precise" />
+    <p class="post-meta">
+    Posted in
+     
+    
+    and tagged
+    
+    <a href="/tags/#clojure" title="clojure">clojure </a>, 
+    
+    <a href="/tags/#leinginen" title="leinginen">leinginen </a>, 
+    
+    <a href="/tags/#emacs" title="emacs">emacs </a>, 
+    
+    <a href="/tags/#slime" title="slime">slime </a>, 
+    
+    <a href="/tags/#swank" title="swank">swank </a>, 
+    
+    <a href="/tags/#ubuntu" title="ubuntu">ubuntu </a>, 
+    
+    <a href="/tags/#precise" title="precise">precise </a>
+    
+    
+    <time itemprop="datePublished" datetime="2012-06-22">
+    on Jun 22, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <h2 id="why-this-combo">Why this combo?</h2>
+
+<p>I’ve been using <a href="http://www.jedit.org">jEdit</a> for some time as my general purpose editor and “IDE” (especially for Ruby on Windows) so it was natural to start there for my first forays into Clojure, dropping out to e.g. <a href="https://github.com/technomancy/leiningen">Leiningen</a> for a REPL.</p>
+
+<p>But debugging Clojure is more of a challenge than, say, Ruby because the stack trace is a Java one and its not as easy to associate the Clojure source file and line number with entries in the stack trace.</p>
+
+<p>Also, I’ve found introducing print statements (e.g. <em>println</em>) into functional code make its look far noisier than OO code to the point where I find it obfuscates what the code is doing.  This is partly a matter of taste but to me functional code looks far more elegant and transitive when compared to imperative and anything that interrupts the flow is a distraction.</p>
+
+<p>After reading around the Clojure community for a better solution, the combination of Emacs, SLIME and Swank (supported by Leiningen) appeared to offer a far richer development and debugging environment so I thought I’d give it a go.</p>
+
+<!-- more -->
+
+<p>In the past though getting all these components to play nice has been frustrating for some.  <a href="http://technomancy.us/list">Phil Hagelberg</a> has contributed a huge amount to making the setup easy for newbies.  So this post, and the recipe in it, is really a paean to Phil (and numerous others who have made contributions!) who made this process straightforward for me.</p>
+
+<h2 id="what-is-slime-and-swank">What is SLIME and Swank?</h2>
+
+<p><a href="http://common-lisp.net/project/slime/">Slime</a> is inevitably an acronym:  the <em>Superior Lisp Interaction Mode for Emacs</em></p>
+
+<p>The <a href="http://common-lisp.net/project/slime/doc/slime.pdf" title="SLIME pdf">manual</a> say:</p>
+
+<blockquote>
+  <p>SLIME is constructed from two parts: a user-interface written in Emacs Lisp, and a
+supporting server program written in Common Lisp. The two sides are connected together
+with a socket and communicate using an RPC-like protocol.</p>
+</blockquote>
+
+<p>Swank is the “supporting server”.</p>
+
+<h2 id="so-why-would-you-bother">So why would you bother?</h2>
+
+<p>What does this mean in practice? Its the ability to edit Clojure code in Emacs and ask SLIME to execute the code in the Swank server giving immediate feedback - truly interactive development.</p>
+
+<h2 id="how-i-tested-the-recipe-below">How I tested the recipe below</h2>
+
+<p>This post encapsulates knowledge picked up over a period of time but I have tested each of the steps in a VirtualBox (4.1.16) guest running Ubuntu Precise Pangolin 12.04 with fairly recent updates, and the usual toolset (git, wget, etc).  Nevertheless mistakes may have crept in so please let me know and I’ll correct and refresh.</p>
+
+<h2 id="install-emacs-24">Install Emacs 24</h2>
+
+<p>I covered installed Emacs 24 from source in a <a href="http://ianrumford.github.com/blog/2012/06/21/installing-emacs-from-source-on-ubuntu-precise-1204/">previous</a> post</p>
+
+<p>Using Emacs 24 seems to forestall problems others have had.</p>
+
+<h2 id="install-leiningen-2-preview">Install Leiningen 2 preview.</h2>
+
+<p>See <a href="https://github.com/technomancy/leiningen">here</a> for full details but briefly:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="nb">cd</span> /tmp
+sudo wget https://raw.github.com/technomancy/leiningen/preview/bin/lein
+sudo mv lein /usr/bin/lein
+sudo chmod 755 /usr/bin/lein<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Asking <code class="highlighter-rouge">lein</code> what version it is will cause it to bootstrap itself and download whatever dependencies it needs.</p>
+
+<p>emacs delete tabs</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein -v<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>On my machine the last line output said:</p>
+
+<p><code class="highlighter-rouge">Leiningen 2.0.0-preview6 on Java 1.7.0_03 OpenJDK 64-Bit Server VM</code></p>
+
+<h2 id="install-phils-emacs-starter-kit">Install Phil’s Emacs starter kit</h2>
+
+<p><a href="https://github.com/technomancy/Emacs-starter-kit">Full details</a> again from Phil’s github page.</p>
+
+<p>Following the advice given, my <code class="highlighter-rouge">~/.emacs.d/init.el</code> looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">require</span><span class="w"> </span><span class="ss">'package</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">add-to-list</span><span class="w"> </span><span class="ss">'package-archives</span><span class="w">
+     </span><span class="o">'</span><span class="p">(</span><span class="s">"marmalade"</span><span class="w"> </span><span class="nb">.</span><span class="w"> </span><span class="s">"http://marmalade-repo.org/packages/"</span><span class="p">)</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">package-initialize</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="n">package-archive-contents</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">package-refresh-contents</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">defvar</span><span class="w"> </span><span class="n">my-packages</span><span class="w"> </span><span class="o">'</span><span class="p">(</span><span class="nf">starter-kit</span><span class="w"> </span><span class="n">starter-kit-lisp</span><span class="w"> </span><span class="n">starter-kit-bindings</span><span class="w"> </span><span class="n">clojure-mode</span><span class="p">)</span><span class="w">
+  </span><span class="s">"A list of packages to be installed at launch"</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">dolist</span><span class="w"> </span><span class="p">(</span><span class="nf">p</span><span class="w"> </span><span class="n">my-packages</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nf">package-installed-p</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">package-install</span><span class="w"> </span><span class="n">p</span><span class="p">)))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>When Emacs is next started, the packages will be downloaded automatically.</p>
+
+<h2 id="making-slimeswank-integration-available-to-all-my-projects">Making SLIME/Swank integration available to all my projects</h2>
+
+<p>I wanted Swank integration to all my projects rather than project by project.  So my <code class="highlighter-rouge">./.lein/profiles.clj</code> looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">{</span><span class="no">:user</span><span class="w"> </span><span class="p">{</span><span class="no">:plugins</span><span class="w"> </span><span class="p">[[</span><span class="n">lein-swank</span><span class="w"> </span><span class="s">"1.4.4"</span><span class="p">]]}}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="a-simple-test">A simple test</h2>
+
+<p>To test and see the Emacs integration with SLIME/Swank, a new, test project was created:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre><span class="nb">cd</span> &lt;where I keep my projects&gt;
+lein new swanktest
+<span class="nb">cd</span> ./swanktest<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>I’m using Clojure 1.4 so I edited swanktest’s initial <code class="highlighter-rouge">project.clj</code> to say so:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">defproject</span><span class="w"> </span><span class="n">swanktest</span><span class="w"> </span><span class="s">"0.1.0-SNAPSHOT"</span><span class="w">
+  </span><span class="no">:description</span><span class="w"> </span><span class="s">"FIXME: write description"</span><span class="w">
+  </span><span class="no">:url</span><span class="w"> </span><span class="s">"http://example.com/FIXME"</span><span class="w">
+  </span><span class="no">:license</span><span class="w"> </span><span class="p">{</span><span class="no">:name</span><span class="w"> </span><span class="s">"Eclipse Public License"</span><span class="w">
+            </span><span class="no">:url</span><span class="w"> </span><span class="s">"http://www.eclipse.org/legal/epl-v10.html"</span><span class="p">}</span><span class="w">
+  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">org.clojure/clojure</span><span class="w"> </span><span class="s">"1.4.0"</span><span class="p">]])</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Any changes needed to be applied and dependencies resolved:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein deps<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Next, Emacs was satrted and swanktest’s <code class="highlighter-rouge">src/swanktest/core.clj</code> edited by e.g. <em>C-x C-f</em> and navigating to <code class="highlighter-rouge">core.clj</code></p>
+
+<p>From within Emacs a Swank server was started using <em>M-x clojure-jack-in</em> and after a while an image similar to the following appeared:</p>
+
+<p>###<!--  img center /images/emacs-swank.png  --></p>
+
+<p>BTW A list of SLIME commands can be found on Phil’s <a href="https://github.com/technomancy/swank-clojure">swank-clojure</a> page.</p>
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p>Learning how to make the most of the integration - some experiences / examples likely to follow in later post.</p>
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/emacs%20ubuntu%20precise%20pangolin%2012.04/2012/06/21/installing-emacs-from-source-on-ubuntu-precise-1204.html" title="Installing emacs from source on Ubuntu Precise 12.04">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/ruby/windows/ole/property/values/2012/06/23/finding-and-mapping-windows-ole-object-property-values-using-ruby.html" title="Finding and mapping Windows OLE object property values using Ruby">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/emacs%20ubuntu%20precise%20pangolin%2012.04/2012/06/21/installing-emacs-from-source-on-ubuntu-precise-1204.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/ruby/windows/ole/property/values/2012/06/23/finding-and-mapping-windows-ole-object-property-values-using-ruby.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

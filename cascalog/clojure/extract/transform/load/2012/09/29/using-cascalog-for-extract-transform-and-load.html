@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Using Cascalog for extract transform and load">
+<title>Using Cascalog for extract transform and load</title>
+<meta property="og:description" content="In two previous posts I explored writing ApachePig user defined functions (UDFs) inJRubyandClojure to process log data, specifically an auditd log.Pig is a v...">
+<meta property="og:url" content="http://www.rumford.name/cascalog/clojure/extract/transform/load/2012/09/29/using-cascalog-for-extract-transform-and-load.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Using Cascalog for extract transform and load">
+<meta name="twitter:description" content="In two previous posts I explored writing ApachePig user defined functions (UDFs) inJRubyandClojure to process log data, specifically an auditd log.Pig is a v...">
+<meta name="twitter:url" content="http://www.rumford.name/cascalog/clojure/extract/transform/load/2012/09/29/using-cascalog-for-extract-transform-and-load.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/cascalog/clojure/extract/transform/load/2012/09/29/using-cascalog-for-extract-transform-and-load.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Using Cascalog for extract transform and load</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#cascalog">cascalog</a>, 
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#extract">extract</a>, 
+    
+    <a href="/categories/#transform">transform</a>, 
+    
+    <a href="/categories/#load">load</a>
+     
+    
+    <time itemprop="datePublished" datetime="2012-09-29">
+    on Sep 29, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p>In two previous posts I explored writing Apache
+<a href="http://pig.apache.org/">Pig</a> <em>user defined functions</em> (UDFs) in
+<a href="http://ianrumford.github.com/blog/2012/09/17/writing-apache-pig-udfs-in-jruby/">JRuby</a>
+and
+<a href="http://ianrumford.github.com/blog/2012/09/21/writing-apache-pig-udfs-in-clojure/">Clojure</a>
+ to process log data, specifically an <em>auditd</em> log.</p>
+
+<p>Pig is a very good option for <em>extract transform and load</em> of log files but it
+is by no means the only option available.  Others include
+<a href="https://github.com/fluent/fluentd">Fluentd</a>,
+<a href="https://cwiki.apache.org/FLUME/">Flume</a>,
+<a href="https://github.com/twitter/scalding">Scalding</a> and
+<a href="https://github.com/nathanmarz/cascalog">Cascalog</a>.  Most of the
+others also
+have or use Hadoop as the processing / execution environment.</p>
+
+<p>This post focuses on the same log data processing scenario as the
+earlier posts, this time using Cascalog, to parse the
+auditd log (available <a href="https://gist.github.com/3804014">here</a>)
+and load the fields into a HBase table.</p>
+
+<!-- more -->
+
+<p>Nathan Marz, the author of Cascalog,
+<a href="http://nathanmarz.com/blog/introducing-cascalog-a-clojure-based-query-language-for-hado.html">describes</a>
+it as</p>
+
+<blockquote>
+  <p>a Clojure-based query language for Hadoop</p>
+</blockquote>
+
+<p>Cascalog <a href="https://github.com/nathanmarz/cascalog">source</a> is available from github and it has a <a href="https://github.com/nathanmarz/cascalog/wiki">wiki</a>
+with some useful articles, albeit incomplete and lagging behind the
+code.</p>
+
+<p>Like Pig, Cascalog takes care of building the low-level Haddoop job
+artefacts but offers a higher level data abstractions.  However,
+Cascalog uses <a href="http://www.cascading.org/">Cascading</a> for managing its
+interface with Hadoop.</p>
+
+<p>Cascading describes itself on its home page
+as:</p>
+
+<blockquote>
+  <p>Cascading is an application framework for Java developers to quickly and easily develop robust Data Analytics and Data Management applications on Apache Hadoop</p>
+</blockquote>
+
+<h1 id="why-cascalog">Why Cascalog?</h1>
+
+<p>Nathan gave a <a href="http://www.slideshare.net/nathanmarz/cascalog">presentation</a> to the Bay Area Clojure User Group in which
+he summarised Cascalog’s features and differentiators as</p>
+
+<ul>
+  <li>Features (slide 6)
+    <ul>
+      <li>Inner and outer joins</li>
+      <li>Aggregators</li>
+      <li>Functions</li>
+      <li>Subqueries</li>
+      <li>Sorting</li>
+      <li>High Performance</li>
+    </ul>
+  </li>
+</ul>
+
+<p>and</p>
+
+<ul>
+  <li>Differentiators (slide 6) as
+    <ul>
+      <li>Super simple</li>
+      <li>Full power of Clojure always available</li>
+      <li>Easy to extend with custom operations</li>
+      <li>Dynamic queries</li>
+      <li>Arbitrary inputs and output</li>
+    </ul>
+  </li>
+</ul>
+
+<p>He could have added <a href="http://en.wikipedia.org/wiki/Function_composition_(computer_science)">composability</a>
+a feature (of Clojure really) which allows complex functions to be
+easily built out of simpler building block functions (“functional lego”).</p>
+
+<p>It is also worth emphasising the <em>Full power of Clojure always
+available</em> differentiator:  a Cascalog program <em>is</em> a Clojure program and the former can
+use the functions and facilities of the latter in a very natural way.
+Contrast this flexibility  with Pig Latin and its <em>user defined functions</em> where the API
+between the former and latter is defined and constrained.</p>
+
+<h1 id="the-cascalog-projectclj-file">The Cascalog project.clj file</h1>
+
+<p>Since Cascalog programs are  Clojure ones, the natural way
+to manage a Cascalog project  is to
+use <a href="https://github.com/technomancy/leiningen">Leiningen</a> (<em>lein</em>). (The Clojure Pig UDF
+<a href="http://ianrumford.github.com/blog/2012/09/21/writing-apache-pig-udfs-in-clojure">post</a>
+delves into Leiningen a bit deeper.)</p>
+
+<p>My project.clj for this  project looks like this</p>
+
+<script src="https://gist.github.com/3800631.js?file=project.clj"> </script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>Cascalog is just another dependency; the latest version (1.10.0) is
+used)</p>
+  </li>
+  <li>
+    <p>the <em>conjars</em> repo is required for Twitter’s Maple Cascading <em>taps</em>
+for  HBase support</p>
+  </li>
+</ul>
+
+<h1 id="explaining-cascalog">Explaining Cascalog</h1>
+
+<p>This isn’t a tutorial about Cascalog per se, I don’t
+understand anywhere near enough yet to do it justice.</p>
+
+<p>The two original and most cited tutorials are <a href="http://nathanmarz.com/blog/introducing-cascalog-a-clojure-based-query-language-for-hado.html">here</a> and <a href="http://nathanmarz.com/blog/new-cascalog-features-outer-joins-combiners-sorting-and-more.html">here</a>.</p>
+
+<p>Notwithstanding,  I will try to explain the <em>very</em> basics else the rest of the
+post will be nearly impenetrable.</p>
+
+<h1 id="a-simple-cascalog-query">A simple Cascalog query</h1>
+
+<p>Cascalog query syntax is based on
+<a href="http://en.wikipedia.org/wiki/Datalog">Datalog</a> which is itself a
+subset of Prolog.</p>
+
+<p>Cascalog queries look perfectly at home to anybody at all familiar with
+Clojure and Lisp-like syntax.  Below  is the key line in the program below to read all the lines
+from the file and print them to <em>stdout</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">?&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nf">stdout</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="n">?line</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">file-tap</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?line</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Some notes:</p>
+
+<ul>
+  <li>
+    <p>the <em>?&lt;-</em> both defines the query (<em>&lt;-</em>) and executes (<em>?-</em>) it</p>
+
+    <p>?&lt;- is actually a Clojure (compile-time) macro</p>
+  </li>
+  <li>
+    <p>the <em>file-tap</em> is a <em>[generator]((https://github.com/nathanmarz/cascalog/wiki/Guide-to-custom-operations)</em> that reads all the lines of the file</p>
+
+    <p>This generator is actually a Cascading
+ <a href="http://docs.cascading.org/cascading/2.0/userguide/html/ch03s05.html">source tap</a>.</p>
+
+    <p>In very (very!) simplistic terms a generator is an implicit <em>for
+ loop</em>.  In the query above, the variable <em>?line</em> is set to the
+ contents of each line
+ of the log file for each “loop”.</p>
+
+    <p>The <em>lfs-textline</em> function creates a source tap for the audit log
+ held on the local filesystem.  There are many taps
+ available, not only for the local filesystem, but also for HDFS
+ (e.g. hfs-textline),
+ <a href="https://github.com/Cascading/maple">HBase</a>, <a href="http://cassandra.apache.org/">Cassandra</a>, etc.</p>
+  </li>
+  <li>
+    <p>the <em>(stdout)</em> is another tap, this time a <em>sink</em> to stdout</p>
+  </li>
+  <li>
+    <p>the <em>[?line]</em> specified the variable to be output; it can have many
+variables though</p>
+  </li>
+</ul>
+
+<p>The full code looks like this:</p>
+
+<script src="https://gist.github.com/3799669.js?file=print_file.clj"> </script>
+
+<p>To run the code using <em>lein</em> with the auditd log file
+<em>./data/blog_audit1.log</em>, whilst in the project folder, type:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m <span class="s1">'aud_cas.print_file'</span> <span class="s2">"./data/blog_audit1.log"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="a-more-useful-query">A more useful query</h1>
+
+<p>Simple enough but printing a file using Cascalog is rather an overkill.  Let’s turn to
+some code to print the audit log <em>type</em>, <em>node</em> and <em>msg</em> i.e. parsing
+the
+fields in the prefix of each record and printing them.</p>
+
+<p>The complete code is</p>
+
+<script src="https://gist.github.com/3804493.js?file=print_fields.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p><em>parse_input_record</em> is exactly the same as by the Pig UDFs</p>
+  </li>
+  <li>
+    <p><em>query-log-lines</em> creates (<em>&lt;-</em>) a Cascalog query to generate each
+ line of the auditd log.</p>
+
+    <p>Queries are one of the three types of generators, the other two being
+ Clojure sequences and Cascading taps.</p>
+  </li>
+  <li>
+    <p><em>query-log-tuples</em> creates a query to generate the fields of each log
+ record</p>
+
+    <p>This function uses the query created by
+ <em>query-log-lines</em> to <em>compose</em> the more complex tuple query.</p>
+
+    <p>Each log line is passed to another <em>generator</em> called
+ <em>dmo-parse-log-record-to-tuple</em> to parse the record and return the
+ values of <em>type</em>, <em>node</em> and <em>msg</em>.</p>
+  </li>
+  <li>
+    <p><em>dmo-parse-log-record-to-tuple</em></p>
+
+    <p>This function is created by the Cascalog
+  <em><a href="https://github.com/nathanmarz/cascalog/wiki/Guide-to-custom-operations">custom operation</a></em>
+  macro <em>defmapop</em>.</p>
+
+    <p>A function defined by <em>defmapop</em> <em>must</em> return a tuple.
+  (A “tuple” is a Clojure vector e.g. [“a” 6 :my-keyword])</p>
+
+    <p>The actual
+ parsing is done by the <em>parse_input_record</em> function as in the Pig examples.</p>
+  </li>
+</ul>
+
+<p>As before, running the code using <em>lein</em>, looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m <span class="s2">"aud_cas.print_fields"</span> <span class="s2">"./data/blog_audit1.log"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>and the output like this:</p>
+
+<script src="https://gist.github.com/3804027.js?file=*scratch*.el"> </script>
+
+<h1 id="using-cascalog-to-save-the-auditd-fields-tuple-to-hbase">Using Cascalog to save the auditd fields tuple to HBase</h1>
+
+<p>The next step is to show how to do exactly the same as used Pig Latin
+scripts +
+JRuby and/or Clojure UDFs examples:  parsing the auditd record; creating and adding a <em>uuid</em> for each record;
+adding a random integer (<em>unique</em>) and a boolean (<em>passed</em>) fields;
+and then
+saving the fields to a HBase table (<em>blog_cascalog_tuple</em>) and column
+family (<em>record</em>).</p>
+
+<p>The complete code looks like this, a lot is common to the print
+example:</p>
+
+<script src="https://gist.github.com/3804543.js?file=save_fields.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>three new <em>defmapop</em> functions are defined</p>
+
+    <p>The three new functions (<em>dmo-uuid</em>, <em>dmo-unique</em>, and
+  <em>dmo-passed</em>) generate their respective variables.</p>
+  </li>
+  <li>
+    <p>a function <em>hbase-tap</em> to make a HBase tap is added</p>
+  </li>
+</ul>
+
+<p>Its worth looking at the key function (<em>save-fields</em>) and walking
+through it:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">save-fields</span><span class="w">
+  </span><span class="s">"Use cascalog to save the prefix fields of an auditd log into HBase"</span><span class="w">
+  </span><span class="p">[</span><span class="n">log-path</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">q-tuples</span><span class="w">  </span><span class="p">(</span><span class="nf">query-log-tuples</span><span class="w"> </span><span class="n">log-path</span><span class="p">)</span><span class="w">
+        </span><span class="n">hbase-sink</span><span class="w"> </span><span class="p">(</span><span class="nf">hbase-tap</span><span class="w"> </span><span class="s">"blog_cascalog_tuple"</span><span class="w"> </span><span class="s">"?uuid"</span><span class="w"> </span><span class="s">"record"</span><span class="w">  </span><span class="s">"?type"</span><span class="w"> </span><span class="s">"?node"</span><span class="w"> </span><span class="s">"?unique"</span><span class="w"> </span><span class="s">"?passed"</span><span class="w">  </span><span class="p">)]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">?&lt;-</span><span class="w"> </span><span class="n">hbase-sink</span><span class="w">  </span><span class="p">[</span><span class="n">?uuid</span><span class="w"> </span><span class="n">?type</span><span class="w"> </span><span class="n">?node</span><span class="w"> </span><span class="n">?unique</span><span class="w"> </span><span class="n">?passed</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">q-tuples</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?type</span><span class="w"> </span><span class="n">?node</span><span class="w"> </span><span class="n">?msg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-uuid</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?uuid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-passed</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?passed</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-unique</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?unique</span><span class="p">))))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<ol>
+  <li>
+    <p>the generator for the log tuples (<em>q-tuples</em>) is created in the
+same way as the print example above.</p>
+  </li>
+  <li>
+    <p>a HBase tap is created for the table
+(<em>blog_cascalog_tuple</em>), the <em>row-key</em> is identified as the <em>?uuid</em>
+variable, column family given as <em>record</em> and
+the  column qualifiers <em>?type</em>, <em>?node</em>, <em>?unique</em> and <em>?passed</em> are given.</p>
+
+    <p>Note the ‘?’ prefix to each qualifier and row-key.</p>
+  </li>
+  <li>
+    <p>the Cascalog query itself now includes additional generator
+calls (<em>dmo_uuid</em>, etc) to set the <em>?uuid</em>, <em>?unique</em> and <em>?passed</em> variables.</p>
+  </li>
+  <li>
+    <p>the <em>[?uuid ?type ?node ?unique ?passed]</em> specifies the
+variables to be output (saved) to HBase; <em>msg</em> has been ignored.</p>
+  </li>
+  <li>
+    <p><em>hbase-sink</em> is given as the output tap.</p>
+  </li>
+</ol>
+
+<p>For completeness, running the code using <em>lein</em>, looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m <span class="s2">"aud_cas.save_fields"</span> <span class="s2">"./data/blog_audit1.log"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can use  the HBase shell to see the table e.g.:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre>/usr/lib/hbase/bin/hbase shell
+
+scan <span class="s1">'blog_cascalog_tuple'</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="doing-a-bit-more---filtering-records-on-field-values">Doing a bit more - filtering records on field values</h1>
+
+<p>The examples so far haven’t touch on Cacaslog ability to filter and
+constrain variables using
+<em>predicates</em>.  Filters can be easily composed to allow arbitrary and powerful
+processing pipelines to be built.</p>
+
+<p>The example predicate clause below filters all values of ?age
+greater  or equal to 30 is, the <em>&lt;</em> is the actual predicate and the
+rest input parameters.  Note the (Clojure) <em>&lt;</em> operator has the
+familiar
+less-than semantics you’d expect.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">?age</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>As a trivial example, say we wanted to filter on auditd records
+selecting only
+login requests (where  <em>type</em> is <em>LOGIN</em>).</p>
+
+<p>The code is available <a href="https://gist.github.com/3804733">here</a>
+but its nearly identical with the code above, the crucial changes
+are in the old
+<em>save-fields</em> function, now called <em>filter-fields</em>:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">filter-fields</span><span class="w">
+  </span><span class="s">"Use cascalog to filter save the prefix fields of an auditd log into HBase"</span><span class="w">
+  </span><span class="p">[</span><span class="n">log-path</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">q-tuples</span><span class="w">  </span><span class="p">(</span><span class="nf">query-log-tuples</span><span class="w"> </span><span class="n">log-path</span><span class="p">)</span><span class="w">
+        </span><span class="n">f-tuples</span><span class="w">  </span><span class="p">(</span><span class="nf">&lt;-</span><span class="w"> </span><span class="p">[</span><span class="n">?t</span><span class="w"> </span><span class="n">?n</span><span class="w"> </span><span class="n">?m</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">q-tuples</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?t</span><span class="w"> </span><span class="n">?n</span><span class="w"> </span><span class="n">?m</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">?t</span><span class="w"> </span><span class="s">"LOGIN"</span><span class="p">))</span><span class="w">  </span><span class="c1">;; Filter on LOGIN records
+</span><span class="w">        </span><span class="n">hbase-sink</span><span class="w"> </span><span class="p">(</span><span class="nf">hbase-tap</span><span class="w"> </span><span class="s">"blog_cascalog_tuple"</span><span class="w"> </span><span class="s">"?uuid"</span><span class="w"> </span><span class="s">"record"</span><span class="w">  </span><span class="s">"?type"</span><span class="w"> </span><span class="s">"?node"</span><span class="w"> </span><span class="s">"?unique"</span><span class="w"> </span><span class="s">"?passed"</span><span class="w">  </span><span class="p">)]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">?&lt;-</span><span class="w"> </span><span class="n">hbase-sink</span><span class="w">  </span><span class="p">[</span><span class="n">?uuid</span><span class="w"> </span><span class="n">?type</span><span class="w"> </span><span class="n">?node</span><span class="w"> </span><span class="n">?unique</span><span class="w"> </span><span class="n">?passed</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">f-tuples</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?type</span><span class="w"> </span><span class="n">?node</span><span class="w"> </span><span class="n">?msg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-uuid</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?uuid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-passed</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?passed</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">dmo-unique</span><span class="w"> </span><span class="no">:&gt;</span><span class="w"> </span><span class="n">?unique</span><span class="p">))))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Notes</p>
+
+<ul>
+  <li>
+    <p>a new query has been defined called <em>f-tuple</em></p>
+
+    <p><em>f-tuples</em> uses the <em>q-tuples</em> query and applies a filter that
+   compare the <em>type</em> with ‘<em>LOGIN</em>’; if the compare fails, the record
+   will not appear in the <em>f-tuples</em> query.</p>
+  </li>
+  <li>
+    <p>the main query now uses <em>f-tuples</em> rather than <em>q-tuples</em></p>
+
+    <p>By using <em>f-tuples</em> <em>only</em> login request will be saved to HBase.</p>
+  </li>
+</ul>
+
+<p>It doesn’t require much imagination to think of some of the useful
+permutations filtering offers.</p>
+
+<h1 id="final-words">Final Words</h1>
+
+<p>Cascalog is hugely impressive and, together with Cascading and Clojure
+ presents a compelling and powerful ecosystem for manipulating
+ and analysing large data sets.  Investing in learning the ecosystem well
+ will pay rich dividends.</p>
+
+<p>The down side is that the learning curve for a complete beginner is
+ quite steep and whilst of great use, the limited documentation,
+ tutorial and blog material available make the hill harder to climb.
+ Maybe this post will help a fellow traveller.</p>
+
+<h1 id="fess-up-time">Fess Up Time</h1>
+
+<p><em>The code to save the fields to HBase doesn’t work in the desired way:
+the name of the column qualifiers retain the ‘?’ in them.  Whether my
+ignorance, a
+bug or whatever, I don’t know yet.  I’ve asked
+a <a href="https://groups.google.com/forum/?hl=en&amp;fromgroups=#!topic/cascalog-user/zu0gXPjmj8s">question</a> on the Cascalog Google Group and will update this post when I
+have more to tell.</em></p>
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/webrick/ftp/2012/09/21/a-one-line-http-file-server-using-webrick.html" title="A one-line http file server using Webrick">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html" title="Using VMFest with VirtualBox (VBox) 4.2">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/webrick/ftp/2012/09/21/a-one-line-http-file-server-using-webrick.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

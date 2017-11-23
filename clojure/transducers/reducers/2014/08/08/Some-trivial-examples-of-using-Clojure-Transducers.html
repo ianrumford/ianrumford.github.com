@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Some trivial examples of using Clojure Transducers">
+<title>Some trivial examples of using Clojure Transducers</title>
+<meta property="og:description" content="  TL;DR: first take on Clojure’s new TransducersIntroductionRich Hickey published a post a few days ago on theforthcoming Transducers.Transducers should make...">
+<meta property="og:url" content="http://www.rumford.name/clojure/transducers/reducers/2014/08/08/Some-trivial-examples-of-using-Clojure-Transducers.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Some trivial examples of using Clojure Transducers">
+<meta name="twitter:description" content="  TL;DR: first take on Clojure’s new TransducersIntroductionRich Hickey published a post a few days ago on theforthcoming Transducers.Transducers should make...">
+<meta name="twitter:url" content="http://www.rumford.name/clojure/transducers/reducers/2014/08/08/Some-trivial-examples-of-using-Clojure-Transducers.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/clojure/transducers/reducers/2014/08/08/Some-trivial-examples-of-using-Clojure-Transducers.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Some trivial examples of using Clojure Transducers</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#transducers">transducers</a>, 
+    
+    <a href="/categories/#reducers">reducers</a>
+     
+    
+    <time itemprop="datePublished" datetime="2014-08-08">
+    on Aug 8, 2014
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>TL;DR: first take on Clojure’s new Transducers</p>
+</blockquote>
+
+<h1 id="introductiona-idorgheadline1a">Introduction<a id="orgheadline1"></a></h1>
+
+<p><a href="https://twitter.com/richhickey">Rich Hickey</a> published a <a href="http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming">post</a> a few days ago on the
+forthcoming <a href="http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming">Transducers</a>.</p>
+
+<p><strong>Transducers</strong> should make their first appearance in <a href="http:///clojure.org">Clojure</a> <em>1.7.0</em>
+and the examples below were run using <em>1.7.0-alpha1</em></p>
+
+<p>The first paragraph of Rich’s post describes <strong>Transducers</strong> as:</p>
+
+<blockquote>
+  <p>Transducers are a powerful and composable way to build algorithmic
+transformations that you can reuse in many contexts, and they’re
+coming to Clojure core and core.async.</p>
+</blockquote>
+
+<p>Rich also says:</p>
+
+<blockquote>
+  <p>The other source of power comes from the fact that transducers compose using ordinary function composition.</p>
+</blockquote>
+
+<p><strong>Transducers</strong> follow on from <strong>Reducers</strong>, first
+<a href="http://clojure.com/blog/2012/05/08/reducers-a-library-and-model-for-collection-processing.html">announced</a> by Rich in
+May 2012.</p>
+
+<p>I wrote a post back in late 2012 called <a href="http://ianrumford.github.io/blog/2013/08/25/some-trivial-examples-of-using-clojure-reducers/">Some trivial examples of
+using Clojure Reducers</a> in which I
+attempted to offer some practical, if contrived, examples of how to
+use <strong>reducers</strong>.</p>
+
+<p>This post reprises the examples in the <a href="http://ianrumford.github.io/blog/2013/08/25/some-trivial-examples-of-using-clojure-reducers/">reducers post</a> but now includes
+equivalent contrived <strong>transducers</strong> examples as well.</p>
+
+<p>I’ve includes some material from the <a href="http://ianrumford.github.io/blog/2013/08/25/some-trivial-examples-of-using-clojure-reducers/">reducers post</a> for completeness, but without
+any explanation, so you don’t have to flip between the two. But you may
+want to refer to the <a href="http://ianrumford.github.io/blog/2013/08/25/some-trivial-examples-of-using-clojure-reducers/">reducers post</a> for <strong>reducers</strong> background.</p>
+
+<!-- more -->
+
+<h1 id="the-codea-idorgheadline6a">The Code<a id="orgheadline6"></a></h1>
+
+<h2 id="the-code---repo-is-on-githuba-idorgheadline2a">The Code - repo is on Github<a id="orgheadline2"></a></h2>
+
+<p>The repo with the example code can be found on
+<a href="https://github.com/ianrumford/clojure-transducer-examples">Github</a>.  Its a
+<a href="http://leiningen.org/">Leiningen</a> project.</p>
+
+<h2 id="the-code---running-the-examplesa-idorgheadline3a">The Code - running the examples<a id="orgheadline3"></a></h2>
+
+<p>Run the examples in the usual way</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m transducers-examples1<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="the-code---code-is-a-tangled-org-mode-filea-idorgheadline4a">The Code - code is a tangled org-mode file<a id="orgheadline4"></a></h2>
+
+<p>The source code and <em>project.clj</em> are generated (tangled) from the
+org-mode source of this post found in the <em>doc</em> folder.</p>
+
+<h2 id="the-code---misca-idorgheadline5a">The Code - misc<a id="orgheadline5"></a></h2>
+
+<p>The <strong>reducers</strong> namespace is <em>r</em> in the examples below i.e.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">[</span><span class="n">clojure.core.reducers</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">r</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>There is no need to <em>require</em>  <strong>transducers</strong>.</p>
+
+<h1 id="the-examples-collectiona-idorgheadline7a">The Examples Collection<a id="orgheadline7"></a></h1>
+
+<p>Many of the following examples will use the same collection
+holding the population of a small village.  The village
+has four families, some families have two parents, others one; and
+each family between one and three children.  One family lives in the North, and one each in the South, East and West.</p>
+
+<p><em>This is stylised, artificial and contrived data designed to be easily understandable to most and in no way intended to suggest any family structures, conventions or arrangements as socially preferable.  Just saying.</em></p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td><td class="code"><pre><span class="c1">;; The Families in the Village
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">village</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:home</span><span class="w"> </span><span class="no">:north</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"smith"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"sue"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">37</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:north</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"smith"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"stan"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">35</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:north</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"smith"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"simon"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:north</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"smith"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"sadie"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jill"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">45</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jeff"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">45</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jackie"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">19</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jason"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"june"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">14</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:west</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"billie"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">55</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:west</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"brian"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">23</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:west</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"bettie"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">29</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:east</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"williams"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"walter"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">23</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:parent</span><span class="p">}</span><span class="w">
+   </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="no">:east</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"williams"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"wanda"</span><span class="w"> </span><span class="no">:age</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}])</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="example-1---how-many-children-in-the-villagea-idorgheadline10a">Example 1 - how many children in the village?<a id="orgheadline10"></a></h1>
+
+<p>An obvious way to do this would be to <em>map</em>  each child to the value
+1, else 0.  The total number of children is then the simple addition
+of the 1s &amp; 0s results of the map operation.</p>
+
+<h2 id="example-1a---using-a-reducer-to-count-how-many-children-in-the-villagea-idorgheadline8a">Example 1a - using a reducer to count how many children in the village<a id="orgheadline8"></a></h2>
+
+<p>The <strong>reducers</strong> way looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre></td><td class="code"><pre><span class="c1">;; Example 1a - using a reducer to add up all the mapped values
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex1a-map-children-to-value-1</span><span class="w"> </span><span class="p">(</span><span class="nf">r/map</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="no">:child</span><span class="w"> </span><span class="p">(</span><span class="no">:role</span><span class="w"> </span><span class="n">%</span><span class="p">))</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nf">ex1a-map-children-to-value-1</span><span class="w"> </span><span class="n">village</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt;
+</span><span class="mi">8</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-1b---using-a-transducer-to-count-how-many-children-in-the-villagea-idorgheadline9a">Example 1b - using a transducer to count how many children in the village<a id="orgheadline9"></a></h2>
+
+<p>The <strong>transducers</strong> way looks very similar. Literally the only difference is to use <strong>core</strong> map
+rather than the <strong>reducers</strong> map.</p>
+
+<p>First the <em>transducer</em>
+function <em>ex1b-map-children-to-value-1</em> is created using the new
+arity for <em>map</em> that takes just the mapping function, no
+collection.</p>
+
+<p>Then the <em>transducer</em> is used with the new <strong>transduce</strong> function to
+reduce the collection and return the answer. <strong>transduce</strong> take the <em>transducer</em>
+function as its first argument, then the “usual” reducer arguments
+of reducing function, initial value and collection.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre></td><td class="code"><pre><span class="c1">;; Example 1b - using a transducer to add up all the mapped values
+</span><span class="w">
+</span><span class="c1">;; create the transducers using the new arity for map that
+;; takes just the function, no collection
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex1b-map-children-to-value-1</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="no">:child</span><span class="w"> </span><span class="p">(</span><span class="no">:role</span><span class="w"> </span><span class="n">%</span><span class="p">))</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;; now use transduce (c.f r/reduce) with the transducer to get the answer 
+</span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex1b-map-children-to-value-1</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt;
+</span><span class="mi">8</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="example-2---how-many-children-in-the-brown-familya-idorgheadline13a">Example 2 - how many children in the Brown family?<a id="orgheadline13"></a></h1>
+
+<p>An obvious way to find how many children just in the Brown family
+would be to select ( <em>filter</em>) the members of the Brown family, and
+use the same <em>map</em> function - e.g. <em>ex1a-map-children-to-value-1</em> - from
+Example 1 to count the children.</p>
+
+<h2 id="example-2a---using-a-reducer-to-count-the-children-in-the-brown-familya-idorgheadline11a">Example 2a - using a reducer to count the children in the Brown family<a id="orgheadline11"></a></h2>
+
+<p>Along with <em>map</em>, <strong>reducers</strong> have a <em>filter</em> function that returns another function that can be used with <em>reduce</em>:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td><td class="code"><pre><span class="c1">;; Example 2a - using a reducer to count the children in the Brown family
+</span><span class="w">
+</span><span class="c1">;; create the reducer to select members of the Brown family
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex2a-select-brown-family</span><span class="w"> </span><span class="p">(</span><span class="nf">r/filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="p">(</span><span class="nf">string/lower-case</span><span class="w"> </span><span class="p">(</span><span class="no">:family</span><span class="w"> </span><span class="n">%</span><span class="p">)))))</span><span class="w">
+
+</span><span class="c1">;; compose a composite function to select the Brown family and map children to 1
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex2a-count-brown-family-children</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex1a-map-children-to-value-1</span><span class="w"> </span><span class="n">ex2a-select-brown-family</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; reduce to add up all the Brown children
+</span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nf">ex2a-count-brown-family-children</span><span class="w"> </span><span class="n">village</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt;
+</span><span class="mi">2</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Its worth observing <strong>reducers</strong> <em>reduce</em> does <strong>not</strong> need to create
+any intermediate collections.</p>
+
+<h2 id="example-2b---using-a-transducer-to-count-the-children-in-the-brown-familya-idorgheadline12a">Example 2b - using a transducer to count the children in the Brown family<a id="orgheadline12"></a></h2>
+
+<p>The transducer-aware <strong>core</strong>  <em>filter</em> function can be used to select
+the Brown family members, while the  <em>transducer</em>
+<em>ex1b-map-children-to-value-1</em> can be used to map children to 1, else 0.</p>
+
+<p>As with <strong>reducers</strong>, the two functions <em>ex2b-select-brown-family</em>
+and <em>ex1b-map-children-to-value-1</em> can be composed together.</p>
+
+<p>And as before, <strong>transduce</strong> is used to count (reduce) the number of children.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre></td><td class="code"><pre><span class="c1">;; Example 2b - using a transducer to count the children in the Brown family
+</span><span class="w">
+</span><span class="c1">;; create the transducer filter to select members of the Brown family
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex2b-select-brown-family</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="p">(</span><span class="nf">string/lower-case</span><span class="w"> </span><span class="p">(</span><span class="no">:family</span><span class="w"> </span><span class="n">%</span><span class="p">)))))</span><span class="w">
+
+</span><span class="c1">;; compose a composite function to select the Brown family and map children to 1
+;; NOTE: transducer comp functions are applied left-to-right
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex2b-count-brown-family-children</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex2b-select-brown-family</span><span class="w"> </span><span class="n">ex1b-map-children-to-value-1</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; transduce to add up all the Brown children
+</span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex2b-count-brown-family-children</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt;
+</span><span class="mi">2</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<blockquote>
+  <p>Note there is a gotcha here.  The functions in the composed
+transducer ex2b-count-brown-family-children are
+applied left-to-right not right-to-left as is usual with comp.</p>
+</blockquote>
+
+<p>Although not explicitly stated in Rich’s
+<a href="http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming">post</a> I guess <strong>transducers</strong>
+do not create intermediate collections either.</p>
+
+<h1 id="example-3---how-many-childrens-names-start-with-ja-idorgheadline16a">Example 3 - how many children’s names start with J?<a id="orgheadline16"></a></h1>
+
+<p>We already know the answer:  just the 3 children in the <em>Jones</em> family.</p>
+
+<p>Algorithmically, this is a three step pipeline: <em>filter</em> on children, a <em>filter</em> on
+names beginning with “J” (or “j”) and finally count of how many (children) in the result.</p>
+
+<h2 id="example-3a---using-a-reducer-to-count-children-with-names-beginning-with-ja-idorgheadline14a">Example 3a - using a reducer to count children with names beginning with J<a id="orgheadline14"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre></td><td class="code"><pre><span class="c1">;; Example 3a - using a reducer to count children with names beginning with J
+</span><span class="w">
+</span><span class="c1">;; select (filter) just the children
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3a-select-children</span><span class="w"> </span><span class="p">(</span><span class="nf">r/filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="no">:child</span><span class="w"> </span><span class="p">(</span><span class="no">:role</span><span class="w"> </span><span class="n">%</span><span class="p">))))</span><span class="w">
+
+</span><span class="c1">;; select names beginning with "j"
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3a-select-names-beginning-with-j</span><span class="w"> </span><span class="p">(</span><span class="nf">r/filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"j"</span><span class="w"> </span><span class="p">(</span><span class="nf">string/lower-case</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="no">:name</span><span class="w"> </span><span class="n">%</span><span class="p">))))))</span><span class="w">
+
+</span><span class="c1">;; In Example 1 we created the _map_ function
+;; ex1a-map-children-to-value-1 to enable reduce to count the number
+;; of children.
+</span><span class="w">
+</span><span class="c1">;; But the need to count the number of entries in a collection using
+;; reduce, after a pipeline possibly involving many filters and
+;; mappers, is a common one. This is straightforward to do, in the final
+;; stage of the pipeline use a map function to transform each entry to
+;; value 1.
+</span><span class="w">
+</span><span class="c1">;; map entries in a collection to 1
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex0a-map-to-value-1</span><span class="w"> </span><span class="p">(</span><span class="nf">r/map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;; create the three step count-children-with-names-beginning-j function
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3a-count-children-with-names-beginning-j</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex0a-map-to-value-1</span><span class="w">
+                                                      </span><span class="n">ex3a-select-names-beginning-with-j</span><span class="w">
+                                                      </span><span class="n">ex3a-select-children</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; reduce the village with the ex32-count-children-with-names-beginning-j function
+</span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nf">ex3a-count-children-with-names-beginning-j</span><span class="w"> </span><span class="n">village</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">3</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Its worth labouring the point that composing the custom reducer <em>count-children-with-names-beginning-js</em> from
+individual <em>filters</em> and <em>mappers</em> is a very powerful technique.</p>
+
+<h2 id="example-3b---using-a-transducer-to-count-children-with-names-beginning-with-ja-idorgheadline15a">Example 3b - using a transducer to count children with names beginning with J<a id="orgheadline15"></a></h2>
+
+<p>As with <strong>transducers</strong> map, <em>filter</em> has a new arity, taking just the
+filtering function, no collection.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></td><td class="code"><pre><span class="c1">;; Example 3b - using a transducer to count children with names beginning with J
+</span><span class="w">
+</span><span class="c1">;; select (filter) just the children
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3b-select-children</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="no">:child</span><span class="w"> </span><span class="p">(</span><span class="no">:role</span><span class="w"> </span><span class="n">%</span><span class="p">))))</span><span class="w">
+
+</span><span class="c1">;; select names beginning with "j"
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3b-select-names-beginning-with-j</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"j"</span><span class="w"> </span><span class="p">(</span><span class="nf">string/lower-case</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="no">:name</span><span class="w"> </span><span class="n">%</span><span class="p">))))))</span><span class="w">
+
+</span><span class="c1">;; map entries in a collection to 1
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex0b-map-to-value-1</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;; create the three step count-children-with-names-beginning-j function
+;; note the left-to-right order in which the indivudal transducers
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex3b-count-children-with-names-beginning-j</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex3b-select-children</span><span class="w">
+                                                      </span><span class="n">ex3b-select-names-beginning-with-j</span><span class="w">
+                                                      </span><span class="n">ex0b-map-to-value-1</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; transduce the village with the ex3b-count-children-with-names-beginning-j transducer
+</span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex3b-count-children-with-names-beginning-j</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">3</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<blockquote>
+  <p>Again, note the ex3b-count-children-with-names-beginning-j transducer
+applies it constituent transducers left-to-right.</p>
+</blockquote>
+
+<h1 id="example-4---creating-a-collection-of-children-whose-names-start-with-ja-idorgheadline19a">Example 4 - creating a collection of children whose names start with J?<a id="orgheadline19"></a></h1>
+
+<p>Sometimes you will want the resulting collection itself, post map,
+filter, etc, and not reduced any further.</p>
+
+<h2 id="example-4a---using-a-reducer-to-create-a-collection-of-children-whose-names-start-with-ja-idorgheadline17a">Example 4a - using a reducer to create a collection of children whose names start with J?<a id="orgheadline17"></a></h2>
+
+<p>Since we want the actual entries, rather than count them, we need a
+pure filter pipeline, similar to Example 3 but one that <strong>doesn’t</strong> use
+the <em>ex0a-map-to-value-1</em> mapper.</p>
+
+<p>Creating a vector of the J children can be done simply by using <em>into</em>.</p>
+
+<p>Under the covers <em>into</em> uses <em>reduce</em> so creating the vector is just a
+matter of applying the
+<em>ex4a-select-children-with-names-beginning-with-j</em> reducers to the
+village and then using the resulting collection with <em>into</em> to create the vector.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td><td class="code"><pre><span class="c1">;; Example 4a - a reducer to create a collection of children whose names start with J?
+</span><span class="w">
+</span><span class="c1">;; create a reducing function to select (filter) children with names starting with "J"
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex4a-select-children-with-names-beginning-with-j</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex3a-select-names-beginning-with-j</span><span class="w">
+                                                            </span><span class="n">ex3a-select-children</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; use into to create a vector of the "J" children
+</span><span class="p">(</span><span class="nb">into</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">ex4a-select-children-with-names-beginning-with-j</span><span class="w"> </span><span class="n">village</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">[{</span><span class="no">:age</span><span class="w"> </span><span class="mi">19</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jackie"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+ </span><span class="p">{</span><span class="no">:age</span><span class="w"> </span><span class="mi">16</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jason"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+ </span><span class="p">{</span><span class="no">:age</span><span class="w"> </span><span class="mi">14</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"june"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-4b---using-a-transducer-to-create-a-collection-of-children-whose-names-start-with-ja-idorgheadline18a">Example 4b - using a transducer to create a collection of children whose names start with J?<a id="orgheadline18"></a></h2>
+
+<p>Very similar to <strong>reducers</strong>, <strong>transducers</strong> can use <em>into</em> to create a
+collection.</p>
+
+<blockquote>
+  <p>Note <em>into</em> takes the <em>transducer</em> and the collection as arguments,
+not just the collection.</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td><td class="code"><pre><span class="c1">;; Example 4b - a transducer to create a collection of children whose names start with J?
+</span><span class="w">
+</span><span class="c1">;; create a reducing function to select (filter) children with names starting with "J"t
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex4b-select-children-with-names-beginning-with-j</span><span class="w"> </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex3b-select-names-beginning-with-j</span><span class="w">
+                                                            </span><span class="n">ex3b-select-children</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; use into to create a vector of the "J" children
+</span><span class="p">(</span><span class="nb">into</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="n">ex4b-select-children-with-names-beginning-with-j</span><span class="w"> </span><span class="n">village</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">[{</span><span class="no">:age</span><span class="w"> </span><span class="mi">19</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jackie"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+ </span><span class="p">{</span><span class="no">:age</span><span class="w"> </span><span class="mi">16</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"jason"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}</span><span class="w">
+ </span><span class="p">{</span><span class="no">:age</span><span class="w"> </span><span class="mi">14</span><span class="n">,</span><span class="w"> </span><span class="no">:home</span><span class="w"> </span><span class="no">:south,</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="s">"june"</span><span class="n">,</span><span class="w"> </span><span class="no">:sex</span><span class="w"> </span><span class="no">:f,</span><span class="w"> </span><span class="no">:family</span><span class="w"> </span><span class="s">"jones"</span><span class="n">,</span><span class="w"> </span><span class="no">:role</span><span class="w"> </span><span class="no">:child</span><span class="p">}]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="example-5---calculate-the-average-age-of-children-on-or-below-the-equatora-idorgheadline22a">Example 5 - calculate the average age of children on or below the equator<a id="orgheadline22"></a></h1>
+
+<p>A more involved, but still straightforward, example to finish this
+section: what is the average age of the children who live on or below
+the equator? By equator I mean where <em>home</em> is East, South or West.</p>
+
+<p>To do this, the value of <em>home</em> will be mapped to a latitude and
+longitude. For example West will be <em>:lat 0 :lng -180</em> and South is
+<em>:lat -90 :lng 0</em>.</p>
+
+<h2 id="example-5a---using-a-reducer-to-calculate-the-average-age-of-children-on-or-below-the-equatora-idorgheadline20a">Example 5a - using a reducer to calculate the average age of children on or below the equator<a id="orgheadline20"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre></td><td class="code"><pre><span class="c1">;; Example 5a - using a reducer to calculate the average age of children on or below the equator
+</span><span class="w">
+</span><span class="c1">;; map :home to latitude and longitude
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-map-home-to-latitude-and-longitude</span><span class="w">
+  </span><span class="p">(</span><span class="nf">r/map</span><span class="w">
+   </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="nf">condp</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="no">:home</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w">
+       </span><span class="no">:north</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+       </span><span class="no">:south</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">-90</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+       </span><span class="no">:west</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">-180</span><span class="p">)</span><span class="w">
+       </span><span class="no">:east</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">180</span><span class="p">)))))</span><span class="w">
+
+
+</span><span class="c1">;; select people on or below the equator i.e. latitude &lt;= 0
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-select-people-on-or-below-equator</span><span class="w"> </span><span class="p">(</span><span class="nf">r/filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="no">:lat</span><span class="w"> </span><span class="n">%</span><span class="p">))))</span><span class="w">
+
+</span><span class="c1">;; To find the average age, we need to add up all the children's ages and
+;; divide by how many children.
+</span><span class="w">
+</span><span class="c1">;; Note, rather than creating a composite pipeline function, in this example
+;; the individual stages of the pipeline are used explicitly.
+</span><span class="w">
+</span><span class="c1">;; count the number of children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-no-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">(</span><span class="nf">ex0a-map-to-value-1</span><span class="w">
+           </span><span class="p">(</span><span class="nf">ex5a-select-people-on-or-below-equator</span><span class="w">
+            </span><span class="p">(</span><span class="nf">ex5a-map-home-to-latitude-and-longitude</span><span class="w">
+             </span><span class="p">(</span><span class="nf">ex3a-select-children</span><span class="w"> </span><span class="n">village</span><span class="p">))))))</span><span class="w">
+
+
+</span><span class="c1">;; sum the ages of children
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-select-age</span><span class="w"> </span><span class="p">(</span><span class="nf">r/map</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="no">:age</span><span class="w"> </span><span class="n">%</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-sum-of-ages-of-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w">
+          </span><span class="p">(</span><span class="nf">ex5a-select-age</span><span class="w">
+           </span><span class="p">(</span><span class="nf">ex5a-select-people-on-or-below-equator</span><span class="w">
+            </span><span class="p">(</span><span class="nf">ex5a-map-home-to-latitude-and-longitude</span><span class="w">
+             </span><span class="p">(</span><span class="nf">ex3a-select-children</span><span class="w"> </span><span class="n">village</span><span class="p">))))))</span><span class="w">
+
+
+</span><span class="c1">;; calculate the average age of children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5a-averge-age-of-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nb">float</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">ex5a-sum-of-ages-of-children-on-or-below-the-equator</span><span class="w"> </span><span class="n">ex5a-no-children-on-or-below-the-equator</span><span class="w"> </span><span class="p">)))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mf">17.3</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-5b---using-a-transducer-to-calculate-the-average-age-of-children-on-or-below-the-equatora-idorgheadline21a">Example 5b - using a transducer to calculate the average age of children on or below the equator<a id="orgheadline21"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre></td><td class="code"><pre><span class="c1">;; Example 5b - using a transducer to calculate the average age of children on or below the equator
+</span><span class="w">
+</span><span class="c1">;; map :home to latitude and longitude
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-map-home-to-latitude-and-longitude</span><span class="w">
+  </span><span class="p">(</span><span class="nb">map</span><span class="w">
+   </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="nf">condp</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="no">:home</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w">
+       </span><span class="no">:north</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+       </span><span class="no">:south</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">-90</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+       </span><span class="no">:west</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">-180</span><span class="p">)</span><span class="w">
+       </span><span class="no">:east</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="no">:lat</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mi">180</span><span class="p">)))))</span><span class="w">
+
+
+</span><span class="c1">;; select people on or below the equator i.e. latitude &lt;= 0
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-select-people-on-or-below-equator</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="no">:lat</span><span class="w"> </span><span class="n">%</span><span class="p">))))</span><span class="w">
+
+</span><span class="c1">;; create a "utility" transducer to select children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-select-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex3b-select-children</span><span class="w">
+        </span><span class="n">ex5b-map-home-to-latitude-and-longitude</span><span class="w">
+        </span><span class="n">ex5b-select-people-on-or-below-equator</span><span class="p">))</span><span class="w"> 
+
+</span><span class="c1">;; create a transducer to count the number of children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-count-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nb">comp</span><span class="w"> </span><span class="n">ex5b-select-children-on-or-below-the-equator</span><span class="w">
+        </span><span class="n">ex0b-map-to-value-1</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; now count the number of children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-no-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex5b-count-children-on-or-below-the-equator</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; create a transducer to extract the age
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-select-age</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="no">:age</span><span class="w"> </span><span class="n">%</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;; create a transducer to extract the ages of all chilren
+;; on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-extract-ages-of-children-on-or-below-thew-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nb">comp</span><span class="w">
+   </span><span class="n">ex5b-select-children-on-or-below-the-equator</span><span class="w">
+   </span><span class="n">ex5b-select-age</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; now sum the ages
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-sum-of-ages-of-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex5b-extract-ages-of-children-on-or-below-thew-equator</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="w"> </span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; calculate the average age of children on or below the equator
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex5b-averge-age-of-children-on-or-below-the-equator</span><span class="w">
+  </span><span class="p">(</span><span class="nb">float</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">ex5b-sum-of-ages-of-children-on-or-below-the-equator</span><span class="w"> </span><span class="n">ex5b-no-children-on-or-below-the-equator</span><span class="p">)))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mf">17.3</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="example-6---comparing-the-performance-of-reducers-and-transducersa-idorgheadline25a">Example 6 - comparing the performance of reducers and transducers<a id="orgheadline25"></a></h1>
+
+<p>Lets time the addition of the ages from Example 5 using <strong>reducers</strong>
+ <em>reduce</em> and <em>fold</em>, and <strong>transducers</strong> <em>transduce</em>.</p>
+
+<h2 id="example-6a---time-a-reducer-adding-up-example-5s-agesa-idorgheadline23a">Example 6a - time a reducer adding up Example 5’s ages<a id="orgheadline23"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td><td class="code"><pre><span class="c1">;; Example 6a - time a reducer adding up Example 5's ages
+</span><span class="w">
+</span><span class="c1">;; time reducer adding up Example 5's ages
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nb">dotimes</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="mi">100000</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w">
+                                  </span><span class="p">(</span><span class="nf">ex5a-select-age</span><span class="w">
+                                   </span><span class="p">(</span><span class="nf">ex5a-select-people-on-or-below-equator</span><span class="w">
+                                    </span><span class="p">(</span><span class="nf">ex5a-map-home-to-latitude-and-longitude</span><span class="w">
+                                     </span><span class="p">(</span><span class="nf">ex3a-select-children</span><span class="w"> </span><span class="n">village</span><span class="p">)))))))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~700 msecs"</span><span class="w">
+
+</span><span class="c1">;; time fold adding up Example 5's ages
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nb">dotimes</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="mi">100000</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">r/fold</span><span class="w"> </span><span class="nb">+</span><span class="w">
+                               </span><span class="p">(</span><span class="nf">ex5a-select-age</span><span class="w">
+                                </span><span class="p">(</span><span class="nf">ex5a-select-people-on-or-below-equator</span><span class="w">
+                                 </span><span class="p">(</span><span class="nf">ex5a-map-home-to-latitude-and-longitude</span><span class="w">
+                                  </span><span class="p">(</span><span class="nf">ex3a-select-children</span><span class="w"> </span><span class="n">village</span><span class="p">)))))))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~700 msecs"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Its not possible to see the benefits on <em>fold’s</em> ability to
+parallelise on this volume of data (village).</p>
+
+<h2 id="example-6b---time-a-transducer-adding-up-example-5s-agesa-idorgheadline24a">Example 6b - time a transducer adding up Example 5’s ages<a id="orgheadline24"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="c1">;; Example 6b - time a transducer adding up Example 5's ages
+</span><span class="w">
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nb">dotimes</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="mi">100000</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex5b-extract-ages-of-children-on-or-below-thew-equator</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">village</span><span class="p">)))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~700 msecs"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>So, in this example, its not possible to see any performance difference between <strong>reducers</strong> and <strong>transducers</strong>.</p>
+
+<h1 id="example-7---all-the-relatives-visit-the-villagea-idorgheadline30a">Example 7 - all the relatives visit the village!<a id="orgheadline30"></a></h1>
+
+<p>Its that time of year again and all the relatives of the families in the village visit and
+the population of the village swells enormously to 10 million people.</p>
+
+<h2 id="example-7---make-some-visitorsa-idorgheadline26a">Example 7 - make some visitors<a id="orgheadline26"></a></h2>
+
+<p>Lets define some functions to create an influx of visitors. <em>Note, no attempt has been made to ensure this randomly generated data makes any sort of real world sense - it could include e.g. a child of age 100.</em></p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></td><td class="code"><pre><span class="c1">;; Example 7 - make some visitors
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-name</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">rand-nth</span><span class="w"> </span><span class="p">[</span><span class="s">"chris"</span><span class="w"> </span><span class="s">"jim"</span><span class="w"> </span><span class="s">"mark"</span><span class="w"> </span><span class="s">"jon"</span><span class="w"> </span><span class="s">"lisa"</span><span class="w"> </span><span class="s">"kate"</span><span class="w"> </span><span class="s">"jay"</span><span class="w"> </span><span class="s">"june"</span><span class="w"> </span><span class="s">"julie"</span><span class="w"> </span><span class="s">"laura"</span><span class="p">])))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-family</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">rand-nth</span><span class="w"> </span><span class="p">[</span><span class="s">"smith"</span><span class="w"> </span><span class="s">"jones"</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="s">"williams"</span><span class="w"> </span><span class="s">"taylor"</span><span class="w"> </span><span class="s">"davies"</span><span class="p">])))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-home</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">rand-nth</span><span class="w"> </span><span class="p">[</span><span class="no">:north</span><span class="w"> </span><span class="no">:south</span><span class="w"> </span><span class="no">:east</span><span class="w"> </span><span class="no">:west</span><span class="p">])))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-sex</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">rand-nth</span><span class="w"> </span><span class="p">[</span><span class="no">:m</span><span class="w"> </span><span class="no">:f</span><span class="p">])))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-role</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">rand-nth</span><span class="w"> </span><span class="p">[</span><span class="no">:child</span><span class="w"> </span><span class="no">:parent</span><span class="p">])))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-fn-random-age</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">rand-int</span><span class="w"> </span><span class="mi">100</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-visitor-template</span><span class="w">
+  </span><span class="p">{</span><span class="no">:home</span><span class="w"> </span><span class="n">ex7-fn-random-home</span><span class="w">
+   </span><span class="no">:family</span><span class="w"> </span><span class="n">ex7-fn-random-family</span><span class="w">
+   </span><span class="no">:name</span><span class="w"> </span><span class="n">ex7-fn-random-name</span><span class="w">
+   </span><span class="no">:age</span><span class="w"> </span><span class="n">ex7-fn-random-age</span><span class="w">
+   </span><span class="no">:sex</span><span class="w"> </span><span class="n">ex7-fn-random-sex</span><span class="w">
+   </span><span class="no">:role</span><span class="w"> </span><span class="n">ex7-fn-random-role</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">ex7-make-visitor</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">into</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">(</span><span class="k">for</span><span class="w"> </span><span class="p">[[</span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="n">ex7-visitor-template</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">k</span><span class="w"> </span><span class="p">(</span><span class="nf">v</span><span class="p">)])))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">ex7-make-visitors</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">take</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nf">repeatedly</span><span class="w"> </span><span class="n">ex7-make-visitor</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ex7-visitors</span><span class="w"> </span><span class="p">(</span><span class="nb">into</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nf">ex7-make-visitors</span><span class="w"> </span><span class="mi">10000000</span><span class="p">)))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-7a---using-reducers-to-count-the-visiting-brown-childrena-idorgheadline27a">Example 7a - using reducers to count the visiting Brown children<a id="orgheadline27"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre></td><td class="code"><pre><span class="c1">;; Example 7a - using reducers count the visiting Brown children
+</span><span class="w">
+</span><span class="c1">;; count the visiting Brown children using reduce
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nf">r/reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nf">ex2a-count-brown-family-children</span><span class="w"> </span><span class="n">ex7-visitors</span><span class="p">)))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~1600 msecs"</span><span class="w">
+
+</span><span class="c1">;; count the visiting Brown children using fold
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nf">r/fold</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nf">ex2a-count-brown-family-children</span><span class="w"> </span><span class="n">ex7-visitors</span><span class="p">)))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~555 msecs"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-7b---using-transducers-to-count-the-visiting-brown-childrena-idorgheadline28a">Example 7b - using transducers to count the visiting Brown children<a id="orgheadline28"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="c1">;; Example 7b - using reducers count the visiting Brown children
+</span><span class="w">
+</span><span class="c1">;; count the visiting Brown children using transduce
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">ex2b-count-brown-family-children</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">ex7-visitors</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~1640 msecs"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-7c---using-core-map-filter-and-reduce-to-count-the-visiting-brown-childrena-idorgheadline29a">Example 7c - using core map, filter and reduce to count the visiting Brown children<a id="orgheadline29"></a></h2>
+
+<p>How do the <strong>reducers</strong> and <strong>transducers</strong> fare against <strong>core</strong> reduce?</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td class="code"><pre><span class="c1">;; Example 7c - using core map, filter and reduce to count the visiting Brown children
+</span><span class="w">
+</span><span class="c1">;; count the visiting Brown children using core map, filter and reduce
+</span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="p">(</span><span class="nb">reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w">
+              </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="no">:child</span><span class="w"> </span><span class="p">(</span><span class="no">:role</span><span class="w"> </span><span class="n">%</span><span class="p">))</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+                   </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"brown"</span><span class="w"> </span><span class="p">(</span><span class="nf">string/lower-case</span><span class="w"> </span><span class="p">(</span><span class="no">:family</span><span class="w"> </span><span class="n">%</span><span class="p">)))</span><span class="w"> </span><span class="n">ex7-visitors</span><span class="p">))))</span><span class="w">
+
+</span><span class="c1">;; =&gt;
+</span><span class="s">"Elapsed time: ~2000 msecs"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In the original <a href="http://ianrumford.github.io/blog/2013/08/25/some-trivial-examples-of-using-clojure-reducers/">reducers post</a> I
+found <strong>reducers</strong> <em>fold</em> was nearly four times faster than <strong>reducers</strong>
+<em>reduce</em>. Here <em>fold</em> is about three times faster. (I’m using the same
+four core workstation.)</p>
+
+<p><strong>Transducers</strong> come out with around the same time as <strong>reducers</strong> reduce.</p>
+
+<p><em>All these numbers should be taken with a large pinch of salt, they
+are just a “wet finger” and this is in no way a rigorous benchmark.</em></p>
+
+<h1 id="final-wordsa-idorgheadline31a">Final Words<a id="orgheadline31"></a></h1>
+
+<p>I’ve only scratched the surface of <strong>transducers</strong> in this post of
+course and Rich’s <a href="http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming">post</a> has opened only
+a crack in the door to understanding the potential of <strong>transducers</strong>;
+there will be more to come,
+appreciate and learn I’m sure.</p>
+
+<p>So far I’ve found <strong>transducers</strong> more immediately understandable than I
+did <strong>reducers</strong>, maybe because I already have a reasonable grasp of the
+latter and  some existing mental context to understand the former. It
+will be interesting to hear / learn how other people new to both
+<em>grok</em> <strong>transducers</strong>.</p>
+
+<p>I’ve been doing a project using <strong>reducers</strong> <em>fold</em> for the parallisation
+benefits and have noticed I have needed to consciously mentally “switch” between the
+<strong>core</strong> world and <strong>reducers</strong> world. In that sense I think <strong>reducers</strong>
+have an “impedance mismatch” with the rest of <strong>core</strong>.</p>
+
+<p>On the other
+hands, writing the examples above I’ve felt <strong>transducers</strong>
+are more “grounded” with <strong>core</strong>; indeed they are <strong>core</strong> (there is no <strong>transducers</strong>
+namespace).</p>
+
+<p>To sum up my opinion in a pithy one-liner: <strong>transducers</strong> are <strong>reducers</strong> decomplected.</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html" title="The benefits of using the Big Data software ecosystem">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/clojure/sugar/threading/macros/2014/10/24/some-syntactic-sugar-for-clojure-threading-macros.html" title="Some syntactic sugar for Clojure's threading macros">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/clojure/sugar/threading/macros/2014/10/24/some-syntactic-sugar-for-clojure-threading-macros.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

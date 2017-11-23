@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="First steps using Pallet, VMFest and VirtualBox (VBox) 4.2">
+<title>First steps using Pallet, VMFest and VirtualBox (VBox) 4.2</title>
+<meta property="og:description" content="Palletis aconfiguration management tool (library) forLinux infrastructures.  Well known alternatives to Pallet include Chefand Puppet.A bit more background  ...">
+<meta property="og:url" content="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="First steps using Pallet, VMFest and VirtualBox (VBox) 4.2">
+<meta name="twitter:description" content="Palletis aconfiguration management tool (library) forLinux infrastructures.  Well known alternatives to Pallet include Chefand Puppet.A bit more background  ...">
+<meta name="twitter:url" content="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">First steps using Pallet, VMFest and VirtualBox (VBox) 4.2</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#pallet">pallet</a>, 
+    
+    <a href="/categories/#vmfest">vmfest</a>, 
+    
+    <a href="/categories/#virtualbox">virtualbox</a>
+     
+    
+    <time itemprop="datePublished" datetime="2012-10-24">
+    on Oct 24, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p><a href="http://www.palletops.com">Pallet</a>
+is a
+<em>configuration management</em> tool (library) for
+Linux infrastructures.  Well known alternatives to Pallet include <a href="http://www.opscode.com/">Chef</a>
+and <a href="http://puppetlabs.com/">Puppet</a>.</p>
+
+<p>A bit more background  on Pallet can be found in a
+ <a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">previous post</a>.  That post is also worth
+ reading for  background on VMFest and how it interacts with VBox</p>
+
+<p>Chef is hugely useful in defining  and managing 
+standardised, repeatable and consistent definitions and configuration
+of Infrastructure components such as 
+ (web servers,
+database serevers, etc). Picking up the basics of Chef is not a steep learning curve.
+I’ve learnt the 20% of Chef that does 80% of what I
+need to do very easily, albeit coming as I do from a recent Ruby background.</p>
+
+<p>Chef is  a vibrant and compelling  <em>ecosystem</em>.  Opscode are doing
+a fine job of taking the software forward, providing good
+community support, documentation, tutorials, books, etc whilst providing professional
+support for these organisation that need it.  That said Chef has its
+naff bits as well.  Chef is flexible but within the constraint of the “API” / “DSL”.  In many
+ways Chef feels like Rails - its  Ruby alright but in a well-defined
+box.  Both strengths and weaknesses of course but the strengths fair
+outweigh  the weaknesses
+for all practical purposes and use.</p>
+
+<p>So why bother with Pallet?  Maybe as a long time Infrastructure guy,
+its because
+my antennae are twitching and I can see a powerful and flexible potential
+addition to the armoury of tools for managing infrastructures.</p>
+
+<p>It is also because 
+Pallet “scripts” are Clojure programs and it
+really is <em>Infrastructure as Code</em> in the most explicit sense:
+Pallet is the library but 
+the scripts are <em>mine</em> and I feel more in control of what is going on
+than with Chef.</p>
+
+<p>Also Pallet’s composability is very attractive feature - it feels very natural (in Clojure) to build high level
+abstractions from lower level ones.  Even with my currently limited Pallet
+knowledge, I
+can already “see” how to build  hierarchical, complete,
+comprehensive and manageable infrastructures, something I’ve  found  harder to imagine 
+with  Chef.  Horses for courses of course.</p>
+
+<p>BTW: Although my environment is VBox 4.2 and the examples below were run using my
+<a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">VBox 4.2 compatible VMFest</a>, there is no reason
+why they shouldn’t work with the PalletOps team’s
+<a href="https://github.com/tbatchelli/vmfest">current release</a> for VBox 4.1 as long as my extensions to hardware
+models (<em>clipboard-mode</em>, <em>utc-time</em> and <em>boot-order</em>) are removed.</p>
+
+<!-- more -->
+
+<h1 id="pallet-tutorials">Pallet Tutorials</h1>
+
+<p>There are a couple of videos worth watching:  <a href="http://hugoduncan.org/">Hugo Duncan</a> at <a href="http://vimeo.com/45562554">EuroClojure</a>
+and <a href="http://disclojure.org/">Antoni Batchelli</a> at
+<a href="http://www.infoq.com/presentations/Pallet-DevOps-for-the-JVM">Clojure West</a></p>
+
+<p>The <a href="http://www.palletops.com">website</a> has
+<a href="http://palletops.com/doc/">getting started</a>  documentation and you can also peruse the  <a href="http://palletops.com/pallet/api/0.7/index.html">API</a></p>
+
+<p>The PalletOps team realise that the documentation and tutorial
+materials for Pallet needs to be improved, especially for people dipping
+their first toe.  I’d second that - today its just a bit too
+challenging to make headway promptly. One only has to look at the IRC #pallet channel to see how many
+pretty basic questions have to be fielded by Pallet’s authors.  Those
+guys are exceptionally helpful but the model doesn’t scale.</p>
+
+<p>There is quite a bit of documentation but it tends to be <em>reference</em>
+and you need to know what you are  looking for.  There isn’t (that I can
+find) too much complete, end to end, tutorial material exploring 
+how to get started, get to where you want to be and climb to  the first
+plateau of understanding.</p>
+
+<p>Pallet is definitely worth your time though.  I hope this post helps
+others get over that initial hump, know enough to learn more;  and progress to a degree of
+competence with Pallet and able to take advantage of many more its features.</p>
+
+<h1 id="create-a-project">Create a project</h1>
+
+<p>As usual, for a Clojure project,
+<a href="https://github.com/technomancy/leiningen">Leiningen</a> (<em>lein</em>) will be used.  (How to
+install Leingen was briefly covered  <a href="http://ianrumford.github.com/blog/2012/09/21/writing-apache-pig-udfs-in-clojure/">here</a>.)</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>lein new pallet_examples
+<span class="nb">cd</span> ./pallet_examples<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="provisioning-examples---using-explicit-image-and-hardware-declarations">Provisioning Examples - using explicit image and hardware declarations</h1>
+
+<p>The frist example tries to do the same as the first example in the
+<a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">previous post</a> but wth Pallet: the simplest and most direct way of
+creating new VMs with Pallet.</p>
+
+<p>The code to create the same Ubuntu 12.04 64bit VM  looks
+like this, and its importnat features will be explained after:</p>
+
+<script src="https://gist.github.com/3894728.js?file=blog_pallet_image0.clj"></script>
+
+<h2 id="the-compute-service">The compute service</h2>
+
+<p>A <em>compute service</em> called <em>vbox</em> is defined
+(<em>pconfig/compute-service</em>) where the <em>provider</em> is <em>vmfest</em></p>
+
+<p>The <em>identity</em> and <em>credential</em> keys specify the account to use to
+drive VBox; the account must be a member of <em>vboxusers</em>.</p>
+
+<h2 id="the-image-models">The image models</h2>
+
+<p>The <em>images</em> in the <em>vbox</em> service definition defines the available image models</p>
+
+<p>The contents of the <em>vmfest-images-models</em> map is exactly the same as
+in the <em>meta</em> file <em>~/.vmfest/models/my-models-list.meta</em> in the
+<a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">previous post</a>.</p>
+
+<p>Note VMFest will <em>also</em> read any <em>meta</em> files in the <em>model-path</em>
+but the explicitly provided images will take preference.</p>
+
+<h2 id="the-hardware-models">The hardware models</h2>
+
+<p>The <em>hardware-models</em> in the <em>vbox</em> service definition provides the additional hardware models</p>
+
+<p>The contents of the <em>vmftest-hardware-models</em> map will be
+familiar  from <em>~/.vmfest/models/my-hardware-models.meta</em> in the <a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">previous post</a>.</p>
+
+<p>Pallet (i.e. pallet-vmfest) has its own default hardware models:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="p">{</span><span class="no">:micro</span><span class="w"> </span><span class="p">{</span><span class="no">:memory</span><span class="w"> </span><span class="mi">512</span><span class="w"> </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span><span class="w">
+ </span><span class="no">:small</span><span class="w"> </span><span class="p">{</span><span class="no">:memory-size</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span><span class="w">
+ </span><span class="no">:medium</span><span class="w"> </span><span class="p">{</span><span class="no">:memory-size</span><span class="w"> </span><span class="mi">2048</span><span class="w"> </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span><span class="w">
+ </span><span class="no">:large</span><span class="w"> </span><span class="p">{</span><span class="no">:memory-size</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span><span class="w"> </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">4</span><span class="p">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The  <em>vmfest-hardware-models</em> map includes a <em>small</em> definition which overrides the default one.</p>
+
+<p>There appears to be no way  to request the hardware
+  models be read
+  from a file but the code to do so is trivial.  For example, using
+  the function <em>load-models</em>  in VMFest’s <em>manager.clj</em>:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">vmfest-hardware-models</span><span class="w"> </span><span class="p">(</span><span class="nf">vman/load-models</span><span class="w"> </span><span class="no">:model-path</span><span class="w"> </span><span class="s">"/home/ian/.vmfest/hardware-models"</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note the <em>model-path</em> is fully qualified.</p>
+
+<h2 id="the-network-configuration">The network configuration</h2>
+
+<p>The comments in <em>pallet.compute.vmfest.clj</em> explains the VMFest / VBox
+network modes succinctly:</p>
+
+<blockquote>
+  <p>Pallet offers two networking models: local and bridged.</p>
+</blockquote>
+
+<blockquote>
+  <p>In Local mode pallet creates two network interfaces in the VM, one for an
+   internal network (e.g. vboxnet0), and the other one for a NAT network. This
+   option doesn’t require VM’s to obtain an external IP address, but requires
+   the image booted to bring up at least eth0 and eth1, so this method won’t
+   work on all images.</p>
+</blockquote>
+
+<blockquote>
+  <p>In Bridged mode pallet creates one interface in the VM that is bridged on a
+   physical network interface. For pallet to work, this physical interface must
+   have an IP address that must be hooked in an existing network. This mode
+   works with all images.</p>
+</blockquote>
+
+<p>The configuration shown below is  the
+default for <em>local mode</em>:  two interfaces (e.g. eth0 &amp; eth1), one
+<em>host-only</em> (connected to <em>vboxnet0</em>) and the second  <em>nat</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="no">:network</span><span class="w"> </span><span class="p">[{</span><span class="no">:attachment-type</span><span class="w"> </span><span class="no">:host-only</span><span class="w"> </span><span class="no">:host-only-interface</span><span class="w"> </span><span class="s">"vboxnet0"</span><span class="p">}</span><span class="w">
+          </span><span class="p">{</span><span class="no">:attachment-type</span><span class="w"> </span><span class="no">:nat</span><span class="p">}]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The default connection (<em>vboxnet0</em>) for the <em>host-only</em> interface can
+be overridden in the <em>compute service</em> definition.  Similarly the default
+bridged interface can be set, else the first bridge-able interface
+will be chosen (usually e.g. eth0).  One can also set the default
+network type to be <em>local</em> or <em>bridged</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre><span class="w">    </span><span class="no">:default-local-interface</span><span class="w"> </span><span class="s">"vboxnet0"</span><span class="w">
+    </span><span class="no">:default-bridged-interface</span><span class="w"> </span><span class="s">"br0"</span><span class="w">
+    </span><span class="no">:default-network-type</span><span class="w"> </span><span class="no">:local</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>It appears to be impossible to provide a custom networking definition
+outside of the constraints of <em>local</em> or <em>bridged</em>. (So for example,
+one can’t have a 3 adapter VM.)  There is no doubt that the two modes
+available are useful and common configurations, but it seems
+unnecessarily limiting not to be able to <em>roll your own</em> network.  From
+superficial examination of the code this improvement doesn’t seem to
+be hard to do.</p>
+
+<h2 id="the-node-spec">The node spec</h2>
+
+<p>The call to <em>pcore/node-spec</em> defines a compute node called <em>node-ubuntu-1204-small</em>.</p>
+
+<p>The node-spec includes the specification of the <em>image</em> to use and
+also the <em>hardware</em>.</p>
+
+<p>Both of these two maps specify the model <em>id</em> to use in the respective
+maps <em>vmfest-images-models</em> and <em>vmfest-hardware-models</em></p>
+
+<p>There does not appear to be anyway to define the complete image explicitly
+in the node-spec definition; if the image map does not have an
+<em>image-id</em> key but does have others (e.g. <em>os-family</em>), the <em>best match</em>
+from the known images  will be used.</p>
+
+<p>But the hardware model can be specified  explicitly if wanted e.g.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="w">  </span><span class="no">:hardware</span><span class="w">  </span><span class="p">{</span><span class="no">:hardware-model</span><span class="w">
+              </span><span class="p">{</span><span class="no">:memory-size</span><span class="w"> </span><span class="mi">512</span><span class="w">
+               </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">1</span><span class="w">
+               </span><span class="no">:vram-size</span><span class="w"> </span><span class="mi">16</span><span class="w">
+               </span><span class="n">etc.</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>One can also include a <em>network</em> entry (key-value) in the <em>node-spec</em>
+but my reading of the pallet-vmfest code indicates the values will not
+be used, even <em>network-type</em>.</p>
+
+<h2 id="the-group-spec">The group spec</h2>
+
+<p>The <em>group-spec</em> create a collection with a given name (e.g.
+<em>image0-group-ubuntu-1024-64</em>) and the <em>node-spec</em> to use (e.g.
+<em>node-ubuntu-1204-small</em>.</p>
+
+<p>The names of the VMs created by this spec will be
+<em>image0-group-ubuntu-1024-64-1</em>, <em>image0-group-ubuntu-1024-64-2</em>, etc.</p>
+
+<p>The group spec can also include, amongst other things,  a <em>count</em>
+keyword (not shown) to set how member nodes the group will have.</p>
+
+<h2 id="the-converge-command">The converge command</h2>
+
+<p>The <em>converge</em> command does exactly that.  It will make the
+infrastructure reflect the definition, creating or destroying VMs as
+necessary; and re-applying configuration to running VMs.</p>
+
+<p>In this example, the <em>count</em> for the <em>group-ubuntu-1204-small-servers</em>
+group is explicitly given (i.e. 1).  Converging with a count of 0 will
+kill all instances of (in) the group.</p>
+
+<h2 id="running-the-converge">Running the converge</h2>
+
+<p>Pallet tends to be run from the repl:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre>lein repl
+<span class="o">(</span>use <span class="s1">'[pallet_examples.blog_pallet_image0 :reload :all])
+(ns pallet_examples.blog_pallet_image0)
+(go-pallet)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="provisioning-examples---tidying-things-up">Provisioning Examples - tidying things up</h1>
+
+<p>Using VMFest <em>meta</em> files (see <a href="http://ianrumford.github.com/blog/2012/10/13/using-vmfest-with-virtualbox-4-dot-2/">previous post</a>) to define both the images and hardware models
+makes the code cleaner:</p>
+
+<script src="https://gist.github.com/3906707.js?file=blog_pallet_image1.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>the <em>vmfest-hardware-models are read from the meta files in
+“~/.vmfest/hardware-models</em></p>
+
+    <p>Note the path to the meta folder has to be fully qualified.</p>
+  </li>
+</ul>
+
+<h1 id="provisioning-examples---using-pallets-configclj-file">Provisioning Examples - using Pallet’s config.clj file</h1>
+
+<p>Pallet has its own configuration file
+<em>~/.pallet/config.clj</em> that is a call to the <em>defpallet</em> macro. The
+config file allows  all the boiler
+plate / common configuration (service definitions, credentials, etc)
+to be externalised and centralised.</p>
+
+<p>(Its also possible to define services in e.g. for vbox 
+<em>~/.pallet/services/vbox.clj</em>.)</p>
+
+<h2 id="the-pallet-configclj-file">The Pallet config.clj file</h2>
+
+<p>The  config.clj for these examples looks like this:</p>
+
+<script src="https://gist.github.com/3879997.js?file=config.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>both the image and hardware models for the <em>vbox</em>
+service are explicitly
+defined</p>
+  </li>
+  <li>
+    <p>image models will also be picked up from <em>meta</em> files the <em>model-path</em>
+as usual.</p>
+  </li>
+  <li>
+    <p>the new VMs will be created in the <em>node-path</em> directory</p>
+  </li>
+  <li>
+    <p>there appears to be no way of sourcing the hardware
+models from a file.</p>
+  </li>
+</ul>
+
+<h2 id="provisioning-using-pallets-configclj">Provisioning using Pallet’s config.clj</h2>
+
+<p>The more concise code to create the example Ubuntu 12.04 VM  looks like this:</p>
+
+<script src="https://gist.github.com/3907968.js?file=blog_pallet_config0.clj"></script>
+
+<p>Notes</p>
+
+<ul>
+  <li>
+    <p>the call to <em>pconfig/compute-service</em> for service <em>vbox</em> pulls  the
+definition from  <em>~/.pallet/config.clj</em></p>
+  </li>
+  <li>
+    <p>image and hardware models are specified by their respective ids</p>
+  </li>
+</ul>
+
+<h1 id="configuration-examples---preparation">Configuration Examples - preparation</h1>
+
+<p>So far the examples have focused on using Pallet for the  <em>provisioning</em> of
+VBox  VMs with a minimum of fuss and code, but doing nothing to their
+<em>configuration</em>.  That’s only half the Pallet story.</p>
+
+<p>Pallet does it configuration magic by <a href="http://www.openssh.com/">ssh-ing</a> into the VM and
+running bash scripts with <em>sudo</em> privilege.  To allow  Pallet to do
+its stuff, the
+image model must be prepped appropriately.</p>
+
+<p>BTW I create (clone) my  (<em>multi-attach</em>) image model from the vdi of a working <em>base</em> VM (that
+has no snapshots - else the clone will not be up to date).</p>
+
+<h2 id="allowing-ssh-access">Allowing ssh access</h2>
+
+<p>The  (<em>multi-attach</em>) image model for the VMs  must be
+prepped to allow ssh access from the system running the Pallet script.</p>
+
+<p>Pallet uses an
+<em>admin user</em> account  (e.g. <em>pallet-admin</em>) to ssh into the VM.  The
+admin user must be  configured
+(in <em>/etc/sudoers</em> using <em>visudo</em>) to  allow  it  to use sudo
+without a password (i.e. <em>pallet-admin ALL = (ALL) NOPASSWD: ALL</em>).</p>
+
+<p>The admin user key-pair is created in the usual way and the public key
+added to the admin user account in the  image model.  Familiar
+territory for most but
+<a href="http://en.wikipedia.org/wiki/Ssh-keygen">just in case</a>.  Be sure to
+test the ssh access (to the base VM) works from the host running the Pallet scripts.</p>
+
+<p>You could (should) also  configure  <em>/etc/ssh/sshd_config</em>
+for enhanced security (e.g. setting <em>AllowUsers</em> to restrict who can
+log on.  (Configuring good system security is a whole post itself.)</p>
+
+<p>(BTW, Pallet has a function called <em>automated-admin-user</em> which will
+create the admin user account in the VM if it doesn’t exist.  But to
+do so needs an existing account
+with sudo privilege.  So chicken’n’egg - I feel its simpler to
+pre-create the admin user in the base model.)</p>
+
+<h2 id="tell-pallet-what-admin-user-to-use">Tell Pallet what admin user to use</h2>
+
+<p>By default, Pallet will use the account running the Pallet script as the admin user.  It is convenient to
+<a href="http://palletops.com/how-to-configure-your-cloud-credentials-in-pa/">set the real admin user</a> in
+<em>/.pallet/config.clj</em> e.g.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td><td class="code"><pre><span class="w"> </span><span class="p">(</span><span class="nf">defpallet</span><span class="w">
+   </span><span class="no">:admin-user</span><span class="w">
+     </span><span class="p">{</span><span class="no">:username</span><span class="w"> </span><span class="s">"pallet-admin"</span><span class="w">
+      </span><span class="no">:private-key-path</span><span class="w"> </span><span class="s">"/home/ian/.ssh/pallet-admin"</span><span class="w">
+      </span><span class="no">:public-key-path</span><span class="w"> </span><span class="s">"/home/ian/.ssh/pallet-admin.pub"</span><span class="w">
+      </span><span class="no">:passphrase</span><span class="w"> </span><span class="s">"&lt;the passphrase goes here&gt;"</span><span class="p">}</span><span class="w">
+         
+   </span><span class="no">:services</span><span class="w"> </span><span class="p">{</span><span class="w">
+      
+      </span><span class="n">etc</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>To make  Pallet  use this admin users requires the <em>converge</em> to be
+(e.g.) “wrapped” in a <em>with-admin-user</em> call - see the example below.</p>
+
+<h2 id="installing-aptitude">Installing <em>aptitude</em></h2>
+
+<p>Pallet uses the <em>aptitude</em> package manager on Ubuntu; support for
+<em>apt</em> is scheduled for 0.8.0 I understand.  Since I’m using the current production
+release (0.7.0), <em>apitude</em> need to be installed in the base model:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>apt-get install aptitude<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="reset-the-network-configuration">Reset the network configuration</h2>
+
+<p>The last
+thing I do before shutting the base VM  down to
+clone its vdi into the image model vdi is to delete (reset) the base’s (and
+hence image’s) network configuration, especially if the base’s
+network configuration is not the same as the VMs based on it.</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>sudo rm /etc/udev/rules.d/70-persistent-net.rules<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="clone-the-base-vdi-to-a-multi-attach-image-model">Clone the base vdi to a multi-attach image model</h2>
+
+<p>The clone command looks like e.g.</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>VBoxManage clonehd /path/to/vmfest/base/base_ubuntu_1204_64.vdi /path/to/vmfest/models/model_ubuntu_1204_64.vdi<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>To make it multi-attach:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>VBoxManage modifyhd  /path/to/vmfest/models/model_ubuntu_1204_64.vdi -type multiattach<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>To confirm VBox knows about the image, and its  multiattach, the below
+pipe  should show  it:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>VBoxManage list hdds | grep -E <span class="s2">"^UUID|Location|^Type"</span> | awk <span class="s1">'{print $2}'</span> | xargs -n 3 | grep <span class="s2">"model_ubuntu_1204_64"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Note: I have found that if the image model is not made *multiattach</em> at this
+stage (as opposed to letting VMFest making it so the first time the
+image is used), subsequent VMs created  using the same image will not
+start but the image is attached  in normal mode.  And if that
+failed VM is removed, the image is deleted as well!  There is
+something in the was VMFest managing images that needs to be tightened
+up but I’ve not got to the bottom of it yet.*</p>
+
+<h1 id="configuration-examples---installing-some-basic-packages">Configuration Examples - installing some basic packages</h1>
+
+<p>In this example, Pallet will  install some basic packages.
+The code looks like this and will be explained below:</p>
+
+<script src="https://gist.github.com/3923227.js?file=blog_pallet_config1.clj"></script>
+
+<h2 id="using-the-admin-user">Using the admin user</h2>
+
+<ul>
+  <li>
+    <p>the call to <em>admin-user-from-config-file</em> pulls the <em>admin-user</em> definition from
+ <em>~/.pallet/config.clj</em> and creates a Pallet <em>user</em> called
+<em>config-file-admin-user</em>.</p>
+  </li>
+  <li>
+    <p>the <em>converge</em> is “wrapped” in a call to <em>with-config-user</em> which
+has the <em>config-file-admin-user</em> given as a parameter</p>
+  </li>
+  <li>
+    <p>the comment at the end shows how the admin-user could be specified
+explicitly and passed as  the <em>user</em> parameter to the <em>converge</em></p>
+  </li>
+</ul>
+
+<h2 id="phases">Phases</h2>
+
+<p>Once a VM has been created and started, Pallet applies a sequence of
+<a href="http://palletops.com/doc/reference/phases/">phases</a> to achieve the
+desired configuration.</p>
+
+<p>The
+API documentation for <a href="http://palletops.com/pallet/api/0.7/pallet.core.html#var-converge/">converge</a>
+says it</p>
+
+<blockquote>
+  <p>… applies the bootstrap phase to all new nodes and the configure
+ phase to all running nodes whose group-name matches a key in the node
+ map. Additional phases can also be specified in the options, and will
+ be applied to all matching nodes. The :configure phase is always
+ applied, by default as the first (post bootstrap) phase. You can
+ change the order in which the :configure phase is applied by
+ explicitly listing it.</p>
+</blockquote>
+
+<p>Phases can have pre- and post- phases, and sub-phases it seems (not
+explored here).</p>
+
+<p>Phase contents are defined using the <em>phase-fn</em> macro (in the <em>pallet.phase</em>
+namespace).  In the example above  the standard <em>configure</em> is defined
+and included in
+the <em>group spec</em>:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="w">    </span><span class="no">:phases</span><span class="w"> </span><span class="p">{</span><span class="no">:configure</span><span class="w"> </span><span class="n">phase-configure-ubuntu-1204-64</span><span class="p">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The <em>configure</em> phase in the example first  creates a file that will tell the <em>apt</em>
+subsystem  to use an
+<a href="http://www.unix-ag.uni-kl.de/~bloch/acng/">apt cacher</a> running on the
+VBox host system to
+save downloading the same packages time and time again.  And then it
+installs a number of packages
+e.g. <em>build-essential</em> (the list is not a
+necessarily sensible selection and definitely not complete).  Finally
+a “flag file” is created in /tmp to show the phase ran ok - I did this
+for debugging.</p>
+
+<h2 id="actions">Actions</h2>
+
+<p>In the code above, <em>package</em>, <em>packages</em>, <em>package-manager</em> and
+<em>remote-file</em> are examples of  a Pallet
+<em><a href="http://palletops.com/doc/reference/actions/">action</a></em>.</p>
+
+<p>Actions <em>do stuff</em> such as install a package, create a file or directory, run a
+script, start a services, etc.  and  are similar to  <a href="http://wiki.opscode.com/display/chef/Resources">Chef’s resources</a>.</p>
+
+<h2 id="crates">Crates</h2>
+
+<p><a href="http://palletops.com/doc/reference/crates/">Crates</a> are</p>
+
+<blockquote>
+  <p>functions that encapsulate some unit of configuration or administration.</p>
+</blockquote>
+
+<p>and</p>
+
+<blockquote>
+  <p>actions can be composed in crate functions to implement your configuration and operational requirements</p>
+</blockquote>
+
+<p>The only <em>create</em> used in the example was the
+<a href="https://github.com/pallet/git-crate">one</a> on Github.  I installed the
+crate (i.e. <em>git.clj</em>)  in my (Leiningen project) <em>src/pallet/crate</em>
+folder.</p>
+
+<p>Crates can be seen as  equivalent  to <a href="http://wiki.opscode.com/display/chef/Recipes">Chef’s recipes</a>.</p>
+
+<h1 id="configuration-examples---composing-richer-configurations">Configuration Examples - composing richer configurations</h1>
+
+<p>The example above wasn’t very complicated, complete or indeed terribly useful.  In real life its is common
+for a server (VM) to have a base configuration on top of which is
+layered configuration for its role (e.g. web server, database server, monitoring,
+whatever).</p>
+
+<p>Lets consider an example that creates  a web server
+running <em>nginx</em> and a database server running <em>mysql</em>.  There are
+<em>crates</em> for both of these on <a href="https://github.com/pallet">Github</a>.</p>
+
+<p>The code for this example looks like this and will be explained below:</p>
+
+<script src="https://gist.github.com/3946124.js?file=blog_pallet_config2.clj"></script>
+
+<p>Immediate notes</p>
+
+<ul>
+  <li>
+    <p>a number of extra crates appear in the <em>require</em></p>
+  </li>
+  <li>
+    <p><em>clojure.data.json</em> is required</p>
+
+    <p>I had to specify the “0.1.3” jar (c.f. “0.2.0”) in my
+  project.clj dependencies to obtain the *json-str” function.</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">[</span><span class="n">org.clojure/data.json</span><span class="w"> </span><span class="s">"0.1.3"</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>
+    <p>four <em>phase-fn</em> calls</p>
+
+    <p>The code has four <em>phase-fn</em> calls, the names and contents of
+ which should be
+ reasonably self-evident.</p>
+  </li>
+</ul>
+
+<h2 id="the-server-specs">The server specs</h2>
+
+<p>The code includes four calls to a new function:
+<em><a href="http://palletops.com/doc/reference/node-types/">server-spec</a></em>.</p>
+
+<p><em>server-specs</em> are</p>
+
+<blockquote>
+  <p>… used to specify phase functions, which can be invoked using converge or lift</p>
+</blockquote>
+
+<p><em>server-specs</em> can inherit (<em>extends</em>) from other <em>server-specs</em>
+ enabling rich definitions to be <em>composed</em> easily. When
+ <em>server-specs</em> inherit, the <em>phase-fn</em> contents for each phase (e.g.
+ <em>configure</em>) are added together.  So, e.g., <em>server-web</em> includes the
+ <em>phase-fns</em> from the <em>server-apt-cache</em> and <em>server-basenode</em> <em>server-specs</em>, as well as
+ its own (<em>phase-configure-db</em>).</p>
+
+<p>To save cluttering up the top-level code, a rich collection (library) of phase and server specs could be relegated to their own Clojure files
+(namespaces) and <em>required</em> as necessary.</p>
+
+<h2 id="the-group-spec-1">The group spec</h2>
+
+<p>The <em>group spec</em> now includes a <em>converge</em> for both the web and
+database groups.  These are performed serially.</p>
+
+<h1 id="final-words">Final Words</h1>
+
+<p>This post is probably already too long and I’ve only scratched the
+surface of what Pallet can do.  It does demonstrate the
+potential though.</p>
+
+<p>But, today, the “barriers to entry” are too high, far higher than with
+e.g. Chef.  One has to “dig around” a lot for information on how to do
+some basic stuff.</p>
+
+<p>For
+me that was ok, an opportunity to see more Clojure in the wild and
+start to build a serious understanding of Pallet.  For the more casual user
+though, I believe this is   a huge disincentive to trying or using
+Pallet, and probably  an insurmountable and / or undesirable
+hurdle.  Its just far easier to get started with Chef.</p>
+
+<p>But, as I said above, I hope this post will  encourage  others to get started on what
+I feel will be a very worthwhile and productive journey.</p>
+
+<h1 id="fess-up">Fess Up</h1>
+
+<p>The <em>nginx</em> crate does not install successfully.  This may be 
+because of plus signs in package names believed fixed in 0.8.</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html" title="Using VMFest with VirtualBox (VBox) 4.2">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/clojure/contract/aspect/2012/11/17/first-take-on-contracts-in-clojure.html" title="A first take on contracts in Clojure">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/clojure/contract/aspect/2012/11/17/first-take-on-contracts-in-clojure.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

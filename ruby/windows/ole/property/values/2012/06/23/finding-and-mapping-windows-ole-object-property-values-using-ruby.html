@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Finding and mapping Windows OLE object property values using Ruby">
+<title>Finding and mapping Windows OLE object property values using Ruby</title>
+<meta property="og:description" content="I learnt much of my Ruby doing stuff on Windows mainly because Windows was the majority platform in my day job and the platform I needed to get things done o...">
+<meta property="og:url" content="http://www.rumford.name/ruby/windows/ole/property/values/2012/06/23/finding-and-mapping-windows-ole-object-property-values-using-ruby.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Finding and mapping Windows OLE object property values using Ruby">
+<meta name="twitter:description" content="I learnt much of my Ruby doing stuff on Windows mainly because Windows was the majority platform in my day job and the platform I needed to get things done o...">
+<meta name="twitter:url" content="http://www.rumford.name/ruby/windows/ole/property/values/2012/06/23/finding-and-mapping-windows-ole-object-property-values-using-ruby.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/ruby/windows/ole/property/values/2012/06/23/finding-and-mapping-windows-ole-object-property-values-using-ruby.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Finding and mapping Windows OLE object property values using Ruby</h1>
+    <meta itemprop="keywords" content="ruby,windows,ole,property,values" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#ruby">ruby</a>, 
+    
+    <a href="/categories/#windows">windows</a>, 
+    
+    <a href="/categories/#ole">ole</a>, 
+    
+    <a href="/categories/#property">property</a>, 
+    
+    <a href="/categories/#values">values</a>
+     
+    
+    and tagged
+    
+    <a href="/tags/#ruby" title="ruby">ruby </a>, 
+    
+    <a href="/tags/#windows" title="windows">windows </a>, 
+    
+    <a href="/tags/#ole" title="ole">ole </a>, 
+    
+    <a href="/tags/#property" title="property">property </a>, 
+    
+    <a href="/tags/#values" title="values">values </a>
+    
+    
+    <time itemprop="datePublished" datetime="2012-06-23">
+    on Jun 23, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p>I learnt much of my Ruby doing stuff on Windows mainly because Windows was the majority platform in my day job and the platform I needed to get things done on.</p>
+
+<p>In those days installing Ruby on Windows was more difficult than it is today ever since the <em>wonderful</em> folks over at <a href="http://rubyinstaller.org/">RubyInstaller</a> have made it such a doddle.</p>
+
+<p>Ruby on Windows has always been considered something of a second class citizen in the Ruby family.  But its really easy do some some very useful and powerful stuff: using Ruby with various Windows APIs has proved very productive for me.</p>
+
+<p>It would be remiss of me, in a first post on using Ruby with Windows, not to tip my hat at <a href="http://rubyonwindows.blogspot.co.uk">David Mullet</a>.  Reading David’s excellent blog made me more than once expostulate “you can really do that so easily?”.  Thank you David for teaching me to fish in the Ruby / Windows waters and giving me the steer on many topics.</p>
+
+<p>Since then I’ve written quite a lot of Windows-specific code in Ruby including for Office (Excel, Outlook), WMI (the Swiss army knife of Windows APIs!) and (some) ADSI.</p>
+
+<p>One of the tasks I’ve found myself doing often was needing to obtain the value of an OLE object’s (e.g the worksheets collection of an Excel workbook) property value and map the value (especially if it is a collection) to some more convenient Ruby form (e.g. “importing” the property into an instance of a class).</p>
+
+<p>I’ve also wanted the mapping to be <em>lazy</em>: for example I didn’t want to have to read in <em>all</em> the emails in my Outlook inbox before I could process <em>any</em> of them.  Although lazy enumeration could be done in Ruby 1.8, 1.9 brought “first class” (external) enumerators.</p>
+
+<p>The code for a method to find an OLE object’s property value(s) and create a mapped enumerator is almost trivial.</p>
+
+<!-- more -->
+
+<p>(Note the below is the essence of my own method, but cut down for the example.)</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></td><td class="code"><pre><span class="c1"># An example to show how to "rubify" WIN32OLE property values</span>
+
+<span class="nb">require</span> <span class="s2">"win32ole"</span>
+
+<span class="k">def</span> <span class="nf">find_ole_property_value</span><span class="p">(</span><span class="n">propertyName</span><span class="p">,</span> <span class="n">oleTarget</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maprBlok</span><span class="p">)</span>
+  
+  <span class="n">oleTarget</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">WIN32OLE</span><span class="p">)</span> <span class="o">||</span> <span class="k">raise</span><span class="p">(</span><span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">"oleTarget &gt;</span><span class="si">#{</span><span class="n">oleTarget</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; is not WIN32OLE"</span><span class="p">,</span> <span class="nb">caller</span><span class="p">)</span>
+  
+  <span class="n">oleValue</span> <span class="o">=</span> <span class="n">oleTarget</span><span class="p">.</span><span class="nf">__send__</span><span class="p">(</span><span class="n">propertyName</span><span class="p">)</span> <span class="k">rescue</span> <span class="kp">nil</span>  <span class="c1">#  Raise exception later with useful info</span>
+  
+  <span class="k">case</span> 
+  <span class="k">when</span> <span class="n">oleValue</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">WIN32OLE</span><span class="p">)</span> <span class="k">then</span>
+    <span class="k">if</span> <span class="n">oleValue</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">then</span>
+      
+      <span class="k">if</span> <span class="nb">block_given?</span> <span class="k">then</span>  <span class="c1"># mapping wanted?</span>
+        
+        <span class="c1"># Note the collection value will only be yielded if the result of the maprBlok call is not nil</span>
+        
+        <span class="n">eachEnum</span> <span class="o">=</span>  <span class="no">Enumerator</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">g</span><span class="o">|</span> <span class="n">oleValue</span><span class="p">.</span><span class="nf">each</span><span class="p">.</span><span class="nf">with_index</span> <span class="p">{</span> <span class="o">|</span> <span class="nb">p</span> <span class="o">|</span> <span class="n">r</span> <span class="o">=</span> <span class="n">maprBlok</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nb">p</span><span class="p">);</span> <span class="n">r</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="nf">yield</span> <span class="n">r</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+        
+      <span class="k">else</span>
+        <span class="n">oleValue</span> <span class="c1"># no mapping wanted</span>
+      <span class="k">end</span>
+      
+    <span class="k">else</span>
+      <span class="nb">block_given?</span> <span class="p">?</span> <span class="n">maprBlok</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">oleValue</span><span class="p">)</span> <span class="p">:</span> <span class="n">oleValue</span>  <span class="c1"># a non-collection value can be mapped as well</span>
+    <span class="k">end</span>
+    
+  <span class="k">else</span>
+    <span class="k">raise</span><span class="p">(</span><span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">"oleTarget &gt;</span><span class="si">#{</span><span class="n">oleTarget</span><span class="si">}</span><span class="s2">&lt; propertyName &gt;</span><span class="si">#{</span><span class="n">propertyName</span><span class="si">}</span><span class="s2">&lt; oleValue &gt;</span><span class="si">#{</span><span class="n">oleValue</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; is not WIN32OLE"</span><span class="p">,</span> <span class="nb">caller</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Ok, so that’s the basic method, below is contrived example to find the names of all the worksheets in a workbook:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="n">myTestWorkbook</span> <span class="o">=</span> <span class="s1">'c:/temp/mytestworkbook.xlsx'</span>  <span class="c1"># The path to my spreadsheet</span>
+
+<span class="n">xlHandle</span> <span class="o">=</span> <span class="no">WIN32OLE</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Excel.Application'</span><span class="p">)</span>  <span class="c1"># Start an instance of Excel.  It will be invisible by default</span>
+
+<span class="n">wbHandle</span> <span class="o">=</span> <span class="n">xlHandle</span><span class="o">.</span><span class="no">Workbooks</span><span class="o">.</span><span class="no">Open</span><span class="p">(</span><span class="n">myTestWorkbook</span><span class="p">)</span>  <span class="c1"># Get the workbook OLE handle</span>
+
+<span class="n">worksheetsEnum</span> <span class="o">=</span> <span class="n">find_ole_property_value</span><span class="p">(</span><span class="s1">'Worksheets'</span><span class="p">,</span> <span class="n">wbHandle</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span> <span class="n">wsHandle</span> <span class="o">|</span>  <span class="c1"># create the enumerator</span>
+	<span class="n">wsHandle</span><span class="o">.</span><span class="no">Name</span> <span class="c1"># enumerator will yield this value i.e. the worksheet name</span>
+<span class="k">end</span>
+
+<span class="c1"># Now do whatever with the list of worksheet names available from the enumerator</span>
+
+<span class="n">myworksheetsNames</span> <span class="o">=</span> <span class="n">worksheetsEnum</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span> <span class="n">wsName</span> <span class="o">|</span> <span class="nb">puts</span><span class="p">(</span><span class="s2">"Found a worksheet called &gt;</span><span class="si">#{</span><span class="n">wsName</span><span class="si">}</span><span class="s2">&lt;"</span><span class="p">);</span> <span class="n">wsName</span> <span class="p">}</span>
+
+<span class="n">wbHandle</span><span class="p">.</span><span class="nf">close</span> <span class="c1"># be tidy</span>
+
+<span class="n">xlHandle</span><span class="p">.</span><span class="nf">quit</span> 	<span class="c1"># be tidy</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>For completeness, this code printed the following:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre>Found a worksheet called &gt;Worksheet1&lt;
+Found a worksheet called &gt;My Worksheet 2&lt;
+Found a worksheet called &gt;The Third Worksheet&lt;<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Only scratching the surface of what’s possible.</p>
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/2012/06/22/clojure-emacs-slime-and-swank-on-ubuntu-precise-1204.html" title="Clojure, Emacs, SLIME and Swank on Ubuntu Precise 12.04">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/2012/09/12/installing-zeromq-2-dot-2-0-with-the-ruby-gem-on-ubuntu-12-dot-04.html" title="Installing ZeroMQ 2.2.0 with the Ruby gem on Ubuntu 12.04">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/2012/06/22/clojure-emacs-slime-and-swank-on-ubuntu-precise-1204.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/2012/09/12/installing-zeromq-2-dot-2-0-with-the-ruby-gem-on-ubuntu-12-dot-04.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

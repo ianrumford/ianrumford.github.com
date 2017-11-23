@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="A first take on contracts in Clojure">
+<title>A first take on contracts in Clojure</title>
+<meta property="og:description" content="I guess I’ve always written pretty defensive code (trust nothing),insisting that e.g. passed arguments are as expected and needed.  Anybody who’sseen my rece...">
+<meta property="og:url" content="http://www.rumford.name/clojure/contract/aspect/2012/11/17/first-take-on-contracts-in-clojure.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="A first take on contracts in Clojure">
+<meta name="twitter:description" content="I guess I’ve always written pretty defensive code (trust nothing),insisting that e.g. passed arguments are as expected and needed.  Anybody who’sseen my rece...">
+<meta name="twitter:url" content="http://www.rumford.name/clojure/contract/aspect/2012/11/17/first-take-on-contracts-in-clojure.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/clojure/contract/aspect/2012/11/17/first-take-on-contracts-in-clojure.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">A first take on contracts in Clojure</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#contract">contract</a>, 
+    
+    <a href="/categories/#aspect">aspect</a>
+     
+    
+    <time itemprop="datePublished" datetime="2012-11-17">
+    on Nov 17, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p>I guess I’ve always written pretty defensive code (<em>trust nothing</em>),
+insisting that e.g. passed arguments are as expected and needed.  Anybody who’s
+seen my recent Ruby code will have found it littered with many, many
+assertions.  Usually 
+my methods check both the input arguments for validity and also end with a call to a final <em>guard</em>  to ensure
+the returned value is also valid.</p>
+
+<p>During my time writing Perl (rather a long time ago), I  used  my own
+variants of the standard  <em>carp</em>, <em>croak</em> and <em>confess</em> functions
+heavily, and followed received wisdom
+to <em>fail early and often</em>.</p>
+
+<p>After moving to Ruby as my primary language, my Perl style evolved  into the implementation of <em>mustbe</em> method e.g. <em>mustbe-hash-or-croak</em>
+to ensure the argument is as expected.  My <em>mustbe</em> methods are
+dynamically defined in a mixin
+using standard Ruby’s metaprogramming techniques and, although they commonly 
+test whether the argument is an instance of a given class, they can
+apply (assert)
+arbitrary constraints.</p>
+
+<p>In time I realised I’d fallen into a contracts style of programming.  I’d not sure
+how or where I first came across contracts formalism but it may have
+been when reading about
+<a href="http://en.wikipedia.org/wiki/Eiffel_(programming_language)#Design_by_Contract">Eiffel’s Design by Contract</a>.</p>
+
+<p>Eiffel’s DBC asserts <em>pre</em> and <em>post</em> constraints on a routine’s execution; in my own
+informal way, I’d become  strongly attracted to contract assertion, not only
+on entry to and exit from  routines (methods, functions), but also in their  bodies.</p>
+
+<p>My recent excursions into writing <a href="http:///clojure.org">Clojure</a> has had me  reaching
+for a way (technique) to apply contracts. Hence this post.</p>
+
+<!-- more -->
+
+<h1 id="contracts-in-clojure">Contracts in Clojure</h1>
+
+<p>I first stumbled on contracts in Clojure whilst reading the <em>superb</em>
+<a href="http://www.manning.com/fogus/">Joy of Clojure</a> (<em>JoC</em>) written 
+by <a href="http://blog.fogus.me/">Michael Fogus</a> (hereafter just <em>Fogus</em>) and
+<a href="http://old.n01se.net/chouser/">Chris Houser</a>.</p>
+
+<p>Fogus had already
+<a href="http://blog.fogus.me/2009/12/21/clojures-pre-and-post/">blogged</a>
+about Clojure’s direct support for the enforcement (assertion) of a function’s entry (<em>pre</em>) and
+exit (<em>post</em>) constraints.  For example, the following function ensures
+the passed argument is a positive number and a map (hash) is returned.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">my-constrained-function</span><span class="w">
+  </span><span class="s">"This function constrains its input and output
+  It ensures the passed argument is a positive number and returned value a map"</span><span class="w">
+  </span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w">
+  </span><span class="p">{</span><span class="no">:pre</span><span class="w"> </span><span class="p">[(</span><span class="nb">instance?</span><span class="w"> </span><span class="n">Number</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w">
+   </span><span class="no">:post</span><span class="w"> </span><span class="p">[(</span><span class="nb">map?</span><span class="w"> </span><span class="n">%</span><span class="p">)]}</span><span class="w">
+  </span><span class="p">{</span><span class="no">:return</span><span class="w"> </span><span class="n">n</span><span class="p">})</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note both <em>:pre</em> and <em>:post</em>  apply an  <em>and-ed</em> sequence of
+constraints;   <em>pre</em>  has two while <em>post</em> has one  in the above.</p>
+
+<p>Note also, the return value is available in a <em>:post</em> constraint using
+the  <em>%</em> familiar.</p>
+
+<p>To me, one of the most interesting, powerful and exciting capabilities of
+Clojure’s support for contracts is the ability (opportunity) to decouple the
+constraints from the function the former are applied to.  Consider this example:</p>
+
+<script src="https://gist.github.com/4060196.js?file=blog_car1.clj"></script>
+
+<p>The call to <em>make-a-red-car</em> will succeed but the call to
+<em>make-an-eco-car</em> will fail because the <em>fuel</em> given (<em>petrol</em>) is not one of the
+acceptable values in the <em>post</em> condition.</p>
+
+<p>The take away here is that the more specific constraints (i.e. red or eco)
+can be external to the base <em>make-a-car</em> function. JoC
+observes (section 7.1.5) on this <em>aspect</em>-like nature:</p>
+
+<blockquote>
+  <p>By pulling out the assertions into a wrapper function, we’ve detached some domain-
+specific requirements from a potentially globally useful function and isolated them in
+aspects (Laddad 2003). By detaching pre- and postconditions from the functions them-
+selves, you can mix in any implementation that you please, knowing that as long as it
+fulfills the contract (Meyer 1991), its interposition is transparent.</p>
+</blockquote>
+
+<h1 id="contracts-libraries-for-clojure">Contracts Libraries for Clojure</h1>
+
+<p>Fogus followed up the JoC’s treatment of constraints with a 
+<a href="http://blog.fogus.me/2010/05/25/trammel-contracts-programming-for-clojure/">blog</a>
+announcing his implementation of a contracts library for Clojure: <a href="https://github.com/fogus/trammel">Trammel</a>.</p>
+
+<p>Also in the frame has been Dmitri Naumov’s
+<a href="https://github.com/dnaumov/clojure-contracts">clojure-contracts</a>.</p>
+
+<p>Earlier this year Trammel and clojure-contracts were brought together
+into
+<a href="https://github.com/clojure/core.contracts">clojure.core.contracts</a> (<em>CCC</em>)
+which the Github page warns is a work in progress.  So, assuming the
+core library has a more assured future than the earlier two, 
+this post explores using <em>CCC</em>.  Documentation for <em>CCC</em> is less well
+developed than e.g. Trammel:  I found myself looking at both Trammel’s examples
+and also <em>CCC</em>’s code to get my head fully around what was going on.</p>
+
+<h1 id="exploring-clojurecorecontracts">Exploring clojure.core.contracts</h1>
+
+<p>The core idea behind <em>CCC</em> is both simple and elegant.  Contracts are
+applied to  a target function by “wrapping” the latter in anonymous
+functions which apply the <em>pre</em> and <em>post</em> constraints.
+Multiple contracts are applied by recursive definitions of
+wrapper functions (so each wrapper sees all the input arguments and
+their signature must be appropriate).</p>
+
+<p>Much of the heavy lifting of <em>CCC</em> is accomplished by Clojure macros.</p>
+
+<h2 id="defining-an-aspect-contract">Defining an <em>aspect</em> contract</h2>
+
+<p>The following code generates two contracts.  The first insists on the
+argument being a map, and the second on the return value being a number:</p>
+
+<script src="https://gist.github.com/4060881.js?file=blog_contract1.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>the <em>contract</em> macro generate an <em>anonymous</em> contract <em>but</em> still must
+ be supplied with a name (e.g. <em>aspect-suck-a-map-cx</em>) and
+description (e.g. <em>enforce a map input argument</em>).</p>
+  </li>
+  <li>
+    <p>To use the anonymous contract subsequently, the result of the <em>contract</em> macro
+must be assigned to a symbol (e.g. <em>aspect-suck-a-map</em>)</p>
+  </li>
+  <li>
+    <p>in the input a map contract (<em>aspect-suck-a-map</em>), a single <em>pre</em> condition has been
+specified <em>(map? m)</em></p>
+  </li>
+  <li>
+    <p>in the output a number contract (<em>aspect-spit-a-number</em>) , a single <em>post</em> condition has been
+specified <em>(instance Number %)</em></p>
+
+    <p><em>post</em> conditions appear <em>after</em> the <em>=&gt;</em></p>
+
+    <p>The return value is available in <em>post</em> conditions as <em>%</em></p>
+  </li>
+  <li>
+    <p>the <a href="http://en.wikipedia.org/wiki/Arity">arity</a> of the contracts must be compatible to whatever subsequent
+function(s) they will be applied to (see later for more on this)</p>
+  </li>
+</ul>
+
+<h2 id="defining-a-constrained-function">Defining a constrained function</h2>
+
+<p>The <em>with-constraints</em> function applies 0, 1 or more <em>aspect</em> contracts
+to an existing function, creating a new function that enforces all
+the contracts.  For example, in the following example contracts are
+used to ensure  the input argument to the
+<em>guaranteed-suck-a-map-and-spit-a-number</em> function is definitely a map,
+and the return value definitely a number.  The unconstrained function
+(<em>suck-a-map-and-spit-a-number</em>) offers  no such guarantees.</p>
+
+<script src="https://gist.github.com/4061893.js?file=blog_with_constraints1.clj"></script>
+
+<h2 id="applying-contracts-to-existing-functions">Applying contracts to existing functions</h2>
+
+<p>A refinement of <em>with-constraints</em> is  <em>provide</em> which “updates” an existing
+function with contracts.  Under the covers, <em>provide</em> uses
+<em>with-constraints</em> together with <em>alter-var-root</em> to update the
+binding of the target function to the (new) function generated by
+<em>with-constraints</em>.  For example:</p>
+
+<script src="https://gist.github.com/4062046.js?file=blog_provide1.clj"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p><em>provide</em> can take a 0, 1 or more vectors, in this example only one is
+supplied:</p>
+  </li>
+  <li>
+    <p><em>provide</em> offers an easy way to add (or subtract) contracts to a
+ existing function, without making any other changes to the code.</p>
+  </li>
+  <li>
+    <p>contracts are applied in the order given.</p>
+  </li>
+</ul>
+
+<h1 id="a-note-on-contract-signatures-and-arities">A note on contract signatures and arities</h1>
+
+<p>Even though an output contract may only be interested in the return
+value (<em>%</em>), it must still have a signature that is compatible with
+every other contract used in the same  <em>with-constraints</em> call.</p>
+
+<p>This militates
+somewhat against composing multiple argument functions using  generic
+aspect contracts as the “composite”  signature and arity of the composed function must
+be consistent with <em>all</em> of the  <em>pre</em> and <em>post</em> conditions / contracts.</p>
+
+<p>The following code illustrates the point:</p>
+
+<script src="https://gist.github.com/4065672.js?file=blog_contract_arity1.clj"></script>
+
+<p>It would help some, especially for pure output contracts, if <em>CCC</em> supported <em>varargs</em> i.e the ability to have
+optional arguments after  the <em>%</em> in the signature (e.g. [a b &amp; c]).
+This currently fails because the <em>build-contract-body</em> function does
+not notice the <em>%</em> and includes it in an <em>apply</em>.  However a one line
+modification to that function seems to do the job with no untoward
+side effects:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="w">          </span><span class="ss">'?ARGS</span><span class="w">       </span><span class="p">(</span><span class="nf">vec</span><span class="w"> </span><span class="p">(</span><span class="nb">list*</span><span class="w"> </span><span class="p">(</span><span class="nb">remove</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="s">"&amp;"</span><span class="w"> </span><span class="p">(</span><span class="nb">name</span><span class="w"> </span><span class="n">%</span><span class="p">))</span><span class="w"> </span><span class="n">args</span><span class="p">)))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Some of the below relies on the use of varargs and hence the modification.</p>
+
+<h1 id="contracts-sugar">Contracts Sugar</h1>
+
+<p>So far, so good.  However, it would be <em>cumbrous</em> to define the
+equivalent rich (large)
+portfolio of contracts /  constrained functions I use in Ruby using the available
+<em>CCC</em>  functions and macros.  More of an exercise in writing Clojure macros,
+it is straightforward to implement a few productivity aids.</p>
+
+<h2 id="generating-many-contracts-easily">Generating many contracts easily</h2>
+
+<p>The code below shows a macro (<em>make-contracts</em>) that does much of the leg-work to
+define new contracts.  Like <em>provide</em>, it accepts 0, 1 or more
+vectors.  Note, these examples are for one argument contracts.</p>
+
+<script src="https://gist.github.com/4066462.js?file=blog_make_contracts1.clj"></script>
+
+<h2 id="generating-mustbe-functions">Generating <em>mustbe</em> functions</h2>
+
+<p>My Ruby <em>mustbe</em> methods mostly take one argument and test it, usually
+to confirm whether it is an instance of a class or not.</p>
+
+<p>The follow code includes a macro (<em>make-mustbe-functions</em>) to do the
+necessary, leveraging <em>make-contracts</em> to define the <em>aspect</em> contracts.
+Note, the “target” function is always <em>identity</em>.</p>
+
+<script src="https://gist.github.com/4079359.js?file=blog_make_mustbe_functions1.clj"></script>
+
+<h2 id="generating-contract-functions-for-inline-use">Generating contract functions for inline use</h2>
+
+<p>Sometimes, in “open code”, you will also want to apply one or more
+contracts to an value of an arbitrary expression.  Again, a macro
+(<em>make-inline-contract-functions</em>) can help with the legwork.  Note this example
+require my minor mod to support varags.</p>
+
+<script src="https://gist.github.com/4079419.js?file=blog_make_inline_functions1.clj"></script>
+
+<h1 id="overloading--pre-and-post-conditions-support">Overloading  <em>pre</em> and <em>post</em> conditions support</h1>
+
+<p>In order to satisfy a constraint in a <em>:pre</em> or <em>:post</em> condition, the
+test function needs only to be (return) <em>true</em>: You can write any old
+condition function that accepts the
+arguments, does any processing it wants to, and as long as it
+return true, the constraint will pass.  <em>:pre</em> and <em>:post</em> therefore
+allow arbitrary logic to be applied at a function’s entry and exit,
+not just performing argument checking.</p>
+
+<p>For example, you may want to know (e.g. <em>println</em>) the return value from a
+function whilst testing, but turn  off the println  when in
+production.  Using <em>provide</em> to update the definition of a target
+function  makes its
+trivially easy to enable and disable such <em>pseudo-contracts</em>, with no
+run-time performance penalty either
+(since
+<em>provide</em> is a compile-time macro).</p>
+
+<p>Another interesting possibility
+would be to use pseudo-contracts to support out-of-band auditing a function’s usage, perhaps adding authorisation checks.</p>
+
+<p>Creating a
+pseudo-contract with an arbitrary code body, and probably without any actual
+conditions,  that can be
+used with <em>with-constraints</em> and / or <em>provide</em>
+is not possible with the <em>contract</em>
+macro. But it is possible to create a new macro, and hack the  other macros and
+functions (<em>build-contract-body</em> and <em>build-contract-fn-body</em>) to
+do the necessary.  It works but the code feels messy and should
+probably be a feature request, together with varargs support, to Fogus
+for comment.</p>
+
+<h1 id="final-words">Final Words</h1>
+
+<p><em>CCC</em> is a great addition to the tools you can use to build quality
+ Clojure code.  That said, support for rich usage (portfolio) of contracts feels a
+ bit primitive right now.  But, as my own simple attempts have
+ demonstrated, it wouldn’t take much to add some  productivity features.</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html" title="First steps using Pallet, VMFest and VirtualBox (VBox) 4.2">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/ruby/constants/gotchas/2013/01/04/gotcha-constants-in-anonymous-ruby-classes-and-mixins.html" title="Gotcha: Constants in anonymous Ruby classes and mixins">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/ruby/constants/gotchas/2013/01/04/gotcha-constants-in-anonymous-ruby-classes-and-mixins.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

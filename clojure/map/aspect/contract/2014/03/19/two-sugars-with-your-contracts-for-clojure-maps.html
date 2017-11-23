@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Two sugars with your Contracts for Clojure Maps">
+<title>Two sugars with your Contracts for Clojure Maps</title>
+<meta property="og:description" content="IntroductionOne of the Clojure projects I’ve been working on usesmulti-level (hierarchical) maps i.e. the values of the keys of a map at one level are often ...">
+<meta property="og:url" content="http://www.rumford.name/clojure/map/aspect/contract/2014/03/19/two-sugars-with-your-contracts-for-clojure-maps.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Two sugars with your Contracts for Clojure Maps">
+<meta name="twitter:description" content="IntroductionOne of the Clojure projects I’ve been working on usesmulti-level (hierarchical) maps i.e. the values of the keys of a map at one level are often ...">
+<meta name="twitter:url" content="http://www.rumford.name/clojure/map/aspect/contract/2014/03/19/two-sugars-with-your-contracts-for-clojure-maps.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/clojure/map/aspect/contract/2014/03/19/two-sugars-with-your-contracts-for-clojure-maps.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Two sugars with your Contracts for Clojure Maps</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#map">map</a>, 
+    
+    <a href="/categories/#aspect">aspect</a>, 
+    
+    <a href="/categories/#contract">contract</a>
+     
+    
+    <time itemprop="datePublished" datetime="2014-03-19">
+    on Mar 19, 2014
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <h1 id="introductiona-idorgheadline1a">Introduction<a id="orgheadline1"></a></h1>
+
+<p>One of the <a href="http:///clojure.org">Clojure</a> projects I’ve been working on uses
+multi-level (hierarchical) <a href="http://en.wikipedia.org/wiki/Hash_table">maps</a> i.e. the values of the keys of a map at one level are often maps
+themselves.</p>
+
+<p>A common enough use case and as <a href="http://blog.fogus.me">Fogus</a> and
+<a href="http://old.n01se.net/chouser">Chris Houser</a> observe in their book <a href="http://www.manning.com/fogus2">The Joy of Clojure</a> (section 5.6):</p>
+
+<blockquote>
+  <p>It’s difficult to write a program of any significant size without the
+need for a map of some sort.</p>
+
+  <p>The use of maps is ubiquitous in writing software because frankly it’s
+difficult to imagine a more robust data structure.</p>
+</blockquote>
+
+<p>Maps  have been around quite a while.  In their book <a href="http://www.amazon.co.uk/Introduction-Algorithms-Thomas-H-Cormen/dp/0262032937/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1392992028&amp;sr=1-1&amp;keywords=0262032937">Introduction To
+Algorithms</a> <em>Cormen et al</em> say Donald Knuth
+<a href="http://books.google.co.uk/books?id=NLngYyWFl_YC&amp;pg=PA252&amp;lpg=PA252&amp;dq=luhn+hash+tables&amp;source=bl&amp;ots=BxWoJG3mJa&amp;sig=cTpYRKlO-rNe8TDar3ko8bv4MQ8&amp;hl=en&amp;sa=X&amp;ei=0UIHU662DKap7Abp1IHgCA&amp;ved=0CFoQ6AEwBg#v=onepage&amp;q=luhn%20hash%20tables&amp;f=false">attributed</a> the invention of
+maps to <a href="http://en.wikipedia.org/wiki/Hans_Peter_Luhn">Hans Peter Luhn</a> in early 1953.</p>
+
+<p>Using <a href="http://en.wikipedia.org/wiki/Hash_table">maps</a> is very natural and easy in
+<a href="http:///clojure.org">Clojure</a> and indeed many other languages that support
+them. Clojure takes <a href="http://amturing.acm.org/award_winners/perlis_0132439.cfm">Alan Perlis’s</a>
+famous quote to heart by providing a rich set of functions to manage maps:</p>
+
+<blockquote>
+  <p>It’s better to have 100 functions operate on one data structure than 10 functions on 10 data structures.</p>
+</blockquote>
+
+<p>But using deep (multi-level) maps with many levels and many keys with long-ish
+descriptive names can make the code look very cluttered and prone to
+typos, misremembered key names, juxtaposition of levels, and similar,
+often <em>silent</em>, errors as e.g. <em>get</em> and <em>get-in</em> will return a
+value (nil) rather than raising an error, and <em>assoc</em> and <em>assoc-in</em>
+wont care at all.</p>
+
+<p>Its very easy in <a href="http:///clojure.org">Clojure</a> to write function(s) to encapsulate
+the accesses to a key’s value, especially for multi-level keys, creating
+“helper” <em>putter</em> and <em>getter</em> accessors.</p>
+
+<p>Arguably, maybe  a stretch, you could think of these accessors as
+<a href="http://en.wikipedia.org/wiki/Higher-order_function">_higher order_</a> functions where the (implicit) input functions are e.g.
+<em>get</em> or <em>assoc</em>.</p>
+
+<p>For example, and as usual a contrived example, where a deep multi-level map
+holds all the details of a house:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">change-kitchen-temperature</span><span class="w">
+  </span><span class="p">[</span><span class="n">house-state</span><span class="w"> </span><span class="n">new-temperature</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">assoc-in</span><span class="w"> </span><span class="n">house-state</span><span class="w"> </span><span class="p">[</span><span class="no">:rooms</span><span class="w"> </span><span class="no">:kitchen</span><span class="w"> </span><span class="no">:properties</span><span class="w"> </span><span class="no">:temperature</span><span class="p">]</span><span class="w"> </span><span class="n">new-temperature</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">install-kitchen-oven</span><span class="w">
+  </span><span class="p">[</span><span class="n">house-state</span><span class="w"> </span><span class="n">new-oven</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">assoc-in</span><span class="w"> </span><span class="n">house-state</span><span class="w"> </span><span class="p">[</span><span class="no">:rooms</span><span class="w"> </span><span class="no">:kitchen</span><span class="w"> </span><span class="no">:appliances</span><span class="w"> </span><span class="no">:cooking</span><span class="w"> </span><span class="no">:oven</span><span class="p">]</span><span class="w"> </span><span class="n">new-oven</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Which is nice (at least to me): semantically named accessors hiding
+the details of the key hierarchy.  If the hierarchy needs to change for
+any reason, only the accessor functions have to be changed.  A familiar enough
+paradigm from many languages.</p>
+
+<p>The other thing I’ve wanted to do  has been
+to apply  <a href="&lt;http://en.wikipedia.org/wiki/Eiffel_(programming_language)&gt;#Design\_by\_Contract">contracts</a> to the <em>leaf</em> values in the map. You could
+of course just use an <em><a href="http://clojuredocs.org/clojure_core/clojure.core/assert">assert</a></em> to apply a contract to a value in “open code”.
+But that means the contract definition (i.e. assertion clause)
+is scattered over the code base, hard to change, inconsistency may
+creep in, etc.</p>
+
+<p><a href="http://blog.fogus.me">Fogus’s</a>
+<a href="https://github.com/clojure/core.contracts">clojure.core.contracts</a> library uses
+<a href="http:///clojure.org">Clojure’s</a> <a href="http://blog.fogus.me/2009/12/21/clojures-pre-and-post/">:pre and post assertions</a> to apply contracts to a
+function’s arguments and/or its result (return value).</p>
+
+<p>In my recent <a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar post</a> on contracts, I demonstrated a
+new library I’ve written
+<a href="https://github.com/ianrumford/clojure-contracts-sugar">clojure-contracts-sugar</a> to add some
+productivity macros (“sugar”) atop <a href="https://twitter.com/fogus">Fogus’s</a> <a href="https://github.com/clojure/core.contracts">library</a>.</p>
+
+<p>In a nice bit of synergy, if you use <em>putter</em> and <em>getter</em> accessors
+for a map’s <em>leaf</em> values, you can apply also contracts to them.</p>
+
+<p>Enter my new library: <a href="https://github.com/ianrumford/clojure-contracts-maps">clojure-contracts-maps</a></p>
+
+<!-- more -->
+
+<h1 id="a-quick-summary-of-clojure-contracts-mapsa-idorgheadline2a">A quick summary of clojure-contracts-maps<a id="orgheadline2"></a></h1>
+
+<p>Apart from the ability to apply rich contracts to the <em>leaf</em> values,
+the new library support some other features.</p>
+
+<p>One feature useful to have is the opportunity to transform <em>map</em> a
+key’s value.
+In the case of a getter, the <em>mapper</em> is applied <strong>before</strong> the value is
+returned effectively returning a <em>view</em> of the value.  In the case of a <em>putter</em>,
+the <em>mapper</em> can e.g. normalise the value in some way <strong>before</strong> the map
+is “updated”.</p>
+
+<p>Its also useful, in a <em>getter</em>,  to support static and (per call) dynamic defaults for the key’s
+value.</p>
+
+<p>You may also want to <em>monitor</em> a key’s access, especially when it
+changes, and have a unique error message - a <em>telltale</em> - when a value
+fails a contract.</p>
+
+<h1 id="a-few-notes-on-contracts-and-constraintsa-idorgheadline3a">A few notes on contracts and constraints<a id="orgheadline3"></a></h1>
+
+<p>A <em>contract</em> is made up of one or more <em>constraints</em>.</p>
+
+<p>Each contract can have constraints of two types: <em>suck</em> constraints
+applied to a function’s arguments and <em>spit</em> constraints applied to
+the function’s result</p>
+
+<p><strong>Putters</strong> have a <em>suck</em> contract for the key’s new value  i.e the new value 
+is an <em>argument</em> to the putter.</p>
+
+<p><strong>Getters</strong> have <em>spit</em> contracts as the value of the key (or its default)
+is the <em>result</em> of the getter.</p>
+
+<p>If you want to use a mnemonic (see later) for a contract to apply to
+both the <strong>getter</strong> and <strong>putter</strong>, the mnemonic <strong>must</strong> have identical
+constraints for both <em>suck</em> and <em>spit</em>.</p>
+
+<p>The macro <em>define-mnemonics</em> will define a symmetric contract. For
+example, to define a symmetric mnemonic <em>:key-value-is-a-map-with-numeric-values</em></p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">define-mnemonics</span><span class="w">
+  </span><span class="n">key-mnemonics</span><span class="w"> </span><span class="p">{</span><span class="no">:key-value-is-a-map-with-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]})</span><span class="w"> </span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This is the same as the explicit call below to <em>configure-contracts-store</em>
+in <em>clojure-contracts-sugar</em></p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">configure-contracts-store</span><span class="w">
+ </span><span class="n">aspect-mnemonic-definitions</span><span class="w">
+ </span><span class="p">{</span><span class="no">:key-value-is-a-map-with-numeric-values</span><span class="w">
+  </span><span class="p">{</span><span class="no">:suck</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w">
+   </span><span class="no">:spit</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]}})</span><span class="w"> </span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note you can define multiple mnemonics is the call to
+<em>define-mnemonics</em>, just add more key-value pairs in the
+<em>key-mnemonics</em> map.</p>
+
+<h1 id="the-codea-idorgheadline8a">The Code<a id="orgheadline8"></a></h1>
+
+<h2 id="jar-is-on-clojarsa-idorgheadline4a">Jar is on Clojars<a id="orgheadline4"></a></h2>
+
+<p>The jar is on <a href="https://clojars.org/name.rumford/clojure-contracts-maps">Clojars</a>:</p>
+
+<p><a href="http://leiningen.org/">Leiningen</a> dependency information:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">[</span><span class="n">name.rumford/clojure-contracts-maps</span><span class="w"> </span><span class="s">"0.1.0"</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="http://maven.apache.org/">Maven</a> dependency information:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>name.rumford<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>clojure-contracts-maps<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>0.1.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="code-is-on-githuba-idorgheadline5a">Code is on Github<a id="orgheadline5"></a></h2>
+
+<p>The code can be found on <a href="https://github.com/ianrumford/clojure-contracts-maps">github</a>
+as a <a href="http://leiningen.org/">Leiningen</a>
+project so you’ll want Leiningen <a href="https://github.com/technomancy/leiningen">installed</a>.</p>
+
+<p>The project structure is Maven style but there is only Clojure today
+i.e. <em>./src/main/clojure</em> and <em>./src/test/clojure</em>.</p>
+
+<h2 id="testsa-idorgheadline6a">Tests<a id="orgheadline6"></a></h2>
+
+<p>There are a number of tests that can be run offering reasonable coverage:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein <span class="nb">test</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="examplesa-idorgheadline7a">Examples<a id="orgheadline7"></a></h2>
+
+<p>The examples below can be found in the repo’s examples folder
+(specifically <em>./examples/map-examples</em>) and they can be run using
+<em>lein</em>:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="nb">cd</span> ./examples/map-examples
+lein run -m map-examples1<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The examples use a couple of harness functions - <em>will-work</em> and
+<em>will-fail</em> - to run tests.</p>
+
+<p><em>will-work</em> takes as arguments the expected result, the accessor
+function and a list of the accessor’s arguments.</p>
+
+<p><em>will-fail</em> takes just the accessor function and its arguments and
+catches the <strong>AssertionError</strong> expected to be thrown.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></td><td class="code"><pre><span class="c1">;; Helper for accessor examples expected to work.  Returns the expected result, else fails
+</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">will-work</span><span class="w">
+  </span><span class="p">[</span><span class="n">expected-result</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fn-args</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">expected-result</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="n">fn-args</span><span class="p">)))</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"will-work"</span><span class="w"> </span><span class="s">"worked as expected"</span><span class="w"> </span><span class="s">"expected-result"</span><span class="w"> </span><span class="n">expected-result</span><span class="w"> </span><span class="s">"fn-accessor"</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="s">"fn-args"</span><span class="w"> </span><span class="n">fn-args</span><span class="p">)</span><span class="w">
+  </span><span class="n">expected-result</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; Helper for accessor examples expected to fail.  Catches the expected AssertionError, else fails.
+</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">will-fail</span><span class="w">
+  </span><span class="p">[</span><span class="n">fn-accessor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fn-args</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">try</span><span class="w">
+    </span><span class="p">(</span><span class="nf">do</span><span class="w">
+      </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="n">fn-args</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"will-fail"</span><span class="w"> </span><span class="s">"DID NOT FAIL"</span><span class="w"> </span><span class="s">"did not cause AssertionError"</span><span class="w"> </span><span class="s">"fn-accessor"</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="s">"fn-args"</span><span class="w"> </span><span class="n">fn-args</span><span class="p">)))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">AssertionError</span><span class="w"> </span><span class="n">e</span><span class="w">
+      </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"will-fail"</span><span class="w"> </span><span class="s">"failed as expected"</span><span class="w"> </span><span class="s">"fn-accessor"</span><span class="w"> </span><span class="n">fn-accessor</span><span class="w"> </span><span class="s">"fn-args"</span><span class="w"> </span><span class="n">fn-args</span><span class="p">))))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<blockquote>
+  <p>The <em>./doc</em> folder contains the source of this post: it is an <a href="http://www.gnu.org/software/emacs/">emacs</a> <a href="http://orgmode.org/">org</a> file <a href="http://orgmode.org/org.html#Extracting-source-code">tangled</a> to generate the examples project.</p>
+</blockquote>
+
+<h1 id="getters-with-simple-contractsa-idorgheadline11a">Getters with Simple Contracts<a id="orgheadline11"></a></h1>
+
+<p>To define a getter call the <em>define-map-get-accessor</em> macro with its
+(minimum) arguments:</p>
+
+<ol>
+  <li>
+    <p>the key’s name; and</p>
+  </li>
+  <li>
+    <p>the contract (constraints) to enforce on the key’s value</p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>Remember: <strong>getter</strong> contracts have <em>spit</em> constraints - the contract is
+applied to the result of the getter.</p>
+</blockquote>
+
+<h2 id="example---a-getter-for-a-key-with-a-numeric-valuea-idorgheadline9a">Example - a getter for a key with a numeric value<a id="orgheadline9"></a></h2>
+
+<p>For example to ensure the value of key <em>:a</em> is a number:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></td><td class="code"><pre><span class="c1">;; Example - a getter for a key with a numeric value
+</span><span class="w">
+</span><span class="c1">;; This example shows how to define a getter function that ensures the
+;; returned value of key :a is a number:
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-a</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:a</span><span class="w"> </span><span class="no">:number</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Explcitly call the function
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">get-key-a</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">1</span><span class="w">
+
+</span><span class="c1">;; But lets use the will-work helper to ensure the result is as expected
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">get-key-a</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="p">})</span><span class="w"> 
+</span><span class="c1">;; =&gt;
+</span><span class="mi">1</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<blockquote>
+  <p>Its worth noting that <em>:number</em> here implies {:spit number?}</p>
+</blockquote>
+
+<h2 id="example---a-getter-using-static-andor-dynamic-defaultsa-idorgheadline10a">Example - a getter using static and/or dynamic defaults<a id="orgheadline10"></a></h2>
+
+<p>You can define the <em>getter</em> accessor  with a static default
+value to be returned if the key is not present in the map (exact
+the same semantics as <em>get</em> with a default value).</p>
+
+<blockquote>
+  <p>Note the contract is applied to the <strong>result</strong> of the accessor so
+defaults must comply with the contract.</p>
+
+  <p>This is lazy though -  if a  default is never needed,
+the contract will never be applied to it.</p>
+</blockquote>
+
+<p>To provide a <em>static</em> default use the optional parameter <em>default</em> on
+the call to <em>define-map-get-accessor</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre></td><td class="code"><pre><span class="c1">;; Example - a getter with a static default for key :d
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:d</span><span class="w"> </span><span class="no">:number</span><span class="w"> </span><span class="n">default</span><span class="w"> </span><span class="mi">42</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">42</span><span class="w">
+
+</span><span class="c1">;; Note the key is present but its value of nil will fail the :number contract
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="n">nil</span><span class="p">})</span><span class="w"> </span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Alternatively a dynamic default can be provided as the second argument
+in a call to the getter.</p>
+
+<p>The dynamic default takes precedence over the static one (if supplied).</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></td><td class="code"><pre><span class="c1">;; Example - a getter called with a dynamic, per call, default for key :d
+</span><span class="w">
+</span><span class="c1">;; The key's value, if present, alway takes precedence over any default
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">55</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="mi">55</span><span class="p">}</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">55</span><span class="w">
+
+</span><span class="c1">;; The static default (if supplied) is used if the key is not present
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{})</span><span class="w"> 
+</span><span class="c1">;; =&gt;
+</span><span class="mi">42</span><span class="w">
+
+</span><span class="c1">;; But a per-call dynamic default take precedence over the static one
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">99</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">99</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">567</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="mi">567</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">567</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="putters-with-simple-contractsa-idorgheadline13a">Putters with Simple Contracts<a id="orgheadline13"></a></h1>
+
+<p>A simple putter uses Clojure’s <em>assoc</em> function and returns the updated
+map; the original map is, of course, unchanged.</p>
+
+<p>You can define equivalent <em>putter</em> accessors, constrained in the
+same way as  <em>getters</em>, by calling the <em>define-map-put-accessor</em> macro  with its
+(minimum) parameters (same as for a getter):</p>
+
+<ol>
+  <li>
+    <p>the key’s name; and</p>
+  </li>
+  <li>
+    <p>the contract (constraints) to enforce on the key’s value</p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>Remember: <strong>putter</strong> contracts have <em>suck</em> constraints - the contract is
+applied to the argument with (new) value of the key.</p>
+</blockquote>
+
+<h2 id="example---a-putter-for-a-key-with-a-numeric-valuea-idorgheadline12a">Example - a putter for a key with a numeric value<a id="orgheadline12"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></td><td class="code"><pre><span class="c1">;; Example - define a putter for the value of key :d which must be a number
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">put-key-d</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-put-accessor</span><span class="w"> </span><span class="no">:d</span><span class="w"> </span><span class="no">:number</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Create a new map with the new value for key :d
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">map-with-old-value-of-d</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="mi">99</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">map-with-new-value-of-d</span><span class="w"> </span><span class="p">(</span><span class="nf">put-key-d</span><span class="w"> </span><span class="n">map-with-old-value-of-d</span><span class="w"> </span><span class="mi">123</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Using the getter on the updated map will return the new value of :d
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="n">map-with-new-value-of-d</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">123</span><span class="w">
+
+</span><span class="c1">;; The old map is of course unchanged
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">99</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="n">map-with-old-value-of-d</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">99</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="using-a-telltale-to-aid-diagnosis-of-assertion-errorsa-idorgheadline16a">Using a telltale to aid diagnosis of assertion errors<a id="orgheadline16"></a></h1>
+
+<p>Errors generated by Clojure’s 
+<a href="http://blog.fogus.me/2009/12/21/clojures-pre-and-post/">pre and post assertions</a>
+are of type <strong>AssertionError</strong>.</p>
+
+<p>Although they produce a (Java) stack track and precisely specify the
+assertion causing the error, they do not provide any information to
+identify the context  of the error i.e. which key suffered the error?</p>
+
+<p>As an aid to providing some context and help identify the
+cause of the error, you can provide an optional <em>telltale</em> parameter to the
+accessor function definition.  The <em>telltale</em> is a description (string) to be printed
+if/when an <strong>AssertionError</strong> occurs.</p>
+
+<h2 id="example---a-getter-with-a-telltalea-idorgheadline14a">Example - a getter with a telltale<a id="orgheadline14"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td class="code"><pre><span class="c1">;; Example - a getter with a telltale
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:d</span><span class="w"> </span><span class="no">:number</span><span class="w"> </span><span class="n">default</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">"The value of key :d was not a number"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; The call to get-key-d below will fail with an asertion error
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-d</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="s">"value of d must be a string else will fail"</span><span class="p">})</span><span class="w"> 
+</span><span class="c1">;; =&gt;  will fail with message something like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="s">"value of d must be a string else will fail"</span><span class="p">}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="nb">key</span><span class="w"> </span><span class="no">:d</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="nb">not</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">number</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---a-putter-with-a-telltalea-idorgheadline15a">Example - a putter with a telltale<a id="orgheadline15"></a></h2>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td class="code"><pre><span class="c1">;; Example - a putter with a telltale
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">put-key-e</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-put-accessor</span><span class="w"> </span><span class="no">:e</span><span class="w"> </span><span class="no">:string</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">"The new value of key :e was not a string"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; The call to put-key-e below will fail with an asertion error
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">put-key-e</span><span class="w"> </span><span class="p">{</span><span class="no">:e</span><span class="w"> </span><span class="s">":e is always a string"</span><span class="p">}</span><span class="w"> </span><span class="mi">123</span><span class="p">)</span><span class="w"> 
+</span><span class="c1">;; =&gt;  will fail with message something like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="s">":e is always a string"</span><span class="p">}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="nb">key</span><span class="w"> </span><span class="no">:e</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="nb">not</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">string</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="contracts-for-keys-with-multiple-constraintsa-idorgheadline21a">Contracts for Keys with multiple constraints<a id="orgheadline21"></a></h1>
+
+<p>In  the examples so far the contract (constraints)  applied to the value of a
+key has been simple - e.g. just a number or string.</p>
+
+<p>In fact, contracts  can be far “richer”: You can use anything supported by
+<a href="https://github.com/ianrumford/clojure-contracts-sugar">clojure-contracts-sugar</a>.</p>
+
+<p>Rich contracts were illustrated in my 
+<a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">contracts sugar post</a> and allow one or more 
+constraints to be applied to the key’s value.</p>
+
+<p>Multiple constraints can be specified in the definition of the accessor simply as a vector of the individual constraints.</p>
+
+<p>Or you can use <em>mnemonics</em> to “package” rich, complex contracts with multiple constraints,
+again as described in the <a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar post</a>.</p>
+
+<p>Some examples should help flesh this out.</p>
+
+<h2 id="example---a-getter-for-a-positive-numeric-key-valuea-idorgheadline17a">Example - a getter for a positive numeric key value<a id="orgheadline17"></a></h2>
+
+<p>To ensure a key’s value is a positive number, the contract’s vector of
+constraints would be:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">[</span><span class="no">:number</span><span class="w"> </span><span class="no">:pos</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td><td class="code"><pre><span class="c1">;; Example - a getter for a positive numeric key value
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-m</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="p">[</span><span class="no">:number</span><span class="w"> </span><span class="no">:pos</span><span class="p">]</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":m must be a positive number"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This works
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">get-key-m</span><span class="w"> </span><span class="p">{</span><span class="no">:m</span><span class="w"> </span><span class="mi">3</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">3</span><span class="w">
+
+</span><span class="c1">;; But this will fail
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-m</span><span class="w"> </span><span class="p">{</span><span class="no">:m</span><span class="w"> </span><span class="mi">-3</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt; And should produce a message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:m</span><span class="w"> </span><span class="mi">-3</span><span class="p">}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="no">:m</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="n">number</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---a-getter-to-ensure-a-keys-value-is-a-map-with-keyword-keys-and-numeric-valuesa-idorgheadline18a">Example - a getter to ensure a key’s value is a map with keyword keys and numeric values<a id="orgheadline18"></a></h2>
+
+<p>Using an example based on one in the <a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar
+post</a>, this one needs to ensure a key’s new value is a map, and its keys are keywords and
+the values are numbers. The contract is:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">[</span><span class="no">:map</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">arg0</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note the key’s value is available for use explicitly in the contract
+as <em>arg0</em> - see the <a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar post</a> for
+an explanation of the use of <em>relative</em> argument names such as <em>arg0</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="c1">;; Example - a getter to ensure a key's value is a map with keyword keys and numeric values
+</span><span class="w">
+</span><span class="c1">;; Note the constraint form uses arg0 to refer to the passed map
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-n</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:n</span><span class="w"> </span><span class="p">[</span><span class="no">:map</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">arg0</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":n must be a map with keywords keys and numeric values"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This works
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-key-n</span><span class="w"> </span><span class="p">{</span><span class="no">:n</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-n</span><span class="w"> </span><span class="p">{</span><span class="no">:n</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt; And should produce a message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:n</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="n">,</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="n">,</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:n</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="no">:n</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="nb">map</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">keywords</span><span class="w"> </span><span class="nb">keys</span><span class="w"> </span><span class="nb">and</span><span class="w"> </span><span class="n">numeric</span><span class="w"> </span><span class="n">values</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---a-getter-with-a-custom-predicatea-idorgheadline19a">Example - a getter with a custom predicate<a id="orgheadline19"></a></h2>
+
+<p>You can define your own predicate functions, not just use
+<a href="http:///clojure.org">Clojure’s</a> “built-ins” (e.g. <em>map?</em>, <em>number?</em>,
+<em>string?</em>, etc). For example, a predicate function to ensure the value is a map with
+keywords keys and numeric values would be
+something like this:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="c1">;; Example - a custom predicate to ensure a map's keys are keywords and values are numeric
+</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">is-map-with-keyword-keys-and-numeric-values?</span><span class="w">
+  </span><span class="p">[</span><span class="n">source-map</span><span class="p">]</span><span class="w">
+  </span><span class="p">{</span><span class="no">:pre</span><span class="w"> </span><span class="p">[(</span><span class="nb">map?</span><span class="w"> </span><span class="n">source-map</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">source-map</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">source-map</span><span class="p">))]}</span><span class="w">
+  </span><span class="n">source-map</span><span class="p">)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The custom predicate can be used in the accessor definition just like
+a “built-in”:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td><td class="code"><pre><span class="c1">;; Example - a rich getter using a custom predicate
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-p</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:p</span><span class="w"> </span><span class="n">is-map-with-keyword-keys-and-numeric-values?</span><span class="w">  </span><span class="n">telltale</span><span class="w"> </span><span class="s">":p failed predicate is-map-with-keyword-keys-and-numeric-values?"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This works
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-key-p</span><span class="w"> </span><span class="p">{</span><span class="no">:p</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-p</span><span class="w"> </span><span class="p">{</span><span class="no">:p</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt; And should produce a message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:p</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="n">,</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="n">,</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:p</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="no">:p</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">is-map-with-keyword-keys-and-numeric-values?</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---a-getter-with-a-custom-mnemonic-for-the-keya-idorgheadline20a">Example - a getter with a custom mnemonic for the key<a id="orgheadline20"></a></h2>
+
+<p><em>Mnemonics</em> are a feature of
+<a href="https://github.com/ianrumford/clojure-contracts-sugar">clojure-contracts-sugar</a> for defining,
+re-using and composing contracts, usually with multiple constraints.</p>
+
+<p>This example again is based loosely on one in my <a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar
+post</a> and demonstrates how to implement the
+<em>is-map-with-keyword-keys-and-numeric-values?</em> predicate function
+using a mnemonic.</p>
+
+<blockquote>
+  <p>Note the example uses the <strong>sugar</strong> macro <em>define-mnemonics</em> to simplify the
+definition of a symmetric (i.e. <em>suck</em> and <em>spit</em>) contract suitable
+for use in the definition of both a getter (spit) <strong>and</strong> putter (suck).</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="c1">;; Define a custom mnemonic map-special ensuring a map with keyword keys and numeric values.
+</span><span class="w">
+</span><span class="c1">;; Note the mnemonic is suitable for a both a getter and putter i.e it has the same *suck* and *spit* constraints
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">define-mnemonics</span><span class="w">
+  </span><span class="n">key-mnemonics</span><span class="w"> </span><span class="p">{</span><span class="no">:key-value-is-a-map-with-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]})</span><span class="w"> </span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The example:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></td><td class="code"><pre><span class="c1">;; Example - a getter with a custom mnemonic for the key
+</span><span class="w">
+</span><span class="c1">;; Use the :key-value-is-a-map-with-numeric-values mnemonic for the key contract 
+;; to ensure the key's value is a map with numeric values.
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="no">:key-value-is-a-map-with-numeric-values</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":q failed contract key-value-is-a-map-with-numeric-values"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This works
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="no">:one</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="no">:two</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="no">:three</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt; And should produce a message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="no">:one</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="no">:two</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="no">:three</span><span class="p">}}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="n">contract</span><span class="w"> </span><span class="n">key-value-is-a-map-with-numeric-values</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="contracts-for-the-mapa-idorgheadline23a">Contracts for the Map<a id="orgheadline23"></a></h1>
+
+<p>So far, I’ve not said anything about the map argument itself, or
+whether a contract (constraints) is applied to it.</p>
+
+<p>In fact, behind the scenes, a contract <strong>is</strong>  applied automatically to
+the map but its minimal: just <em>map?</em></p>
+
+<p>But the default contract for the map  can be overidden using the
+<em>map-contract</em> parameter on the call to e.g.
+<em>define-map-get-accessor</em>.</p>
+
+<p>Just like contracts for a key, map contracts can be anything
+supported by <a href="https://github.com/ianrumford/clojure-contracts-sugar">clojure-contracts-sugar</a>,
+especially mnemonics.</p>
+
+<h2 id="example---applying-a-contract-to-the-map-itselfa-idorgheadline22a">Example - applying a contract to the map itself<a id="orgheadline22"></a></h2>
+
+<p>In the example below the <em>sugar</em> macro <em>define-mnemonics</em>
+defines a contract suitable for the map argument (specifically a
+<em>suck-only</em> contract).</p>
+
+<p>It also defines a key mnemonic to ensure the key’s value is a map with
+positive numeric values.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></td><td class="code"><pre><span class="c1">;; Example - applying a contract to the map itself
+</span><span class="w">
+</span><span class="c1">;; Define the mnemonics
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">define-mnemonics</span><span class="w">
+  </span><span class="n">map-mnemonics</span><span class="w"> </span><span class="p">{</span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]}</span><span class="w">
+
+  </span><span class="n">key-mnemonics</span><span class="w"> </span><span class="p">{</span><span class="no">:key-is-a-map-with-positive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">pos?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w"> </span><span class="p">})</span><span class="w"> 
+
+</span><span class="c1">;; Use both contracts
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="no">:key-is-a-map-with-positive-numeric-values</span><span class="w"> 
+                 </span><span class="n">map-contract</span><span class="w"> </span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":q failed key contract key-is-a-map-with-positive-numeric-values or map contract map-with-keyword-keys"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This works
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail as the value of :a is -1
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-q</span><span class="w"> </span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt; And should produce a message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}}}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="no">:q</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="nb">key</span><span class="w"> </span><span class="n">contract</span><span class="w"> </span><span class="no">:key-is-a-map-with-positive-numeric-values</span><span class="w"> </span><span class="nb">or</span><span class="w"> </span><span class="nb">map</span><span class="w"> </span><span class="n">contract</span><span class="w"> </span><span class="n">map-with-keyword-keys</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="using-transformation-functions-mappersa-idorgheadline26a">Using Transformation Functions (mappers)<a id="orgheadline26"></a></h1>
+
+<h2 id="example---putters-with-mappersa-idorgheadline24a">Example - putters with mappers<a id="orgheadline24"></a></h2>
+
+<p>Sometimes its useful to be also to transform - <em>map</em> - the (new) value of a key
+before <em>putting</em> into the map.  For example to <em>normalise</em> the value in
+some way (e.g. - trivially - string-ify and lower case).</p>
+
+<p>To provide a transformation function, use the <em>mapper</em> parameter on
+the call to <em>define-map-putter</em>.  Your can specify more than one
+mapper - just provide a vector of them.  Multiple mappers are
+applied in the same order as <a href="http://clojuredocs.org/clojure_core/clojure.core/comp">comp</a>  i.e. rightmost first.</p>
+
+<p>Note the key’s contract is applied to the <strong>transformed</strong> value.</p>
+
+<p>The example has a mapper that just converts the argument into a string
+and counts the number of characters.  (Note the stringified keyword
+includes the leading colon.)</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre></td><td class="code"><pre><span class="c1">;; Example - putters with mappers
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">put-key-f</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-put-accessor</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:number</span><span class="w">  </span><span class="n">mapper</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">s</span><span class="p">)))</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":f must be a number"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; These will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:f</span><span class="w"> </span><span class="mi">6</span><span class="p">}</span><span class="w"> </span><span class="n">put-key-f</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="s">"6chars"</span><span class="p">)</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:f</span><span class="w"> </span><span class="mi">7</span><span class="p">}</span><span class="w"> </span><span class="n">put-key-f</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="no">:7chars</span><span class="p">)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---getters-with-mappersa-idorgheadline25a">Example - getters with mappers<a id="orgheadline25"></a></h2>
+
+<p>In a similar vein, for a <em>getter</em>, there may be times when it is
+useful to transform the key’s value  <strong>before</strong> it is returned.</p>
+
+<p>For example, defining additional <em>getters</em> for the same key that holds
+a map to return <em>views</em> of the value e.g. just the keys, just the
+values, the sum of the values, whatever. Or, perhaps, create a
+derivative value e.g. instantiate a Java class instance.</p>
+
+<p>When using a <em>mapper</em> with a <em>getter</em>, the contract (e.g. :number)
+is applied to the <strong>transformed</strong> value, not the value itself
+(e.g. :map). (You could apply a contract to the
+key’s actual value using the map contract.)</p>
+
+<p>Note in the example below a key mnemonic is applied to the map.  This
+is ok; only the <em>suck</em> constraints in the key mnemonic will be
+applied to the map.</p>
+
+<p>The example also shows how mnemonics can be <strong>composed</strong> - see the
+<a href="http://ianrumford.github.io/blog/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts/">sugar post</a> for details. Composed
+mnemonics in the call to <em>define-mnemonics</em> are:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="no">:key-is-a-map-with-keyword-keys-and-postive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="no">:map-with-positive-numeric-values</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>and</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="no">:collection-of-positive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="no">:collection-of-numeric-values</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">pos?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The example:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</pre></td><td class="code"><pre><span class="c1">;; Example - getters with mappers
+</span><span class="w">
+</span><span class="c1">;; Define some mnemonics. Note a key contract mnemonic is applied to the
+;; map. Also mnemonics are composed
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">define-mnemonics</span><span class="w">
+  </span><span class="n">key-mnemonics</span><span class="w"> </span><span class="p">{</span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w">
+
+                 </span><span class="no">:map-with-positive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="nb">map?</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">pos?</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">arg0</span><span class="p">))]</span><span class="w">
+
+                 </span><span class="no">:key-is-a-map-with-keyword-keys-and-postive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="no">:map-with-positive-numeric-values</span><span class="p">]</span><span class="w">
+
+                 </span><span class="no">:collection-of-keywords</span><span class="w"> </span><span class="p">[(</span><span class="nf">coll?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">keyword?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)]</span><span class="w">
+
+                 </span><span class="no">:collection-of-numeric-values</span><span class="w"> </span><span class="p">[(</span><span class="nf">coll?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="n">number?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)]</span><span class="w">
+
+                 </span><span class="no">:collection-of-positive-numeric-values</span><span class="w"> </span><span class="p">[</span><span class="no">:collection-of-numeric-values</span><span class="w"> </span><span class="p">(</span><span class="nb">every?</span><span class="w"> </span><span class="nb">pos?</span><span class="w"> </span><span class="n">arg0</span><span class="p">)]})</span><span class="w">
+
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-g</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:g</span><span class="w">
+                 </span><span class="no">:key-is-a-map-with-keyword-keys-and-postive-numeric-values</span><span class="w">
+                 </span><span class="n">map-contract</span><span class="w"> </span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":g must be a map with keyword keys and postivie values"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Define extra getters for the keys and values of :g's map,
+;; both of which must be collections (coll?) of keywords or positive
+;; numeric values
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-g-keys</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:g</span><span class="w"> </span><span class="no">:collection-of-keywords</span><span class="w">
+                      </span><span class="n">map-contract</span><span class="w"> </span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="n">mapper</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">m</span><span class="p">))</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":g keys must be a collection"</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-g-vals</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:g</span><span class="w"> </span><span class="no">:collection-of-positive-numeric-values</span><span class="w">
+                      </span><span class="n">map-contract</span><span class="w"> </span><span class="no">:map-with-keyword-keys</span><span class="w"> </span><span class="n">mapper</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">m</span><span class="p">))</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":g values must be a collection"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Test data
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">test-map1</span><span class="w"> </span><span class="p">{</span><span class="no">:g</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">test-map1-g-keys</span><span class="w"> </span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="p">(</span><span class="no">:g</span><span class="w"> </span><span class="n">test-map1</span><span class="p">)))</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">test-map1-g-vals</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="p">(</span><span class="no">:g</span><span class="w"> </span><span class="n">test-map1</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;; Test the keys
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="n">test-map1-g-keys</span><span class="w"> </span><span class="n">get-key-g-keys</span><span class="w"> </span><span class="n">test-map1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="o">'</span><span class="p">(</span><span class="no">:a</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="no">:b</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; Test the values
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="n">test-map1-g-vals</span><span class="w"> </span><span class="n">get-key-g-vals</span><span class="w"> </span><span class="n">test-map1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="o">'</span><span class="p">(</span><span class="nf">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; Another getter to sum the values
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-g-sum-vals</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:g</span><span class="w"> </span><span class="no">:number</span><span class="w"> </span><span class="n">mapper</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":g values sum must be a number"</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">get-key-g-sum-vals</span><span class="w"> </span><span class="n">test-map1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">6</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="using-a-monitora-idorgheadline29a">Using a Monitor<a id="orgheadline29"></a></h1>
+
+<p>A monitor provides a <em>hook</em> to call an arbitrary function in an accessor.
+The result of a monitor is ignored.  Monitors can be used for any
+purpose e.g. logging, diagnostics, communications with other
+processes, whatever.</p>
+
+<p>A monitor is specified using the <em>monitor</em> parameter.</p>
+
+<h2 id="example---a-getter-with-a-monitora-idorgheadline27a">Example - a getter with a monitor<a id="orgheadline27"></a></h2>
+
+<p>If provided, the monitor function in a getter is called with at least the following arguments:</p>
+
+<ol>
+  <li>
+    <p>the key name;</p>
+  </li>
+  <li>
+    <p>the key value (transformed if required); and</p>
+  </li>
+  <li>
+    <p>the original (argument) map.</p>
+  </li>
+</ol>
+
+<p>You can, optionally, add your own additional arguments using the
+<em>monitor-args</em> parameter, and these are passed “as-is”
+to the monitor function after the other arguments.  The <em>monitor-args</em> should
+be a vector.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="c1">;; Example - a getter with a monitor
+</span><span class="w">
+</span><span class="c1">;; This is the monitor function
+</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">monitor-get-key-j</span><span class="w">
+  </span><span class="p">[</span><span class="n">key-name</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">opt-args</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"monitor-get-key-j"</span><span class="w"> </span><span class="s">"key-name"</span><span class="w"> </span><span class="n">key-name</span><span class="w"> </span><span class="s">"key-value"</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="s">"arg-map"</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="s">"opt-args"</span><span class="w"> </span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="n">opt-args</span><span class="p">)</span><span class="w"> </span><span class="n">opt-args</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-j</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:j</span><span class="w"> </span><span class="no">:number</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">monitor-get-key-j</span><span class="w"> </span><span class="n">monitor-args</span><span class="w"> </span><span class="p">[</span><span class="s">"opt arg1"</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:three</span><span class="p">]))</span><span class="w">
+
+</span><span class="c1">;; The getter works as usual
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">456</span><span class="w"> </span><span class="n">get-key-j</span><span class="w"> </span><span class="p">{</span><span class="no">:j</span><span class="w"> </span><span class="mi">456</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">456</span><span class="w">
+</span><span class="c1">;; And should display the monitor message:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">monitor-get-key-j</span><span class="w"> </span><span class="n">key-name</span><span class="w"> </span><span class="no">:j</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="mi">456</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="p">{</span><span class="no">:j</span><span class="w"> </span><span class="mi">456</span><span class="p">}</span><span class="w"> </span><span class="n">opt-args</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="nf">opt-arg1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:three</span><span class="p">)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example---a-putter-with-a-monitora-idorgheadline28a">Example - a putter with a monitor<a id="orgheadline28"></a></h2>
+
+<p>If provided, a putter’s monitor function is called always with the following arguments:</p>
+
+<ol>
+  <li>
+    <p>the key name;</p>
+  </li>
+  <li>
+    <p>the key value (transformed if require);</p>
+  </li>
+  <li>
+    <p>the original (argument) map; and</p>
+  </li>
+  <li>
+    <p>the new (updated) map.</p>
+  </li>
+</ol>
+
+<p>As with a getter, and optionally, you pass your own additional arguments using the
+<em>monitor-args</em> parameter.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="c1">;; Example - a putter with a monitor
+</span><span class="w">
+</span><span class="c1">;; This is the monitor function
+</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">monitor-put-key-k</span><span class="w">
+  </span><span class="p">[</span><span class="n">key-name</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="n">new-map</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"monitor-put-key-k"</span><span class="w"> </span><span class="s">"key-name"</span><span class="w"> </span><span class="n">key-name</span><span class="w"> </span><span class="s">"key-value"</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="s">"arg-map"</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="s">"new-map"</span><span class="w"> </span><span class="n">new-map</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">put-key-k</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-put-accessor</span><span class="w"> </span><span class="no">:k</span><span class="w"> </span><span class="no">:string</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">monitor-put-key-k</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; The putter works as usual
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:k</span><span class="w"> </span><span class="s">"new value of key :k"</span><span class="p">}</span><span class="w"> </span><span class="n">put-key-k</span><span class="w"> </span><span class="p">{</span><span class="no">:k</span><span class="w"> </span><span class="s">"old value of key :k"</span><span class="p">}</span><span class="w"> </span><span class="s">"new value of key :k"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:k</span><span class="w"> </span><span class="s">"new value of key :k"</span><span class="p">}</span><span class="w">
+</span><span class="c1">;; And should produce message like:
+</span><span class="err">;;</span><span class="w"> </span><span class="n">monitor-put-key-k</span><span class="w"> </span><span class="n">key-name</span><span class="w"> </span><span class="no">:j</span><span class="w"> </span><span class="n">key-value</span><span class="w"> </span><span class="mi">456</span><span class="w"> </span><span class="n">arg-map</span><span class="w"> </span><span class="p">{</span><span class="no">:k</span><span class="w"> </span><span class="s">"old value of key :k"</span><span class="p">}</span><span class="w"> </span><span class="n">new-map</span><span class="w"> </span><span class="p">{</span><span class="no">:k</span><span class="w"> </span><span class="s">"new value of key :k"</span><span class="p">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="multi-level-keysa-idorgheadline32a">Multi-Level Keys<a id="orgheadline32"></a></h1>
+
+<p>You can also define accessors with multilevel keys and use (define) them in an equivalent way as when using
+<em>get-in</em> and <em>assoc-in</em> directly by providing a vector containing the
+key hierarchy in a call to e.g. <em>define-map_get_accessor</em>.</p>
+
+<h3 id="example---explicit-multi-level-gettersa-idorgheadline30a">Example - Explicit Multi-Level Getters<a id="orgheadline30"></a></h3>
+
+<p>In these getter examples the value of multilevel key <em>[:a :b :c]</em> must be a string:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></td><td class="code"><pre><span class="c1">;; Example - Explicit Multi-Level Getters
+</span><span class="w">
+</span><span class="c1">;; This example shows how to define a getter function that ensures the
+;; returned value of multi-level key [:a :b :c] is a string. It also supplies a
+;; static default.
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="p">[</span><span class="no">:a</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="no">:c</span><span class="p">]</span><span class="w"> </span><span class="no">:string</span><span class="w"> </span><span class="n">default</span><span class="w"> </span><span class="s">"static default for multilevel key [:a :b :c]"</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">"The value of multilevel key [:a :b :c] must be a string"</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"value for multilevel key [:a :b :c]"</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="s">"value for multilevel key [:a :b :c]"</span><span class="p">}}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"value for multilevel key [:a :b :c]"</span><span class="w">
+
+</span><span class="c1">;; The below will fail as [:a :b :c] is not a string
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="s">"value of [:a :b :d]"</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">99</span><span class="p">}}})</span><span class="w">
+</span><span class="c1">;; =&gt; message something like
+;; Contract Failure Value &gt;class clojure.lang.PersistentArrayMap&lt; &gt;{:a {:b 99}}&lt; KEY :a :b REASON The value of multilevel key [:a :b :c] must be a string
+</span><span class="w">
+</span><span class="c1">;; Static Defaults work as expected
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"static default for multilevel key [:a :b :c]"</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">{})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"static default for multilevel key [:a :b :c]"</span><span class="w">
+
+</span><span class="c1">;; Dynnamic Defaults work as expected
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"dynamic default for multilevel key [:a :b :c]"</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="s">"dynamic default for multilevel key [:a :b :c]"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"dynamic default for multilevel key [:a :b :c]"</span><span class="w">
+
+</span><span class="c1">;; This will also work because, although the map does not have enough levels, the static default will be returned
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"static default for multilevel key [:a :b :c]"</span><span class="w"> </span><span class="n">get-key-abc</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"value of b is not a map so key c can not exist"</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"static default for multilevel key [:a :b :c]"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="example---explicit-multi-level-puttersa-idorgheadline31a">Example - Explicit Multi-Level Putters<a id="orgheadline31"></a></h3>
+
+<p>Multilevel putters works equivalently.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td><td class="code"><pre><span class="c1">;; Example - Explicit Multi-Level Putters
+</span><span class="w">
+</span><span class="c1">;; This example shows how to define a putter function for the string multilevel key [:a :b]:
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">put-key-ab</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-put-accessor</span><span class="w"> </span><span class="p">[</span><span class="no">:a</span><span class="w"> </span><span class="no">:b</span><span class="p">]</span><span class="w"> </span><span class="no">:string</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">"The value of multilevel key [:a :b] must be a string"</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"cd"</span><span class="p">}}</span><span class="w">  </span><span class="n">put-key-ab</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"ab"</span><span class="p">}}</span><span class="w"> </span><span class="s">"cd"</span><span class="p">)</span><span class="w"> 
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"cd"</span><span class="p">}}</span><span class="w">
+
+</span><span class="c1">;; The below will fail as [:a :b] is not a string
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">put-key-ab</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"ab"</span><span class="p">}}</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt; message something like
+</span><span class="err">;;</span><span class="w"> </span><span class="n">Contract</span><span class="w"> </span><span class="n">Failure</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">&gt;class</span><span class="w"> </span><span class="n">clojure.lang.PersistentArrayMap&lt;</span><span class="w"> </span><span class="nb">&gt;</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="s">"ab"</span><span class="p">}}</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="no">:a</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="n">REASON</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">multilevel</span><span class="w"> </span><span class="nb">key</span><span class="w"> </span><span class="p">[</span><span class="no">:a</span><span class="w"> </span><span class="no">:b</span><span class="p">]</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">string</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="composing-multi-level-accessorsa-idorgheadline34a">Composing Multi-Level Accessors<a id="orgheadline34"></a></h1>
+
+<p>You might find it useful to be able to <strong>compose</strong> a (new) accessor
+using an existing one.</p>
+
+<p>For example you may want to define a “leaf” accessor for a key at the
+lowest level and then compose the leaf accessor with keys from the
+other, higher levels.  The point being that if the leaf key is used in more
+than one multilevel map, the leaf accessor only has to be defined
+once.</p>
+
+<p>Your can also e.g. use a mapper with a composed accessor and enforce a different contract on the
+mapped (derived) key value.  In the example below the composed accessor
+<em>get-key-z-from-pq</em> defines a mapper to count the characters in the
+expected string and applies a <em>:number</em> contract to the mapped value.
+The leaf accessor <em>get-key-z</em> ensures the value fed into
+the mapper is a <em>:string</em>. (Note you can’t use a dynamic default in
+this case because the <em>:number</em> contract will fail a <em>:string</em>
+supplied as the dynamic default.)</p>
+
+<h3 id="example---composing-a-gettera-idorgheadline33a">Example - composing a getter<a id="orgheadline33"></a></h3>
+
+<p>In this example the leaf accessor is for key <em>:z</em>.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre></td><td class="code"><pre><span class="c1">;; Example - composing a getter
+</span><span class="w">
+</span><span class="c1">;; Define the leaf accessor for key :z
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-z</span><span class="w"> </span><span class="p">(</span><span class="nf">define-map-get-accessor</span><span class="w"> </span><span class="no">:z</span><span class="w"> </span><span class="no">:string</span><span class="w"> </span><span class="n">default</span><span class="w"> </span><span class="s">"static default for key :z"</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">"The value of :z must be a string"</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Compose the leaf with a keys [:a :b]
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-z-from-ab</span><span class="w"> </span><span class="p">(</span><span class="nf">compose-map-get-accessor</span><span class="w"> </span><span class="p">[</span><span class="no">:a</span><span class="w"> </span><span class="no">:b</span><span class="p">]</span><span class="w"> </span><span class="n">get-key-z</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; This will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"multilevel key [:a :b :z] value"</span><span class="w"> </span><span class="n">get-key-z-from-ab</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="no">:z</span><span class="w"> </span><span class="s">"multilevel key [:a :b :z] value"</span><span class="p">}}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"multilevel key [:a :b :z] value"</span><span class="w">
+
+</span><span class="c1">;; The below will fail as [:a :b :z] is not a string
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-key-z-from-ab</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="p">{</span><span class="no">:b</span><span class="w"> </span><span class="p">{</span><span class="no">:d</span><span class="w"> </span><span class="s">"value of [:a :b :d]"</span><span class="w"> </span><span class="no">:z</span><span class="w"> </span><span class="mi">99</span><span class="p">}}})</span><span class="w">
+
+</span><span class="c1">;; Defaults are hierachical and the "leafiest" one wins
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"static default for key :z"</span><span class="w"> </span><span class="n">get-key-z-from-ab</span><span class="w"> </span><span class="p">{})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"static default for key :z"</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="s">"dynamic default for key :z"</span><span class="w"> </span><span class="n">get-key-z-from-ab</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="s">"dynamic default for key :z"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="s">"dynamic default for key :z"</span><span class="w">
+
+</span><span class="c1">;; Compose the leaf with keys [:p :q] *and* use a mapper to return a number
+</span><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">get-key-z-from-pq</span><span class="w"> </span><span class="p">(</span><span class="nf">compose-map-get-accessor</span><span class="w"> </span><span class="p">[</span><span class="no">:p</span><span class="w"> </span><span class="no">:q</span><span class="p">]</span><span class="w"> </span><span class="n">get-key-z</span><span class="w">  </span><span class="n">mapper</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="n">key-contract</span><span class="w"> </span><span class="no">:number</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="n">get-key-z-from-pq</span><span class="w"> </span><span class="p">{</span><span class="no">:p</span><span class="w"> </span><span class="p">{</span><span class="no">:q</span><span class="w"> </span><span class="p">{</span><span class="no">:z</span><span class="w"> </span><span class="s">"a string of 20 chars"</span><span class="p">}}}</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">20</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Finally, there is no actual restriction on leaf accessors being for just one level; they can
+be multilevel.</p>
+
+<h1 id="defining-both-putter-and-gettera-idorgheadline37a">Defining both putter and getter<a id="orgheadline37"></a></h1>
+
+<p>The definitions of a getter and putter for the same key share common
+arguments and its likely both accessors would be required. As a
+convenience, you can define both the putter and getter in one call
+to the <em>define-map-accessors</em> macro.</p>
+
+<p>The base name of the accessors can be supplied using the optional
+<em>name</em> argument and the getter and putter names are generated from it.
+For example if <em>name</em> is <em>the-v-key</em> then the putter name will be
+<em>put-the-v-key</em> and the getter <em>get-the-v-key</em>. The value of <em>name</em>
+can be anything, it is “stringified” (using <em>str</em>) as necessary.</p>
+
+<p>Alternatively, you can explicitly specify the names of each accessor
+using the <em>get-name</em> and <em>put-name</em> parameters respectively.  These
+take priority over <em>name</em>.</p>
+
+<p>If no <em>name</em>, <em>get-name</em> or <em>put-name</em> parameters are provided, the
+name will be derived from the name of the key. So if the key’s name is
+<em>:x</em>, the accessors will be <em>get-x</em> and <em>put-x</em>.</p>
+
+<p>Other, accessor-specific parameters can be provided using the regular
+parameter (e.g. <em>telltale</em>  <em>monitor</em> <em>mapper</em> etc) prefixed by <em>get-</em> or <em>put-</em>.</p>
+
+<h3 id="example---defining-both-accessors-togethera-idorgheadline35a">Example - defining both accessors together<a id="orgheadline35"></a></h3>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></td><td class="code"><pre><span class="c1">;; Example - defining both accessors together
+</span><span class="w">
+</span><span class="c1">;; The base name of the accessors has been provided: "the-v-key"
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">define-map-accessors</span><span class="w"> </span><span class="no">:v</span><span class="w"> </span><span class="n">is-map-with-keyword-keys-and-numeric-values?</span><span class="w"> </span><span class="nb">name</span><span class="w"> </span><span class="n">the-v-key</span><span class="w"> </span><span class="n">telltale</span><span class="w"> </span><span class="s">":p failed predicate is-map-with-keyword-keys-and-numeric-values?"</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; This getter will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-the-v-key</span><span class="w"> </span><span class="p">{</span><span class="no">:v</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail as expected
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-the-v-key</span><span class="w"> </span><span class="p">{</span><span class="no">:v</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+
+</span><span class="c1">;; This putter will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:v</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="w"> </span><span class="n">put-the-v-key</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:v</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="example---defining-both-accessors-using-the-keys-name-to-name-the-accessorsa-idorgheadline36a">Example - defining both accessors using the key’s name to name the accessors<a id="orgheadline36"></a></h3>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></td><td class="code"><pre><span class="c1">;; Example - defining both accessors using the key's name to name the accessors
+</span><span class="w">
+</span><span class="c1">;; Note since no name parameters have been provided, the getter and
+;; putter will derived from the key's name and be called get-x and put-x respectively.
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">define-map-accessors</span><span class="w"> </span><span class="no">:x</span><span class="w"> </span><span class="n">is-map-with-keyword-keys-and-numeric-values?</span><span class="w">
+  </span><span class="n">get-telltale</span><span class="w"> </span><span class="s">"the value of :x or a default was not a map with keyword keys and numeric values"</span><span class="w">
+  </span><span class="n">put-telltale</span><span class="w"> </span><span class="s">"the new value of :x must be a map with keyword keys and numeric values"</span><span class="w">
+  </span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; This getter will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w"> </span><span class="n">get-x</span><span class="w"> </span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="w">
+
+</span><span class="c1">;; But this will fail as expected
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-fail</span><span class="w"> </span><span class="n">get-x</span><span class="w"> </span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="p">{</span><span class="s">"x"</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="s">"y"</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="s">"z"</span><span class="w"> </span><span class="mi">3</span><span class="p">}})</span><span class="w">
+
+</span><span class="c1">;; This putter will work
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">will-work</span><span class="w"> </span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="w"> </span><span class="n">put-x</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="p">{</span><span class="no">:a</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:b</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">:c</span><span class="w"> </span><span class="mi">3</span><span class="p">}}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="final-wordsa-idorgheadline38a">Final Words<a id="orgheadline38"></a></h1>
+
+<p><a href="https://github.com/ianrumford/clojure-contracts-maps">clojure-contracts-maps</a> provides a useful
+additional feature layer sitting atop normal <a href="http:///clojure.org">Clojure</a>
+maps.</p>
+
+<p>Using the library, its possible to apply Clojure’s <a href="http://blog.fogus.me/2009/12/21/clojures-pre-and-post/">pre and post conditions</a> 
+to a map’s key accesses in the
+same way as they can be applied to a function’s arguments. The power
+of <a href="https://github.com/ianrumford/clojure-contracts-sugar">clojure-contracts-sugar</a> (and
+implicitly <a href="https://github.com/clojure/core.contracts">core.contracts</a>) allows for a
+very rich sets of constraints to be applied to a key’s value.</p>
+
+<p>The opportunity to define the access “semantics” of a map’s key via
+regular functions, ensuring the semantics are adhered to and/or applied
+consistently, is a useful and easy-to-use program-correctness aid.</p>
+
+<p>Using <em>mappers</em> with a <em>getter</em> provide a simple way of generating
+<em>views</em> of a key’s value, without affecting the original value.
+Conversely,  <em>mappers</em> with a <em>putter</em> facilitate e.g <em>normalising</em> the
+key’s (new) value before storing in the (updated) map.</p>
+
+<p><em>Monitors</em> provide a simple way of adding arbitrary, but neutral
+non-affecting logic, to the key’s access. And a <em>telltale</em> helps pin
+down where things went wrong.</p>
+
+<h1 id="final-final-wordsa-idorgheadline39a">Final, Final Words<a id="orgheadline39"></a></h1>
+
+<p>I’ve done a fair amount of Ruby meta programming.  An essential difference is
+<a href="http:///clojure.org">Clojure</a> macros are compile-time whereas Ruby is
+run-time.</p>
+
+<p>But doing macro metaprogramming feels quite different:
+<a href="http:///clojure.org">Clojure</a> works with values (<a href="http://en.wikipedia.org/wiki/Homoiconicity">homoiconicity</a>)
+whereas Ruby metaprogramming works with text that is eval-ed.</p>
+
+<p>One of the most noticeable differences I’ve found though (maybe just my
+style) is whereas in Ruby you build the complete code-as-text, with
+macros you can take an iterative approach i.e a top level macro
+returns one or more “calls” to lower
+level more-focused macros.</p>
+
+<p>There does seem to be a bit of a meme in the community along the lines of “If you are
+using a macro you are doing it wrong”.  But, used wisely, macros are a
+fantastic (and sometimes essential) tool.</p>
+
+<p>But the objectives are the same whether Ruby or Clojure - removing boilerplate and getting
+to the heart of the problem rather than distracted by implementation details.</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/clojure/aspect/contract/sugar/macro/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts.html" title="A little sugar with your Clojure Aspect Contracts">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html" title="The benefits of using the Big Data software ecosystem">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/clojure/aspect/contract/sugar/macro/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

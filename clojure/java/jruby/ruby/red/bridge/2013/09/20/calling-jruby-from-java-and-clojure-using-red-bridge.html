@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Calling  JRuby from Java and Clojure using Red Bridge">
+<title>Calling  JRuby from Java and Clojure using Red Bridge</title>
+<meta property="og:description" content="  TL;DR: JRuby Red Bridge Embed Core is awesome!A few months ago I needed to be able to call arbitrary methods inarbitrary JRuby scripts from an instance of ...">
+<meta property="og:url" content="http://www.rumford.name/clojure/java/jruby/ruby/red/bridge/2013/09/20/calling-jruby-from-java-and-clojure-using-red-bridge.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Calling  JRuby from Java and Clojure using Red Bridge">
+<meta name="twitter:description" content="  TL;DR: JRuby Red Bridge Embed Core is awesome!A few months ago I needed to be able to call arbitrary methods inarbitrary JRuby scripts from an instance of ...">
+<meta name="twitter:url" content="http://www.rumford.name/clojure/java/jruby/ruby/red/bridge/2013/09/20/calling-jruby-from-java-and-clojure-using-red-bridge.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/clojure/java/jruby/ruby/red/bridge/2013/09/20/calling-jruby-from-java-and-clojure-using-red-bridge.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Calling  JRuby from Java and Clojure using Red Bridge</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#java">java</a>, 
+    
+    <a href="/categories/#jruby">jruby</a>, 
+    
+    <a href="/categories/#ruby">ruby</a>, 
+    
+    <a href="/categories/#red">red</a>, 
+    
+    <a href="/categories/#bridge">bridge</a>
+     
+    
+    <time itemprop="datePublished" datetime="2013-09-20">
+    on Sep 20, 2013
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>TL;DR: JRuby Red Bridge Embed Core is awesome!</p>
+</blockquote>
+
+<p>A few months ago I needed to be able to call arbitrary methods in
+arbitrary <a href="http://jruby.org/">JRuby</a> scripts from an instance of a <a href="http://www.java.com">Java</a> class.</p>
+
+<p>Its turns out that <a href="https://github.com/jruby/jruby/wiki">JRuby</a> has had a stable <a href="http://jruby.org/apidocs/org/jruby/embed/package-summary.html">API</a> called <a href="https://github.com/jruby/jruby/wiki/RedBridge"><strong>Red Bridge</strong></a> since version 1.4.</p>
+
+<p>This post show how to use <strong>Red Bridge</strong> from <a href="http://www.java.com">Java</a>, and also <a href="http:///clojure.org">Clojure</a>, to call arbitrary methods in arbitrary <a href="http://jruby.org/">JRuby</a>  scripts.</p>
+
+<p>The really nice thing about <strong>Red Bridge</strong> is that it will run “standard” Ruby without any fuss or bother e.g. you don’t need to compile the Ruby to JVM bytecode.</p>
+
+<p>It also means the Java / Clojure is decoupled from the Ruby (source);  you can change the Ruby very quickly and try again, making for a very quick development cycle.</p>
+
+<!-- more -->
+
+<h1 id="some-background-on-red-bridge">Some background on Red Bridge</h1>
+
+<p><a href="https://github.com/jruby/jruby/wiki/RedBridge"><strong>Red Bridge</strong></a> is the old name of the (Java) API
+to <a href="https://github.com/jruby/jruby/wiki/RedBridge">embed</a> <a href="https://github.com/jruby/jruby/wiki">JRuby</a>. The new, more
+correct name for the API is <strong>JRuby Embed</strong> but in this post and the
+code I use <strong>“Red Bridge”</strong>.</p>
+
+<p>From the <a href="https://github.com/jruby/jruby/wiki/RedBridge">Red Bridge wiki</a>:</p>
+
+<blockquote>
+  <p>Red Bridge consists of two layers: Embed Core on the bottom, and
+implementations of JSR223 and BSF (Bean Scripting Framework) on top.</p>
+</blockquote>
+
+<blockquote>
+  <p>Embed Core is JRuby-specific, and can take advantage of much of JRuby’s power.</p>
+</blockquote>
+
+<blockquote>
+  <p>JSR223 and BSF are more general interfaces that provide a common ground across scripting languages.</p>
+</blockquote>
+
+<p>The <a href="https://github.com/jruby/jruby/wiki/RedBridge">wiki</a> goes on to highlight the benefits of using <strong>Embed Core</strong>:</p>
+
+<blockquote>
+  <p>With Embed Core, you can create several Ruby environments in one JVM, and configure them individually …</p>
+</blockquote>
+
+<blockquote>
+  <p>Embed Core offers several shortcuts, such as loading scripts from a java.io.InputStream, or returning Java-friendly objects from Ruby code. These allow you to skip a lot of boilerplate.</p>
+</blockquote>
+
+<p>In the code below, I use the <strong>Embed Core</strong> <a href="http://jruby.org/apidocs/org/jruby/embed/package-summary.html">API</a>, specifically the <a href="http://jruby.org/apidocs/org/jruby/embed/ScriptingContainer.html">ScriptingContainer</a> class.</p>
+
+<p>Its worth noting that the old <strong>Red Bridge</strong> <a href="https://kenai.com/projects/jruby/pages/RedBridge">Project Kenai wiki</a>  has some interesting examples not (seemingly) in the <a href="https://github.com/jruby/jruby/wiki/RedBridge">new</a> wiki:  I used one from the Kenai <a href="https://kenai.com/projects/jruby/pages/RedBridgeExamples">examples</a> page as the basis for my original code.</p>
+
+<h1 id="code-is-on-github">Code is on Github</h1>
+
+<p>The code can be found on <a href="https://github.com/ianrumford/jruby-java-clojure-red-bridge">github</a>.
+Since I’m coming at this post principally from a
+<a href="http:///clojure.org">Clojure</a> perspective, its a <a href="http://leiningen.org/">Leiningen</a>
+project so you need Leiningen <a href="https://github.com/technomancy/leiningen">installed</a>.</p>
+
+<p>The project structure is Maven style e.g. <em>./src/main/java</em>,
+<em>./src/main/clojure</em> and <em>./src/main/ruby</em>.</p>
+
+<p>Clone the repo in the usual way, get the dependencies, compile the Java, and set the classpath:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre>git clone git@github.com:ianrumford/jruby-java-clojure-red-bridge.git
+<span class="nb">cd</span> ./jruby-java-clojure-red-bridge
+lein deps
+lein clean
+lein javac
+<span class="nb">export </span><span class="nv">CLASSPATH</span><span class="o">=</span><span class="sb">`</span>lein classpath<span class="sb">`</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="the-jruby-test-scripts">The JRuby Test Scripts</h1>
+
+<p>The repo has two example JRuby scripts in <em>./src/main/ruby/bin</em> (<strong>java2jruby_example1.rb</strong> and <strong>clojure2jruby_example1.rb</strong>) that will be  used  below.</p>
+
+<p>These test scripts are very simple Ruby just to show the method call
+and return mechanics. But it seems JRuby scripts called from <strong>Red
+Bridge</strong> can do pretty much any Ruby they like, I have not found any
+obvious or practical limitations.</p>
+
+<h1 id="jruby-from-java">JRuby from Java</h1>
+
+<p>The Java implementation can be found in the name.rumford.<strong>JavaJRubyRedBridge</strong> class.  The class contains the usual boilerplate of getters and setters, etc, familiar from, and to, all Java.</p>
+
+<p>The below sections highlight the important  elements of the API.</p>
+
+<h2 id="jruby-from-java-the-scripting-container">JRuby from Java: the Scripting Container</h2>
+
+<p>The <strong>Scripting Container</strong> can be thought of as the JRuby interpreter’s <em>“handler”</em> in the Java.  Its worth reading the <a href="http://jruby.org/apidocs/org/jruby/embed/ScriptingContainer.html">javadoc</a> to get a feel for how to use the class, taking advantage of other capabilities.</p>
+
+<p>Creating the container is easy, just an instantiation:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>  <span class="n">ScriptingContainer</span> <span class="n">newContainer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ScriptingContainer</span><span class="o">();</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jruby-from-java-the-scripting-receiver">JRuby from Java: the Scripting Receiver</h2>
+
+<p>The interface “contract” between the Ruby script and <strong>Red Bridge</strong> is very simple:  the Ruby script has to return something that will accept (receive) the method call(s).  This is called the <strong>Scripting Receiver</strong> in my code.</p>
+
+<p>To me, the simplest way to  provide a receiver is to return an instance of a JRuby class as the very last statement of the script.  For example:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td class="code"><pre><span class="nb">require</span> <span class="s1">'java'</span>
+
+<span class="k">class</span> <span class="nc">MyHelloWorldClass</span>
+  <span class="k">def</span> <span class="nf">hello_world</span>
+    <span class="nb">puts</span><span class="p">(</span><span class="s2">"Hello World!"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">MyHelloWorldClass</span><span class="p">.</span><span class="nf">new</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In the Java, the receiver is returned by calling the <em>runScriptlet</em> method of the <strong>Scripting Container</strong>:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>   <span class="n">scriptReceiver</span> <span class="o">=</span> <span class="n">getScriptingContainer</span><span class="o">().</span><span class="na">runScriptlet</span><span class="o">(</span><span class="n">scriptReader</span><span class="o">,</span> <span class="n">scriptPath</span><span class="o">);</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In the above, the <em>scriptPath</em> is the filesystem path to the Ruby script (e.g. <em>./src/bin/java2jruby_example1.rb</em>).</p>
+
+<p>The <em>scriptReader</em> provides the Java <em>Reader</em>” to read the script file:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>  <span class="n">Reader</span> <span class="n">scriptReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">FileReader</span><span class="o">(</span><span class="n">scriptPath</span><span class="o">));</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jruby-from-java-calling-a-ruby-method">JRuby from Java: calling a Ruby method</h2>
+
+<p>Calling the Ruby method is straightforward but has a couple of wrinkles.</p>
+
+<p>The <strong>Scripting Container’s</strong> <em>callMethod</em> method take a Java <strong>Class</strong> (<em>resultClass</em> in the code below) to tell <strong>Red Bridge</strong> what the type of the returned value from JRuby (<em>resultValue</em> below) will be.</p>
+
+<p>For example, if a  HashMap is expected, <em>resultClass</em> must be <strong>HashMap.class</strong>, <strong>Boolean.class</strong> for Ruby <em>true</em> or <em>false</em>, etc.  To support different return types, a Java generic method has been used:</p>
+
+<p>Note also, the signature of <em>callMethod</em> is different depending on whether arguments (a Java array) for the Ruby method are being provided.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></td><td class="code"><pre>  <span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="nf">callScriptingMethod</span><span class="o">(</span><span class="n">String</span> <span class="n">methodName</span><span class="o">,</span>
+                                   <span class="n">Object</span><span class="o">[]</span> <span class="n">methodArgs</span><span class="o">,</span>
+                                   <span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">resultClass</span>
+                                   <span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"JJRB::callScriptingMethod ==&gt; &gt;{}&lt; METHOD &gt;{}&lt; ARGS &gt;{}&lt;"</span><span class="o">,</span> <span class="n">inspect</span><span class="o">(),</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">methodArgs</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+
+    <span class="n">T</span> <span class="n">resultValue</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">methodArgs</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">resultValue</span> <span class="o">=</span> <span class="n">findScriptingContainer</span><span class="o">().</span><span class="na">callMethod</span><span class="o">(</span><span class="n">findScriptingReceiver</span><span class="o">(),</span> 
+                                                        <span class="n">methodName</span><span class="o">,</span>
+                                                        <span class="n">methodArgs</span><span class="o">,</span>
+                                                        <span class="n">resultClass</span>
+                                                        <span class="o">);</span>
+
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">resultValue</span> <span class="o">=</span> <span class="n">findScriptingContainer</span><span class="o">().</span><span class="na">callMethod</span><span class="o">(</span><span class="n">findScriptingReceiver</span><span class="o">(),</span> 
+                                                        <span class="n">methodName</span><span class="o">,</span>
+                                                        <span class="n">resultClass</span>
+                                                        <span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">resultValue</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"JJRB::callScriptingMethod &lt;== &gt;{}&lt; METHOD &gt;{}&lt; RESULT &gt;{}&lt; &gt;{}&lt;"</span><span class="o">,</span> <span class="n">inspect</span><span class="o">(),</span> <span class="n">methodName</span><span class="o">,</span> <span class="n">resultValue</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">(),</span> <span class="n">resultValue</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"JJRB::callScriptingMethod &lt;== &gt;{}&lt; METHOD &gt;{}&lt; RESULT IS NULL"</span><span class="o">,</span> <span class="n">inspect</span><span class="o">(),</span> <span class="n">methodName</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">resultValue</span><span class="o">;</span>
+
+  <span class="o">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Its worth observing (confirming) that the same method can be called
+repeatedly using the same <strong>Scripting Container / Receiver</strong> pair.</p>
+
+<p>Also, other methods (with different <em>resultValue</em> types) can be called just by changing the <em>methodName</em>, <em>resultClass</em> and <em>methodArgs</em> (if any).</p>
+
+<h2 id="jruby-from-java-running-a-trivial-demo">JRuby from Java: running a trivial demo</h2>
+
+<p>Although designed to be used from other Java classes, <strong>JavaJRubyRedBridge</strong> has a small <strong>main</strong> method to illustrate a trivial demo that passes a HashMap to a Ruby method and expects one back:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td><td class="code"><pre>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+
+    <span class="cm">/*
+
+      A very simple test of passing a HashMap and expecting one one back
+
+    */</span>
+
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">methodArgs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
+
+    <span class="n">JavaJRubyRedBridge</span> <span class="n">redBridge</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JavaJRubyRedBridge</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
+
+    <span class="n">methodArgs</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"method"</span><span class="o">,</span> <span class="n">redBridge</span><span class="o">.</span><span class="na">getRubyScriptMethod</span><span class="o">());</span>
+    <span class="n">methodArgs</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"path"</span><span class="o">,</span> <span class="n">redBridge</span><span class="o">.</span><span class="na">getRubyScriptPath</span><span class="o">());</span>
+
+    <span class="n">redBridge</span><span class="o">.</span><span class="na">callRubyMethod</span><span class="o">(</span><span class="n">redBridge</span><span class="o">.</span><span class="na">getRubyScriptMethod</span><span class="o">(),</span>
+                             <span class="n">methodArgs</span><span class="o">,</span>
+                             <span class="n">HashMap</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+  <span class="o">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The Ruby looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></td><td class="code"><pre><span class="c1"># Java to Ruby Red Bridge Example 1</span>
+
+<span class="nb">require</span> <span class="s2">"java"</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="s1">'java.util.HashMap'</span><span class="p">;</span>
+
+<span class="vg">$DEBUG</span> <span class="o">=</span> <span class="kp">true</span>
+
+<span class="k">class</span> <span class="nc">Java2JRubyExample1</span>
+
+  <span class="nc">WHOAMI</span> <span class="o">=</span> <span class="ss">:Java2JRubyExample1</span>
+
+  <span class="k">def</span> <span class="nf">method1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">eye</span> <span class="o">=</span> <span class="ss">:method1</span>
+
+    <span class="vg">$DEBUG</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">.</span><span class="nf">each_with_index</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="no">WHOAMI</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">eye</span><span class="si">}</span><span class="s2"> arg &gt;</span><span class="si">#{</span><span class="n">i</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">a</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">&lt;"</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="n">rubyReturn</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"class"</span> <span class="o">=&gt;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="s2">"method"</span> <span class="o">=&gt;</span> <span class="n">eye</span><span class="p">.</span><span class="nf">to_s</span><span class="p">}</span>
+    
+    <span class="c1"># java expects a HashMap</span>
+    <span class="n">returnValue</span> <span class="o">=</span> <span class="no">HashMap</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">rubyReturn</span><span class="p">)</span>
+
+    <span class="vg">$DEBUG</span> <span class="o">&amp;&amp;</span> <span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="no">WHOAMI</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">eye</span><span class="si">}</span><span class="s2"> returnValue &gt;</span><span class="si">#{</span><span class="n">returnValue</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">returnValue</span><span class="si">}</span><span class="s2">&lt;"</span><span class="p">)</span>
+    
+    <span class="n">returnValue</span>
+    
+  <span class="k">end</span>
+  
+
+<span class="k">end</span>
+
+<span class="c1"># return an instance of the class</span>
+<span class="no">Java2JRubyExample1</span><span class="p">.</span><span class="nf">new</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Run the demo like so:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>java -cp <span class="sb">`</span>lein classpath<span class="sb">`</span> name.rumford.JavaJRubyRedBridge --path ./src/main/ruby/bin/java2jruby_example1.rb --method method1<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You should see some debug output from both Java and Ruby:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td><td class="code"><pre>17:27:32.491 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments <span class="o">==</span>&gt; UDF ARGS &gt;4&lt;
+17:27:32.495 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments ARG &gt;--path&lt;
+17:27:32.495 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments ARG &gt;./src/main/ruby/bin/java2jruby_example1.rb&lt;
+17:27:32.495 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments ARG &gt;--method&lt;
+17:27:32.495 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments ARG &gt;method1&lt;
+17:27:32.514 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::processArguments &lt;<span class="o">==</span> UDF ARGS &gt;4&lt;
+17:27:32.514 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::callRubyMethod <span class="o">==</span>&gt;  METHOD &gt;method1&lt; DATA &gt;1&lt; 
+17:27:32.514 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::callScriptingMethod <span class="o">==</span>&gt; METHOD &gt;method1&lt; ARGS &gt;1&lt;
+17:27:32.593 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::newScriptingContainer &lt;<span class="o">=</span>&gt; NEW CONTAINER &gt;org.jruby.embed.ScriptingContainer@6b776b55&lt;
+17:27:32.594 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::newScriptingReceiver <span class="o">==</span>&gt; SCRIPT PATH &gt;./src/main/ruby/bin/java2jruby_example1.rb&lt;
+17:27:32.594 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::newScriptingReader &lt;<span class="o">=</span>&gt; SCRIPT PATH &gt;./src/main/ruby/bin/java2jruby_example1.rb&lt; READER &gt;java.io.BufferedReader@6d27d091&lt;
+17:27:34.307 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::newScriptingReceiver &lt;<span class="o">==</span> SCRIPT PATH &gt;./src/main/ruby/bin/java2jruby_example1.rb&lt; RECEIVER &gt;#&lt;Java2JRubyExample1:0x23d582a7&gt;&lt;
+Java2JRubyExample1::method1 arg &gt;0&lt; &gt;Java::JavaUtil::HashMap&lt; &gt;<span class="o">{</span><span class="s2">"path"</span><span class="o">=</span>&gt;<span class="s2">"./src/main/ruby/bin/java2jruby_example1.rb"</span>, <span class="s2">"method"</span><span class="o">=</span>&gt;<span class="s2">"method1"</span><span class="o">}</span>&lt;
+Java2JRubyExample1::method1 returnValue &gt;Java::JavaUtil::HashMap&lt; &gt;<span class="o">{</span><span class="s2">"class"</span><span class="o">=</span>&gt;<span class="s2">"Java2JRubyExample1"</span>, <span class="s2">"method"</span><span class="o">=</span>&gt;<span class="s2">"method1"</span><span class="o">}</span>&lt;
+17:27:34.314 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::callScriptingMethod &lt;<span class="o">==</span> METHOD &gt;method1&lt; RESULT &gt;java.util.HashMap&lt; &gt;<span class="o">{</span><span class="nv">class</span><span class="o">=</span>Java2JRubyExample1, <span class="nv">method</span><span class="o">=</span>method1<span class="o">}</span>&lt;
+17:27:34.314 <span class="o">[</span>main] INFO  name.rumford.JavaJRubyRedBridge - JJRB::callRubyMethod &lt;<span class="o">==</span>  METHOD &gt;method1&lt; RESULT &gt;java.util.HashMap&lt; &gt;<span class="o">{</span><span class="nv">class</span><span class="o">=</span>Java2JRubyExample1, <span class="nv">method</span><span class="o">=</span>method1<span class="o">}</span>&lt;<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="jruby-from-clojure">JRuby from Clojure</h1>
+
+<p>I have separated out the “test” code (<em>./src/main/clojure/redbridge.blog1.clj</em>) from the namespace (file) that implements the <strong>Red Bridge</strong> interface (<strong>redbridge.clojure-jruby</strong>, <em>./src/main/clojure/redbridge.clojure_jruby.clj</em>).</p>
+
+<p>The key functions to create (new) the <strong>Red Bridge</strong> interface are wrapped in convenience functions, i.e. <em>find-scripting-container</em> and <em>find-scripting-receiver</em> that take the <strong>state atom</strong> as the argument.</p>
+
+<h2 id="jruby-from-clojure--the-scripting-container-and-receiver">JRuby from Clojure:  the Scripting Container and Receiver</h2>
+
+<p>Since the <strong>Scripting Container / Receiver</strong> pair can be used for repeated calls, they are kept in a <strong>state atom</strong> holding  a map initialised with the values of the Ruby script path and method (if supplied):</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">initialize-scripting-state</span><span class="w">
+  </span><span class="s">"create a starter state"</span><span class="w">
+  </span><span class="p">([</span><span class="n">ruby-script</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">initialize-scripting-state</span><span class="w"> </span><span class="n">ruby-script</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span><span class="w">
+  </span><span class="p">([</span><span class="n">ruby-script</span><span class="w"> </span><span class="n">ruby-method</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="nf">atom</span><span class="w"> </span><span class="p">{</span><span class="no">:script</span><span class="w"> </span><span class="n">ruby-script</span><span class="w"> </span><span class="no">:method</span><span class="w"> </span><span class="n">ruby-method</span><span class="p">})))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Creating a Java <em>Reader</em> for the Ruby script is simple:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">new-script-reader</span><span class="w">
+  </span><span class="s">"create a Java Reader pointing at the ruby script"</span><span class="w">
+  </span><span class="p">[</span><span class="n">ruby-script</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">file-reader</span><span class="w"> </span><span class="p">(</span><span class="nf">FileReader.</span><span class="w"> </span><span class="n">ruby-script</span><span class="p">)</span><span class="w">
+        </span><span class="n">buffered-reader</span><span class="w"> </span><span class="p">(</span><span class="nf">BufferedReader.</span><span class="w"> </span><span class="n">file-reader</span><span class="p">)]</span><span class="w">
+    </span><span class="n">buffered-reader</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>As is creating a simple <strong>Scripting Container</strong> instance:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">new-scripting-container</span><span class="w">
+  </span><span class="s">"create a new jruby scripting container"</span><span class="w">
+  </span><span class="p">[]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">org.jruby.embed.ScriptingContainer.</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And the <strong>Scripting Receiver</strong> is not much more involved:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">new-scripting-receiver</span><span class="w">
+  </span><span class="s">"parse a ruby script and return a receiver"</span><span class="w">
+  </span><span class="p">([</span><span class="n">ruby-script</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">new-scripting-receiver</span><span class="w"> </span><span class="n">ruby-script</span><span class="w"> </span><span class="p">(</span><span class="nf">new-scripting-container</span><span class="p">)))</span><span class="w">
+  </span><span class="p">([</span><span class="n">ruby-script</span><span class="w"> </span><span class="n">scripting-container</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">scripting-receiver</span><span class="w"> </span><span class="p">(</span><span class="nf">.runScriptlet</span><span class="w"> </span><span class="n">scripting-container</span><span class="w"> </span><span class="p">(</span><span class="nf">new-script-reader</span><span class="w"> </span><span class="n">ruby-script</span><span class="p">)</span><span class="w"> </span><span class="n">ruby-script</span><span class="p">)]</span><span class="w">
+       </span><span class="n">scripting-receiver</span><span class="p">)))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jruby-from-clojure-calling-a-ruby-method">JRuby from Clojure: calling a Ruby method</h2>
+
+<p>The function to call a Ruby method takes the <strong>state atom</strong>, the return value (note e.g just <strong>HashMap</strong> not <strong>HashMap.class</strong>), the method name and method arguments (if any).</p>
+
+<p>if a method name is not supplied, it is fetched from the state atom.</p>
+
+<p>The method’s arguments, if any, are converted into a Java object array (<em>object-array</em> function).</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">call-ruby-method</span><span class="w">
+  </span><span class="s">"call the ruby method"</span><span class="w">
+  </span><span class="p">[</span><span class="n">scripting-state</span><span class="w"> </span><span class="n">result-class</span><span class="w"> </span><span class="n">method-name</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">method-args</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">scripting-container</span><span class="w"> </span><span class="p">(</span><span class="nf">find-scripting-container</span><span class="w"> </span><span class="n">scripting-state</span><span class="p">)</span><span class="w">
+        </span><span class="n">scripting-receiver</span><span class="w"> </span><span class="p">(</span><span class="nf">find-scripting-receiver</span><span class="w"> </span><span class="n">scripting-state</span><span class="p">)</span><span class="w">
+        </span><span class="n">scripting-name</span><span class="w"> </span><span class="p">(</span><span class="nf">if-not</span><span class="w"> </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">method-name</span><span class="p">)</span><span class="w">
+                         </span><span class="n">method-name</span><span class="w">
+                         </span><span class="p">(</span><span class="no">:method</span><span class="w"> </span><span class="err">@</span><span class="n">scripting-state</span><span class="p">))]</span><span class="w">
+    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">not-empty</span><span class="w"> </span><span class="n">method-args</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nf">.callMethod</span><span class="w"> </span><span class="n">scripting-container</span><span class="w"> </span><span class="n">scripting-receiver</span><span class="w"> </span><span class="n">scripting-name</span><span class="w"> </span><span class="p">(</span><span class="nf">object-array</span><span class="w"> </span><span class="n">method-args</span><span class="p">)</span><span class="w"> </span><span class="n">result-class</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nf">.callMethod</span><span class="w"> </span><span class="n">scripting-container</span><span class="w"> </span><span class="n">scripting-receiver</span><span class="w"> </span><span class="n">scripting-name</span><span class="w"> </span><span class="n">result-class</span><span class="p">))))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jruby-from-clojure-running-a-trivial-command-line-demo">JRuby from Clojure: running a trivial command line demo</h2>
+
+<p>The Clojure “test” code (<em>redbridge.blog1</em>) has a  <strong>-main</strong> method that will run a simple demo in the same vein as the Java:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">-main</span><span class="w">
+  </span><span class="s">"main method to run a simple demo"</span><span class="w">
+  </span><span class="p">[</span><span class="o">&amp;</span><span class="w"> </span><span class="n">args</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">cjrb/call-ruby-method</span><span class="w"> </span><span class="p">(</span><span class="nf">cjrb/initialize-scripting-state</span><span class="w"> </span><span class="s">"./src/main/ruby/bin/clojure2jruby_example1.rb"</span><span class="p">)</span><span class="w"> </span><span class="n">RubyHash</span><span class="w"> </span><span class="s">"method1"</span><span class="w"> </span><span class="n">args</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Run the demo using Leiningen:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m redbridge.blog1 <span class="s2">"Hello"</span> <span class="s2">"World"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You should see the debug output from the Ruby:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="no">Clojure2JRubyExample1</span><span class="o">::</span><span class="n">method1</span> <span class="n">arg</span> <span class="o">&gt;</span><span class="mi">0</span><span class="o">&lt;</span> <span class="o">&gt;</span><span class="no">Java</span><span class="o">::</span><span class="no">ClojureLang</span><span class="o">::</span><span class="no">ArraySeq</span><span class="o">&lt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="s2">"Hello"</span> <span class="s2">"World"</span><span class="p">)</span><span class="o">&lt;</span>
+<span class="no">Clojure2JRubyExample1</span><span class="o">::</span><span class="n">method1</span> <span class="n">returnValue</span> <span class="o">&gt;</span><span class="no">Hash</span><span class="o">&lt;</span> <span class="o">&gt;</span><span class="p">{</span><span class="ss">:class</span><span class="o">=&gt;</span><span class="s2">"Clojure2JRubyExample1"</span><span class="p">,</span> <span class="s2">"method"</span><span class="o">=&gt;</span><span class="s2">"method1"</span><span class="p">}</span><span class="o">&lt;</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jruby-from-clojure-running-a-repl-demo">JRuby from Clojure: running a REPL demo</h2>
+
+<p>Trying stuff out in Clojure is much more fun and productive with the REPL.</p>
+
+<p>These examples are in <em>redbridge_blog1</em> which uses the <em>clojure2ruby.rb</em> file, where <em>method1</em> looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre></td><td class="code"><pre>  <span class="k">def</span> <span class="nf">method1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">eye</span> <span class="o">=</span> <span class="ss">:method1</span>
+
+    <span class="vg">$DEBUG</span> <span class="o">&amp;&amp;</span> <span class="n">args</span><span class="p">.</span><span class="nf">each_with_index</span> <span class="p">{</span><span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="no">WHOAMI</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">eye</span><span class="si">}</span><span class="s2"> arg &gt;</span><span class="si">#{</span><span class="n">i</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">a</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">&lt;"</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="c1"># return value must be a Ruby Hash</span>
+    <span class="n">returnValue</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"class"</span> <span class="o">=&gt;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="s2">"method"</span> <span class="o">=&gt;</span> <span class="n">eye</span><span class="p">.</span><span class="nf">to_s</span><span class="p">}</span>
+
+    <span class="vg">$DEBUG</span> <span class="o">&amp;&amp;</span> <span class="nb">puts</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="no">WHOAMI</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">eye</span><span class="si">}</span><span class="s2"> returnValue &gt;</span><span class="si">#{</span><span class="n">returnValue</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2">&lt; &gt;</span><span class="si">#{</span><span class="n">returnValue</span><span class="si">}</span><span class="s2">&lt;"</span><span class="p">)</span>
+    
+    <span class="n">returnValue</span>    
+    
+  <span class="k">end</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Do some initialisation:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre></td><td class="code"><pre><span class="c1">;; Clojure2JRubyExample1
+;; *********************
+</span><span class="w">
+</span><span class="c1">;; Ruby script path
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">ruby-script-clojure2jruby-example1</span><span class="w"> </span><span class="s">"./src/main/ruby/bin/clojure2jruby_example1.rb"</span><span class="w"> </span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; Initialize the state atom
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">state-clojure2jruby-example1</span><span class="w"> </span><span class="p">(</span><span class="nf">cjrb/initialize-scripting-state</span><span class="w"> </span><span class="n">ruby-script-clojure2jruby-example1</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Run same example as the command line demo:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre><span class="c1">;; method1: no arguments, returns a Ruby Hash
+;; *******
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">c2j-m1</span><span class="w"> </span><span class="p">(</span><span class="nf">cjrb/call-ruby-method</span><span class="w"> </span><span class="n">state-clojure2jruby-example1</span><span class="w"> </span><span class="n">RubyHash</span><span class="w"> </span><span class="s">"method1"</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="s">"class"</span><span class="w"> </span><span class="s">"Clojure2JRubyExample1"</span><span class="n">,</span><span class="w"> </span><span class="s">"method"</span><span class="w"> </span><span class="s">"method1"</span><span class="p">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Although a Ruby Hash, you can do stuff with it in Clojure:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre><span class="c1">;; Can iterate over the returned Ruby Hash
+</span><span class="p">(</span><span class="k">for</span><span class="w"> </span><span class="p">[[</span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="n">c2j-m1</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">lgr/info</span><span class="w"> </span><span class="p">(</span><span class="nf">format</span><span class="w"> </span><span class="s">"k &gt;%s&lt; &gt;%s&lt; v &gt;%s&lt; &gt;%s&lt;"</span><span class="w"> </span><span class="p">(</span><span class="nb">class</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="p">(</span><span class="nb">class</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">v</span><span class="p">)))</span><span class="w">
+</span><span class="err">;;</span><span class="w"> </span><span class="n">=&gt;</span><span class="w"> </span><span class="n">Logging</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">REPL</span><span class="w"> </span><span class="n">console</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>On the REPL console you should see:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>16:19:25.156 <span class="o">[</span>nREPL-worker-25] INFO  redbridge.blog1 - k &gt;class java.lang.String&lt; &gt;class&lt; v &gt;class java.lang.String&lt; &gt;Clojure2JRubyExample1&lt;
+16:19:25.159 <span class="o">[</span>nREPL-worker-25] INFO  redbridge.blog1 - k &gt;class java.lang.String&lt; &gt;method&lt; v &gt;class java.lang.String&lt; &gt;method1&lt;<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And common map functions work just fine:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="c1">;; common map functions
+</span><span class="w">
+</span><span class="p">(</span><span class="nb">keys</span><span class="w"> </span><span class="n">c2j-m1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt; 
+</span><span class="o">'</span><span class="p">(</span><span class="s">"class"</span><span class="w"> </span><span class="s">"method"</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">vals</span><span class="w"> </span><span class="n">c2j-m1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="o">'</span><span class="p">(</span><span class="s">"Clojure2JRubyExample1"</span><span class="w"> </span><span class="s">"method1"</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="n">c2j-m1</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="mi">2</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">into</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[[</span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">]]</span><span class="w"> </span><span class="p">[(</span><span class="nf">string/capitalize</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">string/upper-case</span><span class="w"> </span><span class="n">v</span><span class="p">)])</span><span class="w"> </span><span class="n">c2j-m1</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; =&gt;
+</span><span class="p">{</span><span class="s">"Class"</span><span class="w"> </span><span class="s">"CLOJURE2JRUBYEXAMPLE1"</span><span class="n">,</span><span class="w"> </span><span class="s">"Method"</span><span class="w"> </span><span class="s">"METHOD1"</span><span class="p">}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>There are a few other example Ruby methods in <em>clojure2jruby.rb</em> but you get the idea from the above I’m sure: just change the return type, method name and method arguments (if any) in the <em>call-ruby-method</em> function call.</p>
+
+<h1 id="final-words">Final Words</h1>
+
+<p>I’ve only scratched the surface of <strong>Red Bridge Embed Call</strong> but its
+an excellent interface between Java and Clojure and JRuby.</p>
+
+<p>There are other ways of getting programs from different JVM
+languages to talk to one another but this must be one of the most
+robust and easiest to use, and possibly with the least performance penalty.  I’ve used <strong>Red Bridge</strong> to process larges volumes of data in a Hadoop pipeline and have not seen a failure due to <strong>Red Bridge</strong> or been aware of a bottleneck in the bridge itself.</p>
+
+<p>An aside: the thing that’s really struck home to me whilst preparing this
+post is how <em>elegant</em> the Clojure code is. I’ve been a long time fan
+of Ruby and don’t mind too much the <em>ceremony</em> of Java. But just
+scanning the three types of source code I’ve used here, my eye is
+drawn to alight on the Clojure - its just looks so minimalist,
+uncluttered and easy to understand.</p>
+
+<p>BTW I was using Ubuntu 12.04, with Hotspot jdk 1.7.0_40, Clojure 1.5.1, JRuby 1.7.2, Leiningen 2.3.2, Emacs 24.3 and nREPL 0.1.5</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/clojure/reducers/parallel/map/reduce/2013/08/25/some-trivial-examples-of-using-clojure-reducers.html" title="Some trivial examples of using Clojure Reducers">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/clojure/aspect/contract/sugar/macro/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts.html" title="A little sugar with your Clojure Aspect Contracts">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/clojure/reducers/parallel/map/reduce/2013/08/25/some-trivial-examples-of-using-clojure-reducers.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/clojure/aspect/contract/sugar/macro/2014/02/19/a-little-sugar-with-your-clojure-aspect-contracts.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

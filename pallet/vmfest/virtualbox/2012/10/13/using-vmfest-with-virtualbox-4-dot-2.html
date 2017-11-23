@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="Using VMFest with VirtualBox (VBox) 4.2">
+<title>Using VMFest with VirtualBox (VBox) 4.2</title>
+<meta property="og:description" content="VMFest is  “… a PalletOps project to turn VirtualBox into a light-weight cloud provider.”To understand the context and point of this post requires a minor di...">
+<meta property="og:url" content="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="Using VMFest with VirtualBox (VBox) 4.2">
+<meta name="twitter:description" content="VMFest is  “… a PalletOps project to turn VirtualBox into a light-weight cloud provider.”To understand the context and point of this post requires a minor di...">
+<meta name="twitter:url" content="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/13/using-vmfest-with-virtualbox-4-dot-2.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">Using VMFest with VirtualBox (VBox) 4.2</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#pallet">pallet</a>, 
+    
+    <a href="/categories/#vmfest">vmfest</a>, 
+    
+    <a href="/categories/#virtualbox">virtualbox</a>
+     
+    
+    <time itemprop="datePublished" datetime="2012-10-13">
+    on Oct 13, 2012
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p><a href="https://github.com/tbatchelli/vmfest">VMFest</a> is</p>
+
+<blockquote>
+  <p>“… a <a href="http://palletops.com">PalletOps</a> project to turn <a href="https://www.virtualbox.org/">VirtualBox</a> into a light-weight cloud provider.”</p>
+</blockquote>
+
+<p>To understand the context and point of this post requires a minor digression
+into Pallet.</p>
+
+<p><a href="http://palletops.com/">Pallet</a> describes itself as</p>
+
+<blockquote>
+  <p>“A fresh look at cloud infrastructure automation”</p>
+</blockquote>
+
+<p>and</p>
+
+<blockquote>
+  <p>“DevOps for the JVM”</p>
+</blockquote>
+
+<p>Suitably cool aphorisms but, more prosaically, Pallet is a
+<em>configuration management</em> tool (library) for
+Linux infrastructures (although, in principle, there does not appear to
+be any reason why it wouldn’t work with Windows).</p>
+
+<p>Well known alternatives to Pallet include <a href="http://www.opscode.com/">Chef</a>
+and <a href="http://puppetlabs.com/">Puppet</a>.  Currently I use Chef to manage my own
+development environments.</p>
+
+<p>Pallet is written in <a href="http://clojure.org/">Clojure</a> and hence is part of the Java/JVM
+ecosystem.</p>
+
+<p>Pallet
+<a href="http://www.jclouds.org/documentation/reference/supported-providers/">supports</a>
+many
+<em><a href="http://palletops.com/doc/reference/providers/">cloud providers</a></em>
+though the use of the <a href="http://www.jclouds.org/">jclouds</a>  library:  as long as a
+provider supports the jclouds API, it can be used by Pallet.</p>
+
+<p>But VBox is (still?) not  supported by jclouds (there doesn’t appear
+to be a jclouds
+provider).</p>
+
+<p>Because there is no jclouds provider for VBox,  the PalletOps team wrote 
+<a href="https://github.com/pallet/pallet-vmfest">pallet-vmfest</a> to support
+VBox as a “local” <em>compute service</em>.  pallet-vmfest,  in
+turn, uses VMFest to control VBox.</p>
+
+<p>Hope that’s clear.  More on Pallet in a future post.  Now back to
+VMFest.</p>
+
+<!-- more -->
+
+<h1 id="vmfest-and-vbox">VMFest and VBox</h1>
+
+<p>VMFest is a standalone package that does the same job broadly as <a href="http://vagrantup.com/">Vagrant</a>
+(although  the latter favours Chef for configuration management).</p>
+
+<p>The current version of VMFest  only supports VBox 4.1 whereas I now
+use 4.2 (initially because 4.2   stopped the infuriating VM “workspace
+dance” whenever a VM
+changed video mode).</p>
+
+<h2 id="vbox-interfaces-and-components">VBox Interfaces and Components</h2>
+
+<p>The “big picture” diagram in section 1.1 of the VBox
+<a href="http://download.virtualbox.org/virtualbox/4.2.0/VirtualBoxSDK-4.2.0-80737.zip">SDK’s</a>
+ <em>Programming Guide and Reference</em> (<a href="http://download.virtualbox.org/virtualbox/SDKRef.pdf">pdf</a>) is illuminating and puts the
+various interfaces 
+and components into context.</p>
+
+<h2 id="the-main-vbox-api">The main VBox API</h2>
+
+<p>The main VBox API is a Microsoft <em>Component Object Model</em> (<a href="https://www.microsoft.com/com/default.mspx">COM</a>) interface; on Linux the
+interface is emulated by <a href="https://developer.mozilla.org/en-US/docs/XPCOM">XPCOM</a>.</p>
+
+<p>One can program directly to the COM API; the guide cites Python or
+C++ as suitable languages (although from the snippet of code given I
+can’t see why you couldn’t use Ruby if so inclined as - least
+on  Windows itself - 
+ using COM interfaces from Ruby is simple and <em>just works</em>).</p>
+
+<h2 id="vbox-management-interfaces">VBox Management Interfaces</h2>
+
+<p>VBox support three  interfaces “on top” of  the main API:</p>
+
+<ol>
+  <li>the familiar GUI</li>
+  <li>the VBoxManage command</li>
+  <li>the web service</li>
+</ol>
+
+<h2 id="vbox-web-service-interface">VBox Web Service Interface</h2>
+
+<p>The programming guide describes the webservice thus:</p>
+
+<blockquote>
+  <p>VirtualBox comes with a web service that maps nearly the entire Main API. The web service ships in a stand-alone executable (vboxwebsrv) that, when running, acts as an HTTP
+server, accepts SOAP connections and processes them.</p>
+</blockquote>
+
+<p>VMFest uses the web service API to control VBox, specifically by using
+the
+<em>vboxjws</em> Java library (distributed in the SDK).  (There are equivalent artefacts for  driving the
+web service from Perl, Python, Ruby, etc)</p>
+
+<h2 id="porting-vmfest-to--vbox-42">Porting VMFest to  VBox 4.2</h2>
+
+<p>Porting VMFest to work with VBox 4.2 wasn’t hard at least to make my
+examples work.  My branch shouldn’t be considered a definitive port
+yet but it certainly does the basics.</p>
+
+<p>The  most notable changes I had to make were:</p>
+
+<ul>
+  <li>
+    <p>Accommodating the <em>groups</em> parameter in calls to <em>createMachine</em></p>
+
+    <p>I just set the parameter to <em>nil</em> to signify no group affiliation</p>
+  </li>
+  <li>
+    <p><em>findMedium</em> has been withdrawn; use <em>openMedium</em></p>
+
+    <p>As well as making the explicit change, I found it necessary to
+  change the semantics in <em>ensure-image-is-registered</em></p>
+  </li>
+</ul>
+
+<p>Other changes were made as part of my learning curve and also to add
+useful features:</p>
+
+<ul>
+  <li>
+    <p>support for <em>boot-order</em></p>
+
+    <p>Being able to specify the <em>boot-order</em> in the machine definition.
+  Any boot position not specified will be set to null.  (Note the
+  max boot position is 4 - obtained from a system property).
+  e.g.</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="w">    </span><span class="no">:boot-order</span><span class="w"> </span><span class="p">[[</span><span class="mi">1</span><span class="w"> </span><span class="no">:hard-disk</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="w"> </span><span class="no">:dvd</span><span class="p">]]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>
+    <p>support for <em>utc-time</em></p>
+
+    <p>Set the real time clock of the VM to use UTC time.  Linux prefers this</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="w">    </span><span class="no">:utc-time</span><span class="w"> </span><span class="n">true</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>support for <em>clipboard-mode</em></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="w">    </span><span class="no">:clipboard-mode</span><span class="w"> </span><span class="no">:birectional</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>comments sprinkled around the key function</li>
+</ul>
+
+<p>To use the 4.2 compatible code in projects, I created a new snapshot jar using
+the following updated  VMFfest project.clj:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">defproject</span><span class="w"> </span><span class="n">vmfest</span><span class="w"> </span><span class="s">"0.2.5-vbox4.2.0-SNAPSHOT"</span><span class="w">
+  </span><span class="no">:description</span><span class="w"> </span><span class="s">"Manage local VMs from the REPL"</span><span class="w">
+  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">org.clojure/clojure</span><span class="w"> </span><span class="s">"1.4.0"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">slingshot</span><span class="w"> </span><span class="s">"0.10.2"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">org.clojure/tools.logging</span><span class="w"> </span><span class="s">"0.2.3"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">local/vboxjws</span><span class="w"> </span><span class="s">"4.2.0"</span><span class="p">]</span><span class="w">
+                 </span><span class="c1">;;[org.clojars.tbatchelli/vboxjws "4.1.8"]
+</span><span class="w">                 </span><span class="p">[</span><span class="n">fs</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">]]</span><span class="w">
+  </span><span class="no">:license</span><span class="w"> </span><span class="p">{</span><span class="no">:name</span><span class="w"> </span><span class="s">"Eclipse Public License"</span><span class="w">
+            </span><span class="no">:url</span><span class="w"> </span><span class="s">"http://www.eclipse.org/legal/epl-v10.html"</span><span class="p">}</span><span class="w">
+  </span><span class="no">:multi-deps</span><span class="w"> </span><span class="p">{</span><span class="s">"1.4"</span><span class="w"> </span><span class="p">[[</span><span class="n">org.clojure/clojure</span><span class="w"> </span><span class="s">"1.4.0"</span><span class="p">]]</span><span class="w">
+               </span><span class="c1">;; "1.4" [[org.clojure/clojure "1.4.0-beta1"]]
+</span><span class="w">               </span><span class="no">:all</span><span class="w"> </span><span class="p">[[</span><span class="n">slingshot</span><span class="w"> </span><span class="s">"0.10.0"</span><span class="p">]</span><span class="w">
+                     </span><span class="p">[</span><span class="n">org.clojure/tools.logging</span><span class="w"> </span><span class="s">"0.2.3"</span><span class="p">]</span><span class="w">
+                     </span><span class="c1">;;[org.clojars.tbatchelli/vboxjws "4.1.8"]
+</span><span class="w">                     </span><span class="p">[</span><span class="n">local/vboxjws</span><span class="w"> </span><span class="s">"4.2.0"</span><span class="p">]</span><span class="w">
+                     </span><span class="p">[</span><span class="n">fs</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">]]}</span><span class="w">
+  </span><span class="no">:dev-dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">robert/hooke</span><span class="w"> </span><span class="s">"1.1.2"</span><span class="p">]</span><span class="w">
+                     </span><span class="p">[</span><span class="n">log4j/log4j</span><span class="w"> </span><span class="s">"1.2.16"</span><span class="p">]</span><span class="w">
+                     </span><span class="p">[</span><span class="n">lein-clojars</span><span class="w"> </span><span class="s">"0.8.0"</span><span class="p">]]</span><span class="w">
+  </span><span class="no">:repositories</span><span class="w"> </span><span class="p">[[</span><span class="s">"project"</span><span class="w"> </span><span class="s">"file:repo"</span><span class="p">]]</span><span class="w">
+  </span><span class="no">:aot</span><span class="w"> </span><span class="p">[</span><span class="o">#</span><span class="s">"vmfest.virtualbox.model"</span><span class="p">]</span><span class="w">
+  </span><span class="no">:test-selectors</span><span class="w"> </span><span class="p">{</span><span class="no">:default</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="no">:integration</span><span class="w"> </span><span class="n">v</span><span class="p">)))</span><span class="w">
+                   </span><span class="no">:integration</span><span class="w"> </span><span class="no">:integration</span><span class="w">
+                   </span><span class="no">:all</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">_</span><span class="p">]</span><span class="w"> </span><span class="n">true</span><span class="p">)}</span><span class="w">
+  </span><span class="no">:jar-exclusions</span><span class="w"> </span><span class="p">[</span><span class="o">#</span><span class="s">"log4j.xml"</span><span class="p">])</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The new jar (<em>vmfest-0.2.5-vbox4.2.0-SNAPSHOT.jar</em>) can be installed
+in a local repo and cited as a dependency - see later.</p>
+
+<p>Note the <em>aot</em> specification.  I found it necessary to aot-compile
+<em>vmfest.virtualbox.model</em> to allow the <em>defrecords</em> defined in it to
+be imported when not running in a repl.  Not  sure what exactly is
+going on here:  without the <em>aot</em>, running from the command line (e.g.
+<em>lein run -m etc</em>) fails but in a repl (e.g. <em>use etc</em>) worked.</p>
+
+<h2 id="installing-the-42-compatible-vboxjws-and-vmfest-jars">Installing the 4.2-compatible vboxjws and VMFest jars</h2>
+
+<p>Since we are in the Clojure world,
+<a href="https://github.com/technomancy/leiningen">Leiningen</a> (<em>lein</em>) will be used to manage
+the project.  (An earlier <a href="http://ianrumford.github.com/blog/2012/09/21/writing-apache-pig-udfs-in-clojure/">post</a> gave a bit more background on
+Leiningen.)</p>
+
+<p>Leiningen requires that  local jars  be kept in a local maven repository
+(e.g. <em>~/.m2/repository/local</em>)  in order to be used (cited) as a dependency.</p>
+
+<p>BTW You
+may need to install maven first (e.g. <em>sudo apt-get install maven2</em>)</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre>mvn install:install-file -DgroupId<span class="o">=</span><span class="nb">local</span> -DartifactId<span class="o">=</span>vmfest -Dversion<span class="o">=</span><span class="s2">"0.2.5-vbox4.2.0-SNAPSHOT"</span> -Dpackaging<span class="o">=</span>jar -Dfile<span class="o">=</span><span class="s2">"/path/to/vmfest/target/vmfest-0.2.5-vbox4.2.0-SNAPSHOT.jar"</span>
+
+mvn install:install-file -DgroupId<span class="o">=</span><span class="nb">local</span> -DartifactId<span class="o">=</span>vboxjws -Dversion<span class="o">=</span>4.2.0 -Dpackaging<span class="o">=</span>jar -Dfile<span class="o">=</span><span class="s2">"/path/to/sdk/bindings/webservice/java/jax-ws/vboxjws.jar"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Obviously the <em>-Dfile</em> paths would need changing if you are following along.</p>
+
+<p>You should see (find) the jars have been installed  successfully in
+<em>~/.m2/repository/local</em>.</p>
+
+<h2 id="starting-the-vbox-web-service">Starting the VBox Web Service</h2>
+
+<p>The VBox web service must be running for VMFest to do its stuff.  It can be started at boot
+time (see the
+<a href="https://www.virtualbox.org/manual/ch09.html#vboxwebsrv-daemon">User Manual</a>)
+but starting it from a terminal is fine for testing.  Note the user
+account used to run it must be part of the <em>vboxusers</em> group.</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>vboxwebsrv -t0 -v<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You also (one-off) need to disable authorisation</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>VBoxManage setproperty websrvauthlibrary null<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="creating-the-project">Creating the project</h1>
+
+<p>As usual, need to create a Leiningen project</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>lein new vmfest_examples
+<span class="nb">cd</span> ./vmfest_examples<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The project file is pretty minimal.</p>
+
+<script src="https://gist.github.com/3865605.js?file=project.clj"></script>
+
+<p>Notes</p>
+
+<ul>
+  <li>
+    <p>the <em>local/vmfest</em> pulls the 4.2 compatible VMFest jar from the
+<em>local</em> repo in <em>~/.m2/repository</em></p>
+  </li>
+  <li>
+    <p>ditto for the VBox 4.2 Java API jar <em>local/vboxjws</em></p>
+  </li>
+</ul>
+
+<p>Again, as usual, resolve the dependencies</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein deps<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="a-simple-example---using-images">A simple example - using images</h1>
+
+<p>There is not a whole lot to do (write) to create a VBox machine with
+VMFest using an image.
+The following example to create a 64-bit instance of Ubuntu 12.04
+ has been adapted from the example given on the
+VMFest github page:</p>
+
+<p>The code to create and start the VM looks like this:</p>
+
+<script src="https://gist.github.com/3879064.js?file=blog_vmfest_image0.clj"></script>
+
+<p>Notes:</p>
+
+<ol>
+  <li>
+    <p><em>my-server</em> is the connection to <em>vboxwebsrv</em></p>
+
+    <p>Note the credentials; the user account must be a member of
+ <em>vboxusers</em> group.</p>
+  </li>
+  <li>
+    <p><em>boot-order</em>, <em>utc-time</em> and <em>clipboard-mode</em> are my additions to VMFest</p>
+  </li>
+  <li>
+    <p>new images registered as <em>multi-attach</em></p>
+
+    <p>If VMFest can’t find the image (<em>uuid</em>) already in the user’s
+ <em>VirtualBox.xml</em> file, it will register it and mark the image <em>multi-attach</em></p>
+
+    <p>The VMFest documentation confuses (terminologically) making an image (medium) <em>immutable</em> with
+ <em>multi-attach</em> - when it says the former it means the latter.
+ VMs using a <em>multi-attach</em> medium as their base image retain their changes
+ over restarts of the VM (the changes are kept in a
+ <em>dfferencing</em> snapshot).  Using a <em>immutable</em> medium causes the
+ snapshot to be cleared (reset) at VM restart.  See section 6.45 of
+ the <a href="http://download.virtualbox.org/virtualbox/SDKRef.pdf">programming guide</a> for details.</p>
+  </li>
+  <li>
+    <p>the <em>my-image-map</em> defines the <em>image model</em></p>
+  </li>
+  <li>
+    <p>the <em>my-machine-map</em> defines the <em>hardware model</em></p>
+  </li>
+  <li>
+    <p>together the <em>image model</em> and <em>hardware model</em>  can be considered to define
+the <em>profile</em> of the machine (e.g a “small Ubuntu 12.04 VM”)</p>
+  </li>
+</ol>
+
+<p>To run the code</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>lein run -m <span class="s1">'vmfest_examples.blog_vmfest_image0'</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can see from the comment at the bottom its easy to e.g <em>stop</em> or
+<em>destroy</em> a VM.</p>
+
+<h1 id="a-cloudy-example---using--models">A cloudy example - using  models</h1>
+
+<p>Image and hardware models can be assigned names and used to define a
+new VM.  This is especially useful when many VMs have to be created
+using the same recipes.</p>
+
+<h2 id="hardware-models">Hardware Models</h2>
+
+<p>However the <em>only</em>  hardware model defined currently is <em>:micro</em> and there is no way of adding additional hardware profiles (that I can
+find).  (This is a stopper when the image needs to be attached to a SATA
+controller - as in the  examples here.)</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td><td class="code"><pre><span class="p">{</span><span class="no">:micro</span><span class="w">
+   </span><span class="p">{</span><span class="no">:memory-size</span><span class="w"> </span><span class="mi">512</span><span class="w">
+    </span><span class="no">:cpu-count</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="no">:network</span><span class="w"> </span><span class="p">[{</span><span class="no">:attachment-type</span><span class="w"> </span><span class="no">:host-only</span><span class="w">
+               </span><span class="no">:host-only-interface</span><span class="w"> </span><span class="s">"vboxnet0"</span><span class="p">}</span><span class="w">
+              </span><span class="p">{</span><span class="no">:attachment-type</span><span class="w"> </span><span class="no">:nat</span><span class="p">}]</span><span class="w">
+    </span><span class="no">:storage</span><span class="w"> </span><span class="p">[{</span><span class="no">:name</span><span class="w"> </span><span class="s">"IDE Controller"</span><span class="w">
+               </span><span class="no">:bus</span><span class="w"> </span><span class="no">:ide</span><span class="w">
+               </span><span class="no">:devices</span><span class="w"> </span><span class="p">[</span><span class="n">nil</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">{</span><span class="no">:device-type</span><span class="w"> </span><span class="no">:dvd</span><span class="p">}</span><span class="w"> </span><span class="n">nil</span><span class="p">]}]</span><span class="w">
+    </span><span class="no">:boot-mount-point</span><span class="w"> </span><span class="p">[</span><span class="s">"IDE Controller"</span><span class="w"> </span><span class="mi">0</span><span class="p">]}}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>(<em>NOTE:  to prove this example I changed the definition of :micro to
+include the same SATA controller definition as in the image example above.</em>)</p>
+
+<h2 id="image-models">Image Models</h2>
+
+<p>VMFest <em>seems</em> to insist on models (actually the <em>meta</em> files -
+see below) being kept  in
+<em>~/.vmfest/models</em> (the <em>model-path</em>); I can  find no  way to override the default.</p>
+
+<p>Its worth exploring what goes on under the covers when an image model
+name is specified.  VMFest scans the <em>model-path</em> for all files ending in
+<em>.meta</em>.  Meta files contain a map of image model names and their 
+specifications.  For example, say the file
+<em>~/.vmfest/models/my-models-list.meta</em> contained</p>
+
+<script src="https://gist.github.com/3879423.js?file=gistfile1.clj"></script>
+
+<p>This <em>meta</em> defines two named image models: <em>model_ubuntu_1204_64</em> and <em>model_ubuntu_1110_32</em></p>
+
+<p>Note that each image model specification includes a <em>uuid</em> key which
+is, in this case, the path to the actual image file.  The image will be
+registered as <em>multi-attach</em> if not already registered.</p>
+
+<h2 id="a-cloudy-example-with-existing-model-support">A cloudy example with existing model support</h2>
+
+<p>With the <em>~/.vmfest/models/my-models-list.meta</em> file as above, the equivalent code to the image example above would be this:</p>
+
+<script src="https://gist.github.com/3879212.js?file=blog_vmfest_model0"></script>
+
+<h2 id="a-cloudy-example-with-enhanced--model-support">A cloudy example with enhanced  model support</h2>
+
+<p>The lack of any way of providing one’s own portfolio of <em>hardware
+models</em> is a serious limitation.  However, a very small hack to the
+<em>instance</em> function in <em>vmfest.manager.clj</em>  allows hardware models to be kept in a meta
+file.</p>
+
+<p>For example, if <em>~/.vmfest/models/my-hardware-models.meta</em> contained</p>
+
+<script src="https://gist.github.com/3879518.js?file=gistfile1.clj"></script>
+
+<p>The code to use a different hardware model is
+<a href="git://gist.github.com/3879655.git">here</a> but the only line different
+to the model0 example about is the one to specify the <em>:medium</em> hardware profile</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">my-machine-model-hardware-name</span><span class="w"> </span><span class="no">:medium</span><span class="p">)</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This hack reserves a(pre-empts) n ‘image’ model name of <em>hardware-models</em> to
+store the hardware models.</p>
+
+<h1 id="final-words">Final Words</h1>
+
+<p>VMFest is very powerful, its not a lot of code but it does  some
+really heavy lifting with VBox.  Which is a tribute to both VMFest’s author(s)
+and Clojure.</p>
+
+<p>One can see from the image example above, the basic API is fairly
+intuitive once the concepts have been understood and its easy to write
+no-nonsense code that <em>gets stuff done</em>..</p>
+
+<p>That said,  the current model-oriented API features are rather
+too infelicitous to  use extensively without some sort of
+augmentation.  But as
+the comment in <em>vmfest.manager.clj</em> makes clear (and fair enough):</p>
+
+<blockquote>
+  <p>High level API for VMFest. If you don’t want to do anything too fancy, start here.</p>
+</blockquote>
+
+<p>VMFest is the  first   significant
+Clojure project I’ve tried to read, understand and learn.  It
+proved very accessible  in that respect  and I’ve picked up quite a bit of
+idiom and style.
+Thanks guys!</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/cascalog/clojure/extract/transform/load/2012/09/29/using-cascalog-for-extract-transform-and-load.html" title="Using Cascalog for extract transform and load">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html" title="First steps using Pallet, VMFest and VirtualBox (VBox) 4.2">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/cascalog/clojure/extract/transform/load/2012/09/29/using-cascalog-for-extract-transform-and-load.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/pallet/vmfest/virtualbox/2012/10/24/first-steps-using-pallet-with-vmfest-and-virtualbox-4-dot-2.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

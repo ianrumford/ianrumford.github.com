@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="The benefits of using the Big Data software ecosystem">
+<title>The benefits of using the Big Data software ecosystem</title>
+<meta property="og:description" content="  A colleague asked me for a brief high level overview of the BigData software ecosystem, why his company should use it, what for and what’s in it.  Theseare...">
+<meta property="og:url" content="http://www.rumford.name/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="The benefits of using the Big Data software ecosystem">
+<meta name="twitter:description" content="  A colleague asked me for a brief high level overview of the BigData software ecosystem, why his company should use it, what for and what’s in it.  Theseare...">
+<meta name="twitter:url" content="http://www.rumford.name/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/big/data/benefit/apache/yahoo/twitter/likedin/google/hadoop/hive/impala/hdfs/hbase/cassandra/pig/cascalog/scalding/nlp/lucene/solr/d3/r/ruby/python/java/scala/clojure/machine/learning/statistics/visualization/devops/spark/mesos/storm/summingbird/2014/03/22/benefits-of-using-big-data-software.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">The benefits of using the Big Data software ecosystem</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#big">big</a>, 
+    
+    <a href="/categories/#data">data</a>, 
+    
+    <a href="/categories/#benefit">benefit</a>, 
+    
+    <a href="/categories/#apache">apache</a>, 
+    
+    <a href="/categories/#yahoo">yahoo</a>, 
+    
+    <a href="/categories/#twitter">twitter</a>, 
+    
+    <a href="/categories/#likedin">likedin</a>, 
+    
+    <a href="/categories/#google">google</a>, 
+    
+    <a href="/categories/#hadoop">hadoop</a>, 
+    
+    <a href="/categories/#hive">hive</a>, 
+    
+    <a href="/categories/#impala">impala</a>, 
+    
+    <a href="/categories/#hdfs">hdfs</a>, 
+    
+    <a href="/categories/#hbase">hbase</a>, 
+    
+    <a href="/categories/#cassandra">cassandra</a>, 
+    
+    <a href="/categories/#pig">pig</a>, 
+    
+    <a href="/categories/#cascalog">cascalog</a>, 
+    
+    <a href="/categories/#scalding">scalding</a>, 
+    
+    <a href="/categories/#nlp">nlp</a>, 
+    
+    <a href="/categories/#lucene">lucene</a>, 
+    
+    <a href="/categories/#solr">solr</a>, 
+    
+    <a href="/categories/#d3">d3</a>, 
+    
+    <a href="/categories/#r">r</a>, 
+    
+    <a href="/categories/#ruby">ruby</a>, 
+    
+    <a href="/categories/#python">python</a>, 
+    
+    <a href="/categories/#java">java</a>, 
+    
+    <a href="/categories/#scala">scala</a>, 
+    
+    <a href="/categories/#clojure">clojure</a>, 
+    
+    <a href="/categories/#machine">machine</a>, 
+    
+    <a href="/categories/#learning">learning</a>, 
+    
+    <a href="/categories/#statistics">statistics</a>, 
+    
+    <a href="/categories/#visualization">visualization</a>, 
+    
+    <a href="/categories/#devops">devops</a>, 
+    
+    <a href="/categories/#spark">spark</a>, 
+    
+    <a href="/categories/#mesos">mesos</a>, 
+    
+    <a href="/categories/#storm">storm</a>, 
+    
+    <a href="/categories/#summingbird">summingbird</a>
+     
+    
+    <time itemprop="datePublished" datetime="2014-03-22">
+    on Mar 22, 2014
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>A colleague asked me for a brief high level overview of the <strong>Big
+Data</strong> software ecosystem, why his company should use it, what for and what’s in it.  These
+are the tidied up notes I put together quickly.</p>
+</blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/Big_data"><strong>Big Data</strong></a> is a convenient mnemonic to describe an ecosystem of
+computing tools, techniques and technologies that has grown up over
+the past decade to address many of the data processing challenges
+faces by modern enterprises with growing data assets.</p>
+
+<p>This document tales a liberal view of what is inside and outside of a
+strict definition of the ecosystem because, in total, it represents
+the most complete set of freely available software options for many
+enterprises’ data processing needs.</p>
+
+<!-- more -->
+
+<p><strong>Big Data</strong> usage has been associated with processing huge
+data volumes (<a href="http://en.wikipedia.org/wiki/Terabyte">terabytes</a> and more) but most of the tools
+intrinsically do not
+require  large volumes of data and work well with more
+modest volumes, even volumes currently managed using tools such as
+Excel.</p>
+
+<p><strong>Big Data</strong> software, usually running on the
+<a href="http://www.linux.com/"><strong>Linux</strong></a> operating system and often
+on  <a href="http://en.wikipedia.org/wiki/Cloud_computing"><strong>Cloud</strong></a> resources, has been revolutionary within the IT industry facilitating many new
+ways of working with, and the processing of, data. The ecosystem continues
+to exhibit huge volatility and rapid expansion with many competing
+solutions - the market has not decided who the “winners” will be yet
+with <em>de facto</em> standards such as <a href="http://hadoop.apache.org/">Hadoop</a> under pressure from newer
+solutions like <a href="http://spark.apache.org/">Spark</a>.</p>
+
+<p><strong>Big Data</strong> has been associated particularly with commoditising advanced
+analytics (especially <a href="http://en.wikipedia.org/wiki/Predictive_analytics">predictive analytics</a> / <a href="http://en.wikipedia.org/wiki/Machine_learning">machine learning</a>) and
+<a href="http://www.amazon.com/Visual-Organization-Visualization-Decisions-Business/dp/1118794389/ref%3Dla_B002FP9IBA_1_1?s%3Dbooks&amp;ie%3DUTF8&amp;qid%3D1394625591&amp;sr%3D1-1">visualisation</a> technologies, bringing them within the reach of many
+enterprises and offering unprecedented input and insights to guide
+enterprise decision making.</p>
+
+<p>The majority of the currently leading tools, techniques and
+technologies are open source and vendor independent / neutral. Although more and
+more suppliers are entering the <strong>Big Data</strong> market and  selling
+premium solutions, the core tools, techniques and
+technologies are available freely from e.g. the <a href="http://www.apache.org"><strong>Apache Foundation</strong></a>.</p>
+
+<p>Many leading and well-known companies such as <a href="http://www.yahoo.com">Yahoo</a>, <a href="http://www.twitter.com">Twitter</a>, <a href="http://www.google.com">Google</a>, <a href="http://www.linkedin.com">LinkedIn</a>, <a href="http://www.netflix.com">Netflix</a> and
+<a href="http://www.facebook.com">Facebook</a> have donated key technologies to the public domain
+either directly on <a href="http://www.github.com">Github</a> and/or under the umbrella of an <a href="http://www.apache.org/"><strong>Apache Foundation</strong></a> project.</p>
+
+<h1 id="big-data-does-not-have-to-be-big-ticket">Big Data does not have to be Big Ticket</h1>
+
+<p>Suppliers’ premiums for their valued-added offerings can be significant and act to deter small scale
+exercises / trials of elements of the ecosystem that appear to offer
+the best potential dividends.</p>
+
+<p>This needn’t be the case. It entirely possible to start small and
+simple, and grow as needed. Its very easy to prototype  using existing
+resources and scale up to e.g. the Cloud if, as and when needed: <strong>Big
+Data</strong> does not have to be <strong>Big Ticket</strong>.</p>
+
+<p>Not only is the <strong>Big Data</strong> ecosystem often the <strong>only</strong> way to process
+large volumes of data, it is also the <strong>cheapest</strong>.</p>
+
+<h1 id="the-benefits-of-using-the-big-data-software-ecosystem">The benefits of using the <strong>Big Data</strong> software ecosystem</h1>
+
+<p>The benefits of using the <strong>Big Data</strong> software ecosystem are numerous.
+Almost everybody will have their own list, here are some of mine.</p>
+
+<h2 id="scale-with-growing-or-existing-large-data-volumes">Scale with growing or existing large data volumes</h2>
+
+<p>Mainstream 20th Century tools, techniques and technologies for data processing ran out of steam when confronted
+with larger volumes of data. Even today, arguably the most popular
+tool for managing structured data, <a href="http://www.microsoft.com/">Microsoft’s</a> <a href="http://office.microsoft.com/en-gb/excel/">Excel</a>, can only hold a million
+rows.</p>
+
+<p>Many enterprises may not be aware of how much data they have; its
+not unusual to be have terabytes if any websites are involved.</p>
+
+<p>The <strong>Big Data</strong> software portfolio is design to scale to handle data
+volumes becoming commonplace in many enterprises.</p>
+
+<h2 id="both-batch-and-real-time-data-processing">Both Batch and Real Time Data Processing</h2>
+
+<p>Historically <strong>Big Data</strong> data processing has been predicated on
+<a href="http://hadoop.apache.org/">Hadoop’s</a> batch process (e.g.
+overnight jobs).</p>
+
+<p>Today, with the advent of technologies such as Apache
+incubator project <a href="https://incubator.apache.org/projects/storm.html"><strong>Storm</strong></a>, there are solutions to process incoming
+data in real time; and hybrid solutions in the continuum between the
+two extremes.</p>
+
+<h2 id="supports-structured-and-unstructured-data">Supports Structured and Unstructured Data</h2>
+
+<p><strong>Big Data</strong>  has a rich set of solutions for acquiring,
+storing, processing and integrating both structured and unstructured data.</p>
+
+<p><strong>Big Data</strong> databases scale to far larger data volumes that commonly
+available commercial <a href="http://en.wikipedia.org/wiki/Relational_database">relational databases</a>.</p>
+
+<p><strong>Big Data</strong> also has some of the best solutions for mining unstructured text.</p>
+
+<h2 id="prototyping-data-analyses-previously-too-expensive-to-attempt">Prototyping data analyses previously too expensive to attempt</h2>
+
+<p>The availability of free software and “pay as your go”
+capacity in the <strong>Cloud</strong> has made the case for performing new and/or
+more in-depth analyses of data assets easier to cost and justify.</p>
+
+<p>Its easy to do a <em>proof of concept</em> in the Cloud, with constrained
+costs, to help inform the  decision whether the benefit of a full-blown implementation will
+bring the expected benefits and justify the full costs.</p>
+
+<h2 id="perform-data-analyses-previously-too-expensive-to-run-regularly">Perform data analyses previously too expensive to run regularly</h2>
+
+<p><strong>Big Data</strong> software by and large runs on <strong>Linux</strong> on commodity Intel
+(x86) processors.  Whether using an enterprise’s own infrastructure or
+a Cloud provider, compute cycles are very cheap today.</p>
+
+<h2 id="performing-data-analyses-previously-too-difficult-to-do">Performing data analyses previously too difficult to do</h2>
+
+<p>The <strong>Big Data</strong> ecosystem includes a range of tools for performing
+advanced analytics and machine learning.  Techniques which were once
+only accessible to enterprises with very specialist staff such as
+statisticians and  data scientists
+are now almost commoditised, with advice, example implementations and guidance on
+approaches to use are easily available.</p>
+
+<h2 id="performing-new-forms-of-data-analysis">Performing new forms of data analysis</h2>
+
+<p>The innovations made in <strong>Big Data</strong> processing techniques by companies such
+as Twitter has opened the Industry’s eyes to whole new ways of working
+with data at scale.</p>
+
+<h2 id="minimising-supplier-risk">Minimising Supplier Risk</h2>
+
+<p>The availability of the source code for most of the software
+mitigates a whole class of supplier risk.</p>
+
+<h2 id="mainstream-language-support">Mainstream Language Support</h2>
+
+<p>Most <strong>Big Data</strong> software is written in one of the most common
+commercial programming language in use today: <a href="http://www.java.com"><strong>Java</strong></a>. But, and more
+importantly, in a language that runs on the <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">Java Virtual Machine</a> (<strong>JVM</strong>).</p>
+
+<p>The <strong>JVM</strong> is important because many of the other most popular
+languages in use (e.g. <a href="http://www.python.org/">Python</a>, <a href="http://jruby.org/">Ruby</a>), and up and coming 
+languages (<a href="http://www.scala-lang.org/">e.g. Scala</a>, <a href="http://clojure.org/">Clojure</a>) also run on the JVM facilitating easier interworking between
+code bases and effective “re-use”.</p>
+
+<h2 id="automation">Automation</h2>
+
+<p>The <strong>Linux</strong> community has always  strongly endorsed and supported automation
+tools and new tools and ways of working (<a href="http://en.wikipedia.org/wiki/DevOps"><strong>DevOps</strong></a>) have been developed
+to create, support and manage infrastructures, notably for <strong>Big Data</strong> progressing,
+running on Cloud resources.</p>
+
+<p>The outcome has been that even running 100s or 1000s of virtual servers in the
+Cloud is  manageable  at reasonable cost.</p>
+
+<h2 id="cost">Cost</h2>
+
+<p>The majority of the most important parts of the <strong>Big Data</strong> ecosystem
+are freely available and with liberal licencing (e.g. the <a href="https://www.apache.org/licenses/">Apache Foundation v2.0 licence</a>).</p>
+
+<p>The use of <a href="http://www.linux.com">Linux</a> and extraordinarily powerful commodity  <a href="http://en.wikipedia.org/wiki/X86">x86</a> processors
+(either own or in the Cloud) offer unprecedented  processing capacity
+at reasonable cost.  Hardware costs are likely to fall even further
+with the advent of competing <a href="http://www.arm.com/">ARM</a> <a href="http://www.arm.com/products/processors/armv8-architecture.php">v8</a> 64-bit processors entering the
+market ~2014.</p>
+
+<h2 id="support">Support</h2>
+
+<p>Even though the customary support process is informal via the
+respective communities, many of the
+most established players do offer formal, paid support product
+offerings and plans (e.g. <a href="http://www.cloudera.com">Cloudera</a>, <a href="http://www.mapr.com/">MapR</a> and <a href="http://hortonworks.com/">Hortonworks</a>).</p>
+
+<p>The popularity of <strong>Big Data</strong> software means that skilled people are
+relatively easily available in the market.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>The documentation for many <strong>Big Data</strong> projects is of remarkably good quality given it
+has been produced mostly by volunteers.</p>
+
+<p>There are also a plethora of good books on many topics, sometimes
+written by senior contributors to the software, and providing insights
+into how the software works with working examples of how do many
+tasks.</p>
+
+<p>Documentation and Books are backed by online question forums such
+as <a href="http://stackoverflow.com/">StackOverflow</a> which has become almost the “go first” sites for questions
+on computing.</p>
+
+<h1 id="whats-in-big-data-software-ecosystem">What’s in <strong>Big Data</strong> Software Ecosystem</h1>
+
+<p>The <strong>Big Data</strong> software ecosystem can seem complex jigsaw of tools,
+techniques and technologies.  But the components of the ecosystem can
+be broken down into a small number of categories.</p>
+
+<h2 id="mapreduce">MapReduce</h2>
+
+<p><strong>Big Data</strong> has been for some time almost synonymous with <a href="http://en.wikipedia.org/wiki/MapReduce"><strong>MapReduce</strong></a> - a
+technique for processing large volumes of data in parallel first articulated in
+Google’s <a href="http://research.google.com/archive/mapreduce.html">seminal paper</a> published in late 2004.</p>
+
+<p><a href="http://hadoop.apache.org/"><strong>Hadoop</strong></a> is the <a href="http://www.apache.org/"><strong>Apache Foundation’s</strong></a> open source implementation of <a href="http://en.wikipedia.org/wiki/MapReduce"><strong>MapReduce</strong></a>.</p>
+
+<h2 id="distributed-filesystems">Distributed Filesystems</h2>
+
+<p><a href="http://hadoop.apache.org/"><strong>Hadoop</strong></a> has its own high capacity, high performance and fault tolerant distributed
+filesystem called <a href="http://hortonworks.com/hadoop/hdfs/"><strong>HDFS</strong></a> - the <strong>Hadoop Distributed File System</strong>.</p>
+
+<p><strong>HDFS</strong> stores data (files) across many commodity servers enabling the virtual
+filestore to be much bigger than capacity of an individual server.</p>
+
+<h2 id="nosql-databases">NoSQL Databases</h2>
+
+<p>The <strong>Hadoop</strong> family also comes with its own <a href="http://martinfowler.com/nosql.html"><strong>NoSQL</strong></a> database called
+<a href="https://hbase.apache.org/"><strong>HBase</strong></a> - the <strong>Hadoop Database</strong>.</p>
+
+<p>NoSQL databases are very different from the familiar commercial
+transactional databases such as <a href="http://www.oracle.com/us/products/database/overview/index.html">Oracle</a>
+or Microsoft’s <a href="http://www.microsoft.com/en-us/sqlserver/product-info.aspx">SQL Server</a>.</p>
+
+<p>NoSQL databases are not <a href="http://en.wikipedia.org/wiki/Relational_database">relational</a> and do
+not (directly) respond to <a href="http://en.wikipedia.org/wiki/SQL">SQL</a> queries (although some can be made to
+do so - see below).</p>
+
+<p><strong>HBase</strong> has been designed to scale to terabytes of data - a
+stretch for conventional relational databases.</p>
+
+<p><strong>HBase</strong> is well-suited to read-heavy <a href="http://en.wikipedia.org/wiki/Online_analytical_processing">online analytical processing</a>
+(<strong>OLAP</strong>) workloads. Another database in the <strong>Apache</strong> family,
+<a href="http://cassandra.apache.org/">Cassandra</a>, is tuned for write and is therefore particularly suitable
+for <a href="http://en.wikipedia.org/wiki/Online_transaction_processing">online transactional processing</a> (<strong>OLTP</strong>) workloads, including
+real-time processing of new data.</p>
+
+<h2 id="sql-support">SQL Support</h2>
+
+<p>Many of the exiting database-oriented tools in the enterprise use SQL
+to interrogate relational databases so access to NoSQL databases using
+SQL is an important consideration.</p>
+
+<p><strong>Hadoop</strong> has a solution called <a href="http://hive.apache.org/"><strong>Hive</strong></a> offering a variant of SQL called
+<strong>HiveQL</strong>.</p>
+
+<p>The performance of <strong>Hive</strong> is admittedly modest and recently there have
+been a spate of new ways of accessing NoSQL databases from SQL tools,
+such as <a href="http://www.cloudera.com/">Cloudera’s</a> <a href="http://www.cloudera.com/content/cloudera/en/products-and-services/cdh/impala.html"><strong>Impala</strong></a>, offering a “massively parallel SQL query
+engine”.</p>
+
+<h2 id="data-manipulation-languages-and-pipelines">Data Manipulation Languages and Pipelines</h2>
+
+<p>The <strong>MapReduce</strong> paradigm is essentially one of a pipeline of data
+transformation (map) and aggregation (reduce) steps.</p>
+
+<p><strong>Hadoop</strong> comes with <a href="https://pig.apache.org/"><strong>Pig</strong></a> (sic). <strong>Pig</strong> enables rich and complex data
+processing pipelines to be built in a modular way, using off-the-shelf and
+custom building block, bound together using a specialised
+data management language called <a href="http://pig.apache.org/docs/r0.12.0/basic.html"><strong>Pig Latin</strong></a>.</p>
+
+<p><strong>Pig</strong> is not to everyone’s taste and there are some excellent
+alternatives notably  <a href="http://cascalog.org/"><strong>Cascalog</strong></a> and <a href="https://blog.twitter.com/2012/scalding"><strong>Scalding</strong></a> (from <a href="http://www.twitter.com">Twitter</a>).</p>
+
+<p>Much of the work in acquiring and processing new data
+begins by capturing, cleaning, normalising and storing the data: the
+so-called <a href="http://en.wikipedia.org/wiki/Extract,_transform,_load">extract, transform and load</a> (<strong>ETL</strong>) stages.  This is where
+Pig, Cascalog, etc excel.</p>
+
+<h2 id="machine-learning">Machine Learning</h2>
+
+<p><strong>Big Data</strong> has triggered an explosion in interest and use of the
+three main areas of <a href="http://en.wikipedia.org/wiki/Machine_learning"><strong>Machine Learning / Artificial Intelligence</strong></a>:
+<a href="http://en.wikipedia.org/wiki/Recommender_system"><strong>recommendation</strong></a>, <a href="http://en.wikipedia.org/wiki/Cluster_analysis"><strong>clustering</strong></a> and <a href="http://en.wikipedia.org/wiki/Statistical_classification"><strong>classification</strong></a>.</p>
+
+<p>The <strong>Apache Foundation</strong> offering in this space is <a href="https://mahout.apache.org/"><strong>Mahout</strong></a> but there
+are many other options available such as <a href="http://www.r-project.org/"><strong>R</strong></a>, <a href="http://www.cs.waikato.ac.nz/ml/weka/"><strong>Weka</strong></a>, <a href="http://scikit-learn.org/stable/"><strong>scikit-learn</strong></a>, etc.</p>
+
+<h2 id="search">Search</h2>
+
+<p>Although perhaps not thought part of the <strong>Big Data</strong> ecosystem, <a href="http://en.wikipedia.org/wiki/Web_search_engine"><strong>search
+engines</strong></a> are arguably the <strong>original</strong> Big Data technology.</p>
+
+<p>Search deals mostly with unstructured text-like data (including, and
+especially, <a href="http://en.wikipedia.org/wiki/HTML">web pages</a>).</p>
+
+<p>The search engine from Apache, <a href="https://lucene.apache.org/"><strong>Lucene / Solr</strong></a>, is an incredibly
+powerful piece of technology powering many web sites’ search
+capabilities.</p>
+
+<p>Some of the most interesting work in <strong>Big Data</strong> today combines machine
+learning and search to offer new and innovative insights into the
+contents of unstructured data.</p>
+
+<h2 id="natural-language-processing---nlp">Natural Language Processing - NLP</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/Natural_language_processing"><strong>NLP</strong></a> is another technology that has “come of age” in the <strong>Big Data</strong>
+era of cheap processing.</p>
+
+<p>NLP has proved itself notably applicable to <a href="http://en.wikipedia.org/wiki/Sentiment_analysis"><strong>sentiment analysis</strong></a> and <a href="http://en.wikipedia.org/wiki/Named-entity_recognition"><strong>named
+entity recognition</strong></a>.</p>
+
+<p><strong>Apache</strong> has its own toolkit <a href="https://opennlp.apache.org/"><strong>OpenNLP</strong></a> but <a href="http://www.stanford.edu/">Stanford University’s </a>has
+a well-received range of <a href="http://nlp.stanford.edu/">NLP</a> tools, while <a href="http://www.nltk.org/"><strong>NLTK</strong></a> has had traction in the
+<a href="http://www.python.org/">Python</a> community.</p>
+
+<h2 id="business-intelligence">Business Intelligence</h2>
+
+<p>For many enterprises, there is little point is processing vast volumes
+of data unless the results can be reported on and visualised.  The industry is well
+served by many commercial products such as <a href="http://www.tableausoftware.com/"><strong>Tableau</strong></a> but <a href="http://community.pentaho.com/projects/mondrian/"><strong>Mondrian</strong></a> is an open source <em>gem</em>.</p>
+
+<h2 id="visualisation-and-dash-boards">Visualisation and Dash Boards</h2>
+
+<p>Computing is generally well served for visualisation tools and languages
+like <strong>R</strong> and <strong>Python</strong> have particularly strong support for graphics.</p>
+
+<p>However it is worth mentioning <a href="http://d3js.org/"><strong>D3</strong></a>, a <a href="http://en.wikipedia.org/wiki/JavaScript">JavaScript</a> library for
+<em>explanatory</em> visualisation in modern browsers i.w. web-based.</p>
+
+<p>Secondly, and also worthy of note, is <a href="http://www.shopify.com/">Shopify’s</a>  <a href="http://shopify.github.io/dashing/#overview"><strong>Dashing</strong></a> for
+creating browser-hosted dashboards.</p>
+
+<h2 id="statistics">Statistics</h2>
+
+<p>As a discipline, <a href="http://en.wikipedia.org/wiki/Statistics"><strong>statistics</strong></a> has been around and well-established for <a href="http://en.wikipedia.org/wiki/History_of_statistics">centuries</a>.
+But the computing era, and more recently <strong>Big Data</strong>, has provided enormous volumes
+of data on which to predicate statistical analyses.</p>
+
+<p>The undoubtedly most widely used language for statistical computing is <a href="http://www.r-project.org/"><strong>R</strong></a> but
+<a href="http://www.python.org/">Python</a> has a strong following.</p>
+
+<p>But the challenges of <strong>Big Data</strong> has revealed limitations in <strong>R’s</strong> usefulness
+because of its architectural limitations.  More recent statistical languages
+like <a href="http://julialang.org/"><strong>Julia</strong></a> has to potential to obviate and remove these obstacles to
+process really large volumes of data.</p>
+
+<h2 id="data-serialisation-and-interchange">Data Serialisation and Interchange</h2>
+
+<p>Aka the <strong>plumbing</strong>, data serialisation and interchange technologies
+such as <a href="http://thrift.apache.org/"><strong>Apache’s</strong> <strong>Thrift</strong>, </a> Google’s <a href="https://code.google.com/p/protobuf/"><strong>ProtoBufs</strong></a> and Apache’s <a href="http://avro.apache.org/"><strong>Avro</strong></a>
+have broken the back of data exchange between processing components.</p>
+
+<h1 id="whats-hot">What’s Hot</h1>
+
+<p><strong>Big Data</strong> is only a decade old but already seeing the usurpation of the
+earlier technologies (e.g. Hadoop) with more recent innovations.</p>
+
+<p>For example, <strong>Hadoop</strong> is already under pressure from new kid on the
+block Apache’s incubating project <a href="https://spark.incubator.apache.org/"><strong>Spark</strong></a> offering “lightning-fast
+cluster computing”.</p>
+
+<p>Another Apache project <a href="http://mesos.apache.org/"><strong>Mesos</strong></a> look to revolutionise the way
+compute cluster resources can be managed, offering resource-efficient
+dynamic partitioning as the next step on from an the sort of static
+partitioning found in a <strong>Hadoop</strong> cluster.</p>
+
+<p>Meanwhile <a href="https://incubator.apache.org/projects/storm.html"><strong>Storm</strong></a> looks to make real-time analysis of new, incoming
+data a reality.</p>
+
+<p><a href="http://nathanmarz.com/about/">Nathan Marz’s</a>, in his book <a href="http://www.manning.com/marz/">Big Data</a> has articulated how batch and
+real-time can be integrated and used pragmatically to deliver
+real-time views of large and growing volumes of data.</p>
+
+<p>On the “theory” front, but with important practical implications,
+there has been some amazing work by Twitter on an <a href="https://speakerdeck.com/johnynek/algebra-for-analytics"><strong>Algebra for
+Analytics</strong></a> using <a href="http://en.wikipedia.org/wiki/Associative_property">associative</a> <a href="http://en.wikipedia.org/wiki/Monoid">monoidal</a> <a href="http://en.wikipedia.org/wiki/Semigroup">semigroups</a> to enable
+low-latency, parallelizable computation approaches applicable to a
+range of use cases culminating in their <a href="https://speakerdeck.com/sritchie/the-road-to-summingbird-stream-processing-at-every-scale"><strong>Summingbird</strong></a> library.</p>
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/clojure/map/aspect/contract/2014/03/19/two-sugars-with-your-contracts-for-clojure-maps.html" title="Two sugars with your Contracts for Clojure Maps">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/clojure/transducers/reducers/2014/08/08/Some-trivial-examples-of-using-Clojure-Transducers.html" title="Some trivial examples of using Clojure Transducers">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/clojure/map/aspect/contract/2014/03/19/two-sugars-with-your-contracts-for-clojure-maps.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/clojure/transducers/reducers/2014/08/08/Some-trivial-examples-of-using-Clojure-Transducers.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

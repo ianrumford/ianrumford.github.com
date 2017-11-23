@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1">
+
+<meta property="og:title" content="A Ruby JMX Feed for Riemann">
+<title>A Ruby JMX Feed for Riemann</title>
+<meta property="og:description" content="There are a plethora of monitoring tools available today, the range ofchoice catering for most every need andfor all sorts of application and / or infrastruc...">
+<meta property="og:url" content="http://www.rumford.name/ruby/riemann/jmx/hadoop/hbase/2013/01/15/a-ruby-jmx-feed-for-riemann.html">
+<meta property="og:site_name" content="An Ostler in IT">
+<meta property="og:locale" content="en_UK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@ianrumford">
+<meta name="twitter:creator" content="@ianrumford">
+<meta name="twitter:title" content="A Ruby JMX Feed for Riemann">
+<meta name="twitter:description" content="There are a plethora of monitoring tools available today, the range ofchoice catering for most every need andfor all sorts of application and / or infrastruc...">
+<meta name="twitter:url" content="http://www.rumford.name/ruby/riemann/jmx/hadoop/hbase/2013/01/15/a-ruby-jmx-feed-for-riemann.html">
+
+<meta name="keywords" content="IT Ostler Horses Courses">
+
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="http://www.rumford.name/ruby/riemann/jmx/hadoop/hbase/2013/01/15/a-ruby-jmx-feed-for-riemann.html">
+<link rel="alternate" type="application/atom+xml" title="An Ostler in IT" href="http://www.rumford.name/feed.xml" />
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script language="Javascript" type="text/javascript">
+function search_google()
+{
+  var query = document.getElementById("google-search").value;
+  window.open("http://google.com/search?q=" + query
+      + "%20site:" + "http://www.rumford.name");
+}
+</script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script type='text/javascript'>
+var blocklink = ['http://humanorightswatch.org','http://o-o-6-o-o.com','http://darodar.com','http://blackhatworth.com','http://hulfingtonpost.com','http://bestwebsitesawards.com','http://darodar.com','http://buttons-for-website.com','http://ilovevitaly.co','http://semalt.com','http://priceg.com','http://simple-share-buttons.com','http://googlsucks.com','http://4webmasters.org','http://aliexpress.com','http://addons.mozilla.org/en-US/firefox/addon/ilovevitaly/','http://free-share-buttons.com','http://buttons-for-your-website.com','http://theguardlan.com','http://buy-cheap-online.info','http://best-seo-offer.com','http://4webmasters.org','http://trafficmonetize.org','http://howtostopreferralspam.eu','http://ilovevitaly.com','http://sanjosestartups.com','http://free-social-buttons.com','http://best-seo-offer.com','http://guardlink.org','http://www.event-tracking.com','http://www3.free-social-buttons.com','http://www1.free-social-buttons.com','http://www2.free-social-buttons.com','http://websites-reviews.com','http://floating-share-buttons.com','http://satellite.maps.ilovevitaly.com','http://free-social-buttons.com','http://www.event-tracking.com','http://erot.co'];
+for (var b = blocklink.length; b--;) {
+  if (document.referrer.match(blocklink[b]))
+    window.location = "http://www.google.com";
+}
+</script>
+
+
+
+<link type="application/atom+xml" rel="alternate" href="http://www.rumford.name/atom.xml" title="An Ostler in IT" />
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <header class="site-header">
+
+  <div class="wrapper">
+
+    <h1 class="site-title"><a href="/">An Ostler in IT</a></h1>
+    <h3 class="site-meta">Horses for Courses</h3>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+        
+        <a class="page-link" href="/">Home</a>
+        
+        
+        
+        <a class="page-link" href="/about/">About</a>
+        
+        
+        
+        <a class="page-link" href="/archives/">Archives</a>
+        
+        
+        
+        <a class="page-link" href="/categories/">Categories</a>
+        
+        
+        
+        <a class="page-link" href="/tags/">Tags</a>
+        
+        
+        
+        <a class="page-link" href="/guestbook/"></a>
+        
+        
+        
+        <a class="page-link" href="/feed.xml"></a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    
+
+  <div class="page-content col-sm-8">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 itemprop="name" class="post-title">A Ruby JMX Feed for Riemann</h1>
+    <meta itemprop="keywords" content="" />
+    <p class="post-meta">
+    Posted in
+    
+    <a href="/categories/#ruby">ruby</a>, 
+    
+    <a href="/categories/#riemann">riemann</a>, 
+    
+    <a href="/categories/#jmx">jmx</a>, 
+    
+    <a href="/categories/#hadoop">hadoop</a>, 
+    
+    <a href="/categories/#hbase">hbase</a>
+     
+    
+    <time itemprop="datePublished" datetime="2013-01-15">
+    on Jan 15, 2013
+    </time>
+    </p>
+  </header>
+
+  <article class="post-content" itemprop="articleBody">
+    <p>There are a plethora of monitoring tools available today, the range of
+choice catering for most every need and
+for all sorts of application and / or infrastructure complexity.  And size of chequebook too although price is
+no real guide to quality, flexibility or ease of use.</p>
+
+<p>Many, perhaps most, of the best solutions are open source and
+cross-platform (Linux/Unix and Windows).  Some have great features,
+battle-hardened reliability, excellent support and documentation;
+and helpful and engaged communities underpinning them.   The
+grand-daddy is undoubtedly <a href="http://www.nagios.org/">Nagios</a>.  I’m no expert in Nagios
+but there is no doubt  it
+is a magnificent achievement.</p>
+
+<p>Do we really need another solution?  Probably not.  But
+<a href="http://riemann.io">Riemann</a> is interesting and 
+relevant  because its not a monitoring tool <em>per se</em> but an <em>event stream
+processor</em>.  Riemann is a more a scion of the same family as (the also hugely
+impressive) <a href="http://esper.codehaus.org/">Esper</a>.</p>
+
+<p>Simply put Riemann is, in my words, a <em>traffic cop</em> for events coming in
+from multiple <em>sources</em>
+and going out to multiple <em>sinks</em>.</p>
+
+<p>This post is about creating a Ruby source client for JMX data using Hadoop and
+HBase as the data sources. It does not go into how to build a Hadoop /
+HBase system (Apache <a href="https://blogs.apache.org/bigtop/entry/apache_bigtop_0_5_0">BigTop 0.5.0</a> has just released and may be the
+easier route - I’ve not used it).</p>
+
+<p>For completeness, I’ve included some <a href="#riemannsummary">background</a> on
+Riemann, and simple guidance on how to run a Riemann server, and also how to
+<a href="#configurejmx">configure</a> Hadoop &amp; HBase for JMX.  If
+you are unfamiliar with either, you may find it beneficial to  read them first, before the
+sections on the feed.</p>
+
+<p>The below was tested on Ubuntu 12.04 using Ruby 1.9.3 (jRuby 1.7.2) and
+Cloudera’s
+<a href="https://ccp.cloudera.com/display/CDH4DOC/CDH4+Quick+Start+Guide">CDH4 YARN distribution</a>
+running in <em>pseudo-distributed</em> (i.e. one host) mode.</p>
+
+<!-- more -->
+
+<h1 id="some-background-to-ruby-jmx-feeds-for-riemann">Some background to Ruby JMX feeds for Riemann</h1>
+
+<p>After swapping a couple of emails with <em>@aphyr</em> I decided to loosely
+model my feeds on the way <em>riemann-tools</em> worked, specifically using 
+Riemann’s reference Ruby client to submit events to
+Riemann.</p>
+
+<p>It seems one of the first attempts to write a JMX feed in Ruby for
+Riemann was <a href="http://alcy.github.com/">alcy’s</a>
+<a href="https://github.com/alcy/riemann-hbase">HBase</a> example.  (This is the
+one referred to on the <a href="http://riemann.io/clients.html">clients</a> page
+on the Riemann website.)  alcy’s example gave me the critical ‘first
+steps’ knowledge to try something more adventurous.</p>
+
+<p>Although this post focuses on the JMX feed, the code has been written
+with the likely need to have (integrate) other types of feeds for other sources, not just
+JMX ones.</p>
+
+<p>Ruby is an ideal language to prototype this sort of framework and the
+below is more about writing that framework in Ruby since submitting
+events to Riemann
+side is so easy as to be essentially trivial.</p>
+
+<h2 id="preparation">Preparation</h2>
+
+<p>There are some pre-requisites.</p>
+
+<h3 id="installing-jruby">Installing jRuby</h3>
+
+<p>My code takes advantage of the existing support in <a href="http://jruby.org/">jRuby</a> for JMX provided by
+<a href="http://jmesnil.net/weblog/">Jeff Mesnil’s</a> 
+<a href="https://rubygems.org/gems/jmx4r">jmx4r</a> gem.</p>
+
+<p>Full details on how to install jRuby are available on the <a href="https://github.com/jruby/jruby/wiki">wiki</a> but
+the following install of 1.7.2 worked fine for me:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre></td><td class="code"><pre><span class="nb">cd</span> /tmp
+wget http://jruby.org.s3.amazonaws.com/downloads/1.7.2/jruby-bin-1.7.2.tar.gz
+tar -xvf ./jruby-bin-1.7.2.tar.gz
+mkdir /usr/lib/jruby
+mv jruby-1.7.2 /usr/lib/jruby/1.7.2
+ln -f -s /usr/lib/jruby/1.7.2/bin/jruby /usr/bin/jruby
+ln -f -s /usr/lib/jruby/1.7.2/bin/jrubyc /usr/bin/jrubyc 
+ln -f -s /usr/lib/jruby/1.7.2/bin/jruby.rb /usr/bin/jruby.rb<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="installing-the-gems">Installing the gems</h3>
+
+<p>Three gems are needed:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>sudo jruby -S gem install jmx4r riemann-client riemann-feeds<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h1 id="example-0-a-simple-namenode-feed">Example 0: a simple NameNode feed</h1>
+
+<p>One of the key components of Hadoop is the <a href="http://wiki.apache.org/hadoop/NameNode">HDFS NameNode</a> daemon.</p>
+
+<h2 id="example-0-the-code">Example 0: the code</h2>
+
+<p>Here’s the code:</p>
+
+<script src="https://gist.github.com/4474713.js?file=blog_feed_jmx0.rb"></script>
+
+<h2 id="example-0-notes">Example 0: Notes</h2>
+
+<p>Quite a few things to note:</p>
+
+<ul>
+  <li>
+    <p>The first line specifies jruby</p>
+  </li>
+  <li>
+    <p>Running with debug enabled (<em>$DEBUG = true</em>) will produce lots of
+diagnostics</p>
+  </li>
+  <li>
+    <p>The feed handler (<em>Riemann::Feeds::FeedHandler</em>) manages feeds</p>
+
+    <p>The feed handler instantiates and runs feeds.</p>
+
+    <p>It (will) also do some other
+stuff but that’s for a later post.</p>
+  </li>
+  <li>
+    <p>The feed specification (<em>feedspec_namenode</em>) is just a regular hash</p>
+
+    <p>The feed specification can only have three (symbol) keys: <em>type</em>, <em>name</em> and
+<em>configuration</em>.</p>
+
+    <p>The <em>configuration</em> will be passed transparently to the instantiated
+instance of the feed type class - see next.</p>
+  </li>
+  <li>
+    <p>The feed type is <em>JMX</em></p>
+
+    <p>The feed type is the name of the class that must be found in
+<em>Riemann::Feeds::Type</em> e.g. <em>Riemann::Feeds::Type::JMX</em>.</p>
+
+    <p>If the feed class is not
+already loaded, the feed handler will attempt to do so by requiring
+<em>‘riemann/feeds/type/jmx’</em>.</p>
+  </li>
+  <li>
+    <p>Configuring the feed</p>
+
+    <p>I’ve tried to make it easy to configure feeds flexibly and the
+capabilities look beyond  the needs of this simple example -  the
+following  two example explores this more.</p>
+
+    <p>For example, the <em>config_riemann</em>, <em>credentials_jmx</em> and
+<em>jmxconfig_namenode</em> hashes provide ‘external’ (to the
+feedspec_namenode) hash are ‘pulled into’ the <em>configuration</em> by their
+inclusion in the <em>include_configuration</em> array.  The former’s key-value
+pairs are used the set the attributes (accessors) of the feed instance.</p>
+
+    <p>The purpose of ‘external’ configuration is three-fold:  First many feeds will have common
+configuration needs e.g. the details of the Riemann server
+(<em>config_riemann</em>) to submit events to.</p>
+
+    <p>Secondly, credentials such as the JMX username and
+password really should not be kept in scripts  but in protected (e.g.
+permissions 600) files somewhere else.</p>
+
+    <p>Finally, configuration files can be updated without any changes to the
+feed scripts themselves.</p>
+  </li>
+  <li>
+    <p>Setting the Riemann event defaults</p>
+
+    <p>The <em>configuration</em> can contain a hash with the default event fields’ values
+to use (e.g. <em>service</em> as <em>‘NameNode’</em>).</p>
+  </li>
+  <li>
+    <p>Defining the JMX beans to monitor</p>
+
+    <p>The <em>beans</em> key in the <em>configuration</em> defines the beans to monitor.  It
+must be a array.</p>
+
+    <p>Two beans are defined in this examples, <em>NameNodeActivity</em> and the
+ubiquitous <em>OperatingSystem</em> one containing attributes such as  cpu time,
+swap usage, load average, free memory, etc.</p>
+
+    <p>Normally beans are specified by a hash specification (described
+later in Example 1).
+Just supplying the bean name (string) is a shorthand to ‘fake up’ a
+specification with the
+defaults.</p>
+
+    <p>Using the defaults for a bean specification   tells the feed
+instance to ask the bean what attributes it has and report  them
+all to Riemann.</p>
+  </li>
+</ul>
+
+<h2 id="example-0-the-eachevent-method">Example 0: the each_event method</h2>
+
+<p>The feed instance  dynamically defines an <em>each_event</em>  method on its
+  <a href="http://blog.madebydna.com/all/code/2011/06/24/eigenclasses-demystified.html"><em>singleton / eigenclass</em></a>.</p>
+
+<p>The <em>each_event</em> method for the JMX class is an <a href="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_containers.html">iterator</a> that
+  yields events with <em>metric</em> and <em>description</em> for all of the
+  attributes to be reported on.</p>
+
+<p>Running with $DEBUG enabled will show exactly what the <em>each_event</em>
+  method does.  Here it is for this example (slightly tidied up for
+  ease of reading):</p>
+
+<script src="https://gist.github.com/4524629.js?file=blog_feed_jmx0_each_event.rb"></script>
+
+<h1 id="example-1--easy-attribute-selection-and-configuration">Example 1:  easy attribute selection and configuration</h1>
+
+<p>In the previous example all of the attributes for each bean were
+reported on (the default).  Sometimes though
+this is not what you want and e.g. maybe only a few specific, nominated
+attributes should be reported.</p>
+
+<p>Sometimes metric values may need to be normalised, for example to
+always report storage in gigabytes, or time in your chosen radix
+(e.g. seconds since the epoch).</p>
+
+<p>You  may actually want to do some  transformation of
+an event (<em>map</em>) e.g. to change the <em>status</em> from <em>ok</em> to <em>critical</em>
+when a threshold has been breached.</p>
+
+<p>Finally, you  may also want to filter events using a predicate (<em>select</em>) that
+returns <em>truthy</em> or <em>falsey</em>.</p>
+
+<p>This example  shows also how common and / or sensitive information can
+be read from  external YAML file(s).</p>
+
+<p>It also  demonstrates how bean and / or attribute level event defaults can be set.</p>
+
+<h2 id="example-1-external-configuration-files">Example 1: external configuration files</h2>
+
+<p>In this example the <em>config_riemann</em>, <em>credentials_jmx</em> and
+<em>jmxconfig_namenode</em> hashes providing ‘external’ configuration have
+been moved (written) to their own individual YAML files in <em>./etc</em>.
+Writing  YAML files is straightforward  e.g:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td><td class="code"><pre><span class="nb">require</span> <span class="s1">'yaml'</span>
+
+<span class="n">config_riemann</span> <span class="o">=</span> <span class="p">{</span><span class="ss">riemann_host: </span><span class="s1">'10.16.0.64'</span><span class="p">,</span> <span class="ss">riemann_port: </span><span class="mi">5555</span><span class="p">,</span> <span class="ss">riemann_interval: </span><span class="mi">10</span><span class="p">}</span>
+
+<span class="n">credentials_jmx</span> <span class="o">=</span> <span class="p">{</span><span class="ss">jmx_user: </span><span class="s1">'monitorRole'</span><span class="p">,</span> <span class="ss">jmx_pass: </span><span class="s1">'monitorpass'</span><span class="p">}</span>
+
+<span class="n">jmxconfig_namenode</span> <span class="o">=</span> <span class="p">{</span><span class="ss">jmx_host: </span><span class="s1">'10.16.0.48'</span><span class="p">,</span> <span class="ss">jmx_port: </span><span class="mi">8004</span><span class="p">}</span>
+
+<span class="n">config_home</span> <span class="o">=</span> <span class="s1">'./etc'</span>
+
+<span class="n">yaml_files</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">config_riemann</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">config_home</span><span class="p">,</span> <span class="s1">'config_riemann.yaml'</span><span class="p">),</span>
+  <span class="n">jmxconfig_namenode</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">config_home</span><span class="p">,</span> <span class="s1">'jmxconfig_namenode.yaml'</span><span class="p">),</span>
+  <span class="n">credentials_jmx</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">config_home</span><span class="p">,</span> <span class="s1">'credentialsJMX.yaml'</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">yaml_files</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">yaml_path</span> <span class="o">|</span> 
+ <span class="no">File</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">yaml_hndl</span><span class="o">|</span>  <span class="no">YAML</span><span class="p">.</span><span class="nf">dump</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">yaml_hndl</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The contents of the e.g. <em>config_riemann</em> YAML file looks as you might expect:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="nn">---</span>
+<span class="s">:riemann_host</span><span class="pi">:</span> <span class="s">10.16.0.64</span>
+<span class="s">:riemann_port</span><span class="pi">:</span> <span class="s">5555</span>
+<span class="s">:riemann_interval</span><span class="pi">:</span> <span class="s">10</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="example-1-the-code-to-monitor-selected-attributes-of-the-hdfs-namenode">Example 1: the code to monitor selected attributes of the HDFS NameNode</h2>
+
+<p>The code looks like this:</p>
+
+<p>&lt;script src=”https://gist.github.com/4524859.js?file=blog_feed_jmx1.rb””&gt;&lt;/script&gt;</p>
+
+<h2 id="example-1-notes">Example 1: Notes</h2>
+
+<ul>
+  <li>
+    <p>The <em>config_riemann_path</em>, <em>credentials_jmx_path</em> and
+<em>jmxconfig_namenode_path</em> are YAML files.</p>
+  </li>
+  <li>
+    <p>The values of both the original beans’ specifications are now hashes.</p>
+
+    <p>The only keys allowed in the specification hash are
+<em>event_defaults</em> and <em>attributes</em>, the values for which are expected to
+be hashes, and the <em>bean_name</em> which must be a string.</p>
+  </li>
+</ul>
+
+<h2 id="example-1--attribute-level-event-defaults-for-the-namenode-bean">Example 1:  attribute-level event defaults for the NameNode bean</h2>
+
+<p>If a bean has its own <em>event_defaults</em> these are merged with the
+feed-level event defaults with normal hash semantics for duplicate
+keys (last value wins).</p>
+
+<p>Note however, <em>tags</em> array are <em>concatenated</em>.  In this example
+events for this bean will have additional tags (<em>Activity</em> and <em>Files</em>) as well
+as the feed-level tags (<em>YARN</em> and <em>NameNode</em>).</p>
+
+<h2 id="example-1--attribute-selection-for-the-namenode-bean">Example 1:  attribute selection for the NameNode bean</h2>
+
+<p>The <em>attributes</em> key hash value can contain four keys: <em>include</em>,
+<em>exclude</em>, <em>all</em> and <em>definitions</em>.</p>
+
+<p>If no <em>all</em> value (array) is provided, all of the bean’s attributes are
+automatically supplied.</p>
+
+<p>If  <em>include</em>  (array) is provided it  takes precedence over the
+<em>all</em> list.</p>
+
+<p>However, <em>exclude</em> attributes (array) are <em>always</em> discarded.</p>
+
+<p>The logic looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="n">attrUse</span> <span class="o">=</span> <span class="p">((</span><span class="n">attrInc</span> <span class="o">||</span> <span class="n">attrAll</span><span class="p">)</span> <span class="o">-</span> <span class="n">attrExc</span><span class="p">).</span><span class="nf">uniq</span>  <span class="c1"># list of unique attributes to report on</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note all attributes  in <em>include</em> and <em>exclude</em> and the  keys (i.e.
+attribute names)
+in <em>definitions</em>  <em>must</em> be
+present in the <em>all</em> array (sanity checking).</p>
+
+<p><em>definitions</em> will be explained in the discussion of  the attributes for
+the <em>OperatingSystem</em> bean below.</p>
+
+<h2 id="example-1-attributes-for-the-operatingsystem-bean">Example 1: attributes for the OperatingSystem bean</h2>
+
+<p>The <em>attributes</em> hash for the <em>OperatingSystem</em> bean is rather more
+involved.  As for the <em>NameNodeActivity</em> bean, the
+<em>include</em> lists all the wanted attributes, in this case five of them
+(e.g <em>free_physical_memory_size</em>).</p>
+
+<p>The <em>attributes</em> hash also includes a <em>definitions</em> key,  also
+a hash, that defines how the attribute should be treated (processed):</p>
+
+<ul>
+  <li><em>event-defaults</em></li>
+</ul>
+
+<p>If present, the <em>event-defaults</em> value provides attribute-level
+ defaults, in this case just an  extra tag (<em>FreeMem</em>).</p>
+
+<ul>
+  <li>
+    <p><em>metric</em></p>
+
+    <p>If present, the <em>metric</em> value defines the normalisation to be applied to the
+<em>metric</em> value.</p>
+
+    <p>In this example, the <em>free_physical_memory_size</em> will be converted into
+GB using a <em>proc</em> taking the metric as its only argument.</p>
+
+    <p>In the background, the feed instance creates a method with a unique name (e.g.
+<em>metric_free_physical_memory_size_123456</em>) using the proc for its
+body (using <em>define_method</em>).</p>
+  </li>
+  <li>
+    <p><em>map</em></p>
+
+    <p>If present, the <em>map</em> function takes the event as its only argument and
+returns the (maybe modified) event.  Again, as for <em>metric</em>,  a uniquely named method is
+created (e.g. <em>map_free_physical_memory_size_7263828</em>).</p>
+
+    <p>In this example the <em>status</em> has been changed to <em>critical</em>’ because the
+<em>select</em> (see next) will <em>only</em> pass through events which have crossed the threshold.</p>
+  </li>
+  <li>
+    <p><em>select</em></p>
+
+    <p>If present, the <em>select</em> must be a predicate function, with the
+event as its only argument, and returning <em>truthy</em> or <em>falsey</em>.  If the
+latter, the event is discarded and <em>not</em> sent to Riemann.</p>
+
+    <p>If this case, only events where the <em>free_physical_memory_size</em> is
+less that 1GB are submitted to Riemann. (Note the <em>metric</em> has been
+previously normalised to GB.)</p>
+  </li>
+</ul>
+
+<h2 id="example-1-the-eachevent-method">Example 1: the each_event method</h2>
+
+<p>Seeing the  generated <em>each_event</em>  method may help clarify how the attribute
+<em>definitions</em> have been used, particularly <em>free_physical_memory_size</em>:</p>
+
+<script src="https://gist.github.com/4524871.js?file=blog_feed_jmx1_each_event.rb"></script>
+
+<h1 id="example-2--advanced-configuration">Example 2:  advanced configuration</h1>
+
+<p>The example covers the same ground as Example 1 but using a more
+advanced configuration technique: using Ruby itself to create
+the necessary data structures.</p>
+
+<p>Using YAML is very useful in many situations although it has some
+drawbacks. For example it is not possible to easily save (serialise)  a <em>Proc</em> in a
+YAML file.</p>
+
+<p>However its easy straightforward to use Ruby itself to build the
+configuration.  Ruby files can be used in the same ways / places
+as YAML files.  Arguably using an <em>active</em> Ruby configuration is less
+<em>safe</em> than a <em>passive</em> YAML one since the former is executed
+(<em>instance_eval</em>) on the feed instance.</p>
+
+<h2 id="example-2-the-code">Example 2: the code</h2>
+
+<p>The feed script itself is now pretty minimal with the feed
+specification now defined as  a Ruby file (<em>./etc/feedspecNameNode.rb</em>):</p>
+
+<script src="https://gist.github.com/4526324.js?file=blog_feed_jmx2.rb"></script>
+
+<h2 id="example-2-the-namenode-feed-specification">Example 2: the NameNode feed specification</h2>
+
+<p>The <em>./etc/feedconfigNameNode.rb</em> file looks like this:</p>
+
+<script src="https://gist.github.com/4526444.js?file=blog_feed_jmx2_feedspecNameNode.rb"></script>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>Normal Ruby semantics</p>
+
+    <p>The full power of Ruby available.</p>
+  </li>
+  <li>
+    <p>YAML files are used as before for simple configuration</p>
+  </li>
+  <li>
+    <p>The two bean specifications refer to external Ruby files</p>
+
+    <p><em>./etc/jmxbeanconfigNameNodeActivity.rb</em> and
+ <em>./etc/jmxbeanconfigOperatingSystem.rb</em> are listed in the <em>beans</em> array.</p>
+  </li>
+  <li>
+    <p>The result of evaluating Ruby code is the feed specification hash</p>
+
+    <p><em>instance_eval</em> is used to do the evaluation with the feed instance
+ as <em>self</em>.</p>
+  </li>
+</ul>
+
+<h2 id="example-2-the-namenodeactivity-bean-configuration">Example 2: the NameNodeActivity bean configuration</h2>
+
+<p>The <em>./etc/jmxbeanconfigNameNodeActivity.rb</em> file contains the same as
+in Example 1:</p>
+
+<script src="https://gist.github.com/4526464.js?file=blog_feed_jmx2_jmxbeanconfigNameNodeActivity.rb"></script>
+
+<h2 id="example-2-the-operatingsystem-bean-configuration">Example 2: the OperatingSystem bean configuration</h2>
+
+<p>The <em>./etc/jmxbeanconfigOperatingSystem.rb</em> file contains the more
+involved specification, again the same as Example 1:</p>
+
+<script src="https://gist.github.com/4526472.js?file=blog_feed_jmx2_jmxbeanconfigOperatingSystem.rb"></script>
+
+<h2 id="example-2-using-simple-building-blocks-mix-and-match">Example 2: using simple building blocks, mix and match</h2>
+
+<p>Using YAML and Ruby to create simple building block for a feed
+specification and configuration allows you to create rich feed <em>mix and match</em>
+definitions that can be easily added, changed or augmented as needed.</p>
+
+<p>This abillity  comes into it own when monitoring feeds from  multiple
+sources (e.g. a whole Hadoop / HBase cluster) where many common beasn
+and attributes
+need to be collected (for example most if not all hosts will monitor
+ <em>OperatingSystem</em>).</p>
+
+<p>Also, it makes it easy to build
+<em>templates</em> for host  <em>roles</em> e.g. in a Hadoop cluster with a number
+of HDFS DataNodes, you’d likely want to monitor them in the same way,
+collecting the same beans and attributes.</p>
+
+<h1 id="final-words-on-riemann-feeds">Final Words on Riemann Feeds</h1>
+
+<p>The above is useful for a small number of hosts  but it
+would be clumsy to use for, again and e.g., a Hadoop cluster where the
+same monitoring will likely be used across the cluster and depending
+on the individual hosts’ roles.  Building configurations for multiple
+hosts, using templates, will be the subject of the next post.</p>
+
+<p>Also, there is nothing in the above to watch over the feeds
+themselves (<em>who watches the watchers?</em>) and telling Riemann if and when the
+feeds fail.  This will be covered in the
+next post as well.</p>
+
+<p>A JMX feed is a useful and versatile solution for the Java world but there are many more feed
+sources it would be nice to support e.g.
+<a href="http://linux.die.net/man/8/auditd">auditd</a> for security exceptions.  Also
+it would be good to have feeds that <em>gateway</em> to other monitors e.g.
+sucking from Nagios’s <a href="http://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details">nrpe</a>.</p>
+
+<p>Finally, anyone reading this post hoping to discover how to configure
+the <em>sink</em> side of Riemann will have been sorely disappointed.  As most
+infrastructure folk will tell you, good monitoring is all about the
+tuning of what you do will all the data (and when you get the DevOps
+out of bed).  This is part science, part art and part experience so a
+prescriptive approach will only get you to first base.  But is will be
+interesting to explore some utility “recipes” for common concerns.</p>
+
+<h1 id="a-idriemannsummaryariemann-overview"><a id="riemannsummary"></a>Riemann Overview</h1>
+
+<p>The Riemann <a href="http://riemann.io">website</a> has recently had a make over and is
+very good, well worth browsing.</p>
+
+<p>Riemann’s author is <a href="http://aphyr.com/">Kyle Kingsbury</a></p>
+
+<h2 id="riemann-features">Riemann Features</h2>
+
+<p>Riemann adds some deceptively simple but very elegant ways to
+filter, (re)direct or aggregate inbound events.</p>
+
+<p>It is completely <em>agnostic</em> as to
+the characteristics of the event sources and sinks.</p>
+
+<p>It also doesn’t care much (intrinsically) as the
+semantics of the event data: as long as the event itself observes a
+very simple format, restricting  itself to a hash / map with a  set of
+easily understood and familiar
+<a href="http://riemann.io/concepts.html">fields named &amp; value pairs</a>,
+Riemann will process it successfully. The meaning of the fields’ values
+are a matter for the sources and sinks: if source X says <em>The backup
+has failed</em> its up to sink Y to say <em>get the on-call DevOps out of bed</em>.</p>
+
+<p>Riemann is written in <a href="http:///clojure.org">Clojure</a> and brings the ability to
+<em>compose</em> event pipelines in really simple but intuitive ways.
+Arguably its most powerful feature.</p>
+
+<h2 id="riemann-events">Riemann Events</h2>
+
+<p>A Riemann event is a hash / map.  An example  Ruby one:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="p">{</span><span class="ss">host: </span><span class="s1">'server01'</span><span class="p">,</span> <span class="ss">service: </span><span class="s1">'HBase'</span><span class="p">,</span> <span class="ss">status: </span><span class="s1">'ok'</span><span class="p">,</span> <span class="ss">metric: </span><span class="mi">5</span><span class="p">,</span> <span class="ss">:description</span><span class="p">:</span> <span class="s1">'No of
+HBase users'</span><span class="p">,</span> <span class="ss">tags: </span><span class="p">[</span><span class="s1">'HBase'</span><span class="p">,</span> <span class="s1">'Users'</span><span class="p">]}</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The valid fields (keys) are listed</p>
+
+<h2 id="riemann-clients">Riemann Clients</h2>
+
+<p>Riemann provide  clients for anumber of  different lanagues bindings for building
+custome sources including reference ones in
+<a href="https://github.com/aphyr/riemann-ruby-client">Ruby</a>, <a href="https://github.com/aphyr/riemann-java-client">Java</a> and
+{Clojure](https://github.com/aphyr/riemann-clojure-client).  There are
+also clients for  othe rpopular langaes such as Python, Perl, Node, C, Erlang and Scala.</p>
+
+<h2 id="riemann-sinks">Riemann Sinks</h2>
+
+<p>A number of <em>sinks</em> are already available including <a href="http://riemann.io/howto.html#forward-to-graphite">Graphite</a>,
+<a href="http://riemann.io/howto.html#notify-with-pagerduty">PagerDuty</a> and
+<a href="http://riemann.io/howto.html#send-email">email</a>.  Riemann servers can
+also be daisy-chainen if need be e.g for load sharing, aggreation
+(e.g. by location, service, etc), separation
+of duties, whatever.</p>
+
+<h1 id="running-a-riemann-server">Running a Riemann Server</h1>
+
+<p>Running a Riemann server and feeding it some events is really very easy and described in the
+<a href="http://riemann.io/quickstart.html">QuickStart</a> section on the
+website.  This section is drawn from it.</p>
+
+<h2 id="installing-riemann">Installing Riemann</h2>
+
+<p>The 0.1.5 version can be installed using the following:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre></td><td class="code"><pre>wget http://aphyr.com/riemann/riemann-0.1.5.tar.bz2
+tar xvfj riemann-0.1.5.tar.bz2
+<span class="nb">cd </span>riemann-0.1.5<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The expanded tar file creates three folders.  The <em>lib</em> folder contains
+the Riemann  (v0.1.5) jar (<em>riemann-jar</em>), <em>etc</em> contains an example
+configuration (<em>riemann.config</em> - see below)
+and <em>bin</em> which contains a simple script (<em>riemann</em>) to run Riemann with the
+example, or your own, configuration.</p>
+
+<p>I’ve found a problem with <em>tags</em> (see later) support when using the 0.1.5  and am
+currently using the unreleased 0.1.6-SNAPSHOT from Github.  To install
+0.1.6 requires <a href="https://github.com/technomancy/leiningen">Leiningen</a> to be installed (see
+<a href="http://ianrumford.github.com/blog/2012/09/21/writing-apache-pig-udfs-in-clojure/">another of my posts</a>
+for some guidance if necessary).</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre></td><td class="code"><pre><span class="nb">cd</span> &lt;wherever you want to keep riemann <span class="nb">source</span>&gt;
+git clone https://github.com/aphyr/riemann.git
+<span class="nb">cd </span>riemann
+lein uberjar<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The <em>target</em> directory will contain the <em>standalone</em> jar
+<em>riemann-0.1.6-SNAPSHOT-standalone.jar</em>.</p>
+
+<h2 id="configuring-riemann">Configuring Riemann</h2>
+
+<p>The <em>etc</em> folder contains an example
+configuration for running tcp, udp and ws (websockets) servers.</p>
+
+<p>The configuration file is a snippet of Clojure:</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td><td class="code"><pre><span class="p">(</span><span class="nf">logging/init</span><span class="w"> </span><span class="no">:file</span><span class="w"> </span><span class="s">"riemann.log"</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">; Listen on the local interface over TCP (5555), UDP (5555), and websockets
+; (5556)
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="s">"127.0.0.1"</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">tcp-server</span><span class="w"> </span><span class="no">:host</span><span class="w"> </span><span class="n">host</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">udp-server</span><span class="w"> </span><span class="no">:host</span><span class="w"> </span><span class="n">host</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">ws-server</span><span class="w">  </span><span class="no">:host</span><span class="w"> </span><span class="n">host</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">; Expire old events from the index every 5 seconds.
+</span><span class="p">(</span><span class="nf">periodically-expire</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">; Keep events in the index for 5 minutes by default.
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="nb">index</span><span class="w"> </span><span class="p">(</span><span class="nf">default</span><span class="w"> </span><span class="no">:ttl</span><span class="w"> </span><span class="mi">300</span><span class="w"> </span><span class="p">(</span><span class="nf">update-index</span><span class="w"> </span><span class="p">(</span><span class="nb">index</span><span class="p">)))]</span><span class="w">
+
+  </span><span class="c1">; Inbound events will be passed to these streams:
+</span><span class="w">  </span><span class="p">(</span><span class="nf">streams</span><span class="w">
+
+    </span><span class="c1">; Index all events immediately.
+</span><span class="w">    </span><span class="nb">index</span><span class="w">
+
+    </span><span class="c1">; Calculate an overall rate of events.
+</span><span class="w">    </span><span class="p">(</span><span class="nf">with</span><span class="w"> </span><span class="p">{</span><span class="no">:metric</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">:host</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="no">:state</span><span class="w"> </span><span class="s">"ok"</span><span class="w"> </span><span class="no">:service</span><span class="w"> </span><span class="s">"events/sec"</span><span class="p">}</span><span class="w">
+      </span><span class="p">(</span><span class="nf">rate</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="nb">index</span><span class="p">))</span><span class="w">
+
+    </span><span class="c1">; Log expired events.
+</span><span class="w">    </span><span class="p">(</span><span class="nf">expired</span><span class="w">
+      </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">info</span><span class="w"> </span><span class="s">"expired"</span><span class="w"> </span><span class="n">event</span><span class="p">)))</span><span class="w">
+</span><span class="p">))</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This makes Riemann  listen only for events coming from  localhost.
+To make it listen for sources external to localhost, change the host
+value e.g.</p>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">]</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="using-the-016-jar">Using the 0.1.6 jar</h2>
+
+<p>The <em>riemann</em> script in <em>bin</em> needs to be edited to use the 0.1.6
+jar.  Change the line near the top of the script:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre><span class="nv">JAR</span><span class="o">=</span><span class="s2">"&lt;wherever you want to keep riemann source&gt;/target/riemann-0.1.6-SNAPSHOT-standalone.jar"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="running-riemann">Running Riemann</h2>
+
+<p>Assuming you are in the riemann source folder, the following will start
+Riemann with the example configuration:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>./bin/riemann <span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>or with your own</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>./bin/rieman /path/to/my-riemann.config<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="sending-riemann-some-events">Sending Riemann some events</h2>
+
+<p>A very simple way to test your Riemann server is by sending it some
+events is using <em>riemann-health</em> from the Rieman server itself.:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>gem install riemann-health
+riemann-health<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Or if you’re Riemann server is running elsewhere (e.g. on ip 10.16.0.64) then:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>riemann-health --host 10.16.0.64<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The health events can be view using the Riemann Dashboard.  On the
+Riemann server:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>gem install riemann-dash
+riemann-dash<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Click <a href="http://localhost:4567/">here</a> to see the dashboard on localhost running on its default port (4567).</p>
+
+<h1 id="a-idconfigurejmxaconfiguring-jmx-data-sources"><a id="configurejmx"></a>Configuring JMX Data Sources</h1>
+
+<p>Each source will have its own way of configuring JMX access.  The
+below only applies
+to Hadoop &amp; HBase.  Configuring JMX can be a bit fraught if reports on the net are
+anything to go by.  The below worked for me.  Note I’m using YARN;
+details will be different (but not too dissimilar) for Hadoop v1.</p>
+
+<p>In this
+example authenticated access will be enforced 
+i.e  remote  JMX requests must explicitly
+include a username and password.  Also, although different files are
+used for Hadoop and HBase components, the contents
+(usernames &amp; passwords) are the same  for
+convenience - they can be different of course.</p>
+
+<p>I use environment variables <em>$HADOOP_CONF_HOME</em> and
+<em>$HBASE_CONF_HOME</em> and,
+in my system, these are <em>/etc/hadoop/conf</em> and <em>/etc/hbase/conf</em> respectively.</p>
+
+<h2 id="hadoop">Hadoop</h2>
+
+<p>Hadoop YARN has a number of component daemons that all have to be
+configured to respond to JMX requests.</p>
+
+<ul>
+  <li>HDFS</li>
+</ul>
+
+<p>HDFS has one <em>NameNode</em>, an optional <em>SecondaryNameNode</em> and a
+ <em>DataNode</em> daemon  that runs on each server that hosts data.</p>
+
+<ul>
+  <li>
+    <p>YARN (Map Reduce)</p>
+
+    <p>YARN has the <em>ResourceManager</em> replacing  the <em>JobTracker</em> of version 1</p>
+
+    <p>Each mapred <em>worker</em> machine has a <em>NodeManager</em> daemon.</p>
+
+    <p>YARN also has the <em>JobHistoryTracker</em> daemon running on the same
+host as the <em>ResourceManager</em>.</p>
+  </li>
+</ul>
+
+<p>In <em>pseudo-distributed</em> all of these run on the same host and hence  need to listen for JMX requests on
+different ports.</p>
+
+<h3 id="configure-the-hadoop-metrics-properties">Configure the Hadoop Metrics Properties</h3>
+
+<p>Edit <em>$HADOOP_CONF_HOME/hadoop-metric.properties</em> to contain the following:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre></td><td class="code"><pre><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"hadoop"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">hadoop.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">hadoop.period=</span><span class="mi">60</span><span class="w">
+
+</span><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"jvm"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">jvm.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">jvm.period=</span><span class="mi">60</span><span class="w">
+
+</span><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"rpc"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">rpc.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">rpc.period=</span><span class="mi">60</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="create-the-jmx-usernames-and-password-files">Create the JMX Usernames and Password files</h3>
+
+<p>JMX password files have to have restricted permissions (600) and since HDFS and
+YARN daemons run under different users (hdfs and yarn), a password file
+is needed for each.</p>
+
+<p>Create file <em>$HADOOP_CONF_HOME/jmxremote.access</em> containing:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="err">monitorRole</span><span class="w"> </span><span class="err">readonly</span><span class="w">
+</span><span class="err">controlRole</span><span class="w"> </span><span class="err">readwrite</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Create file <em>$HADOOP_CONF_HOME//jmxremote.passwd</em> with chosen passwords
+for monitoring (read-only e.g. ‘monitorpass’) and
+control (read/write e.g. ‘controlpass’):</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre><span class="err">monitorRole</span><span class="w"> </span><span class="err">monitorpass</span><span class="w">
+</span><span class="err">controlRole</span><span class="w"> </span><span class="err">controlpass</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Run the following command sequence whilst in the conf folder:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre></td><td class="code"><pre>chown root.hadoop ./jmxremote.access
+chmod 640 ./jmxremote.access
+cp ./jmxremote.pass ./hdfs-jmxremote.passwd
+cp ./jmxremote.pass ./yarn-jmxremote.passwd
+chmod 600 ./<span class="k">*</span>jmxremote.passwd
+chown hdfs.hadoop ./hdfs-jmxremote.passwd
+chown yarn.hadoop ./yarn-jmxremote.passwd<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="configure-the-hadoop-daemons-to-enable-jmx">Configure the Hadoop daemons to enable JMX</h3>
+
+<p>Edit <em>$HADOOP_CONF_HOME/hadoop-env.sh</em> to contain the following lines</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></td><td class="code"><pre><span class="c"># JMX Options</span>
+
+<span class="nb">export </span><span class="nv">HADOOP_CONF_HOME</span><span class="o">=</span>/etc/hadoop/conf
+
+<span class="nv">HADOOP_JMX_OPTS</span><span class="o">=</span><span class="s2">"-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false"</span>
+
+<span class="nv">HADOOP_JMX_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Djava.net.preferIPv4Stack=true"</span>
+
+<span class="nv">HADOOP_JMX_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.access.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/jmxremote.access"</span>
+
+<span class="nb">export </span><span class="nv">HADOOP_NAMENODE_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=8004 </span><span class="se">\</span><span class="s2">
+  -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/hdfs-jmxremote.passwd"</span>
+
+<span class="nb">export </span><span class="nv">HADOOP_SECONDARYNAMENODE_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=8005 </span><span class="se">\</span><span class="s2">
+  -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/hdfs-jmxremote.passwd"</span>
+
+<span class="nb">export </span><span class="nv">HADOOP_DATANODE_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=8006 </span><span class="se">\</span><span class="s2">
+  -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/hdfs-jmxremote.passwd"</span>
+  
+<span class="nb">export </span><span class="nv">YARN_RESOURCEMANAGER_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=8007 </span><span class="se">\</span><span class="s2">
+  -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/yarn-jmxremote.passwd"</span>
+
+<span class="nb">export </span><span class="nv">YARN_NODEMANAGER_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HADOOP_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=8008 </span><span class="se">\</span><span class="s2">
+  -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HADOOP_CONF_HOME</span><span class="s2">/yarn-jmxremote.passwd"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Notes:</p>
+
+<ul>
+  <li>
+    <p>Note the different ports used.  These seem to be arbitrary although
+examples on the Net show the NameNode on 8004.  I have just used the
+next port up for the others.</p>
+  </li>
+  <li>
+    <p>Note the different password files used for the HDFS and YARN
+daemons.</p>
+  </li>
+</ul>
+
+<h3 id="restart-the-hadoop-daemons">Restart the Hadoop daemons</h3>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre></td><td class="code"><pre>service hadoop-yarn-resourcemanager restart
+service hadoop-yarn-nodemanager restart
+service hadoop-hdfs-namenode restart
+service hadoop-hdfs-secondarynamenode restart
+service hadoop-hdfs-datanode restart<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="check-the-hadoop-daemons-are-listening">Check the Hadoop daemons are listening</h3>
+
+<p>To check the <em>NameNode</em> is listening for example:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>netstat -antp | grep 8004<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>should display something like:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>tcp        0      0 0.0.0.0:8004           0.0.0.0:<span class="k">*</span>               LISTEN      -               <span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="hbase">HBase</h2>
+
+<p>HBase has two main components: the <em>Master</em> and <em>RegionServer</em>.  Its
+the latter that does all the heavy lifting and an instance of it will
+run on each HBase server.</p>
+
+<p>BTW HBase also require / uses ZooKeeper and in the <em>pseudo-distrubuted</em> confgiuration
+there will also be a daemon called <em>QuorumPeerMain</em> running.</p>
+
+<p>In <em>pseudo-distributed</em> mode both the Master and (one) RegionServer
+will run on the same host. Hence they need to listen for JMX requests on
+different port.</p>
+
+<h3 id="configure-the-hbase-metrics-properties">Configure the HBase Metrics Properties</h3>
+
+<p>Edit <em>$HBASE_CONF_HOME/conf/hadoop-metric.properties</em> to contain the following:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre></td><td class="code"><pre><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"hbase"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">hbase.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">hbase.period=</span><span class="mi">60</span><span class="w">
+
+</span><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"jvm"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">jvm.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">jvm.period=</span><span class="mi">60</span><span class="w">
+
+</span><span class="err">#</span><span class="w"> </span><span class="err">Configuration</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"rpc"</span><span class="w"> </span><span class="err">context</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="err">rpc.class=org.apache.hadoop.metrics.spi.NullContextWithUpdateThread</span><span class="w">
+</span><span class="err">rpc.period=</span><span class="mi">60</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="create-the-jmx-usernames-and-password-files-1">Create the JMX Usernames and Password files</h3>
+
+<p>The jmx usernames and password file needs to be created in the same
+way as for Hadoop; you could copy the Hadoop file into
+<em>$HBASE_CONF_HOME/conf</em>, and change the ownerships (hbase.hbase).</p>
+
+<h3 id="configure-the-hbase-daemons-to-enable-jmx">Configure the HBase daemons to enable JMX</h3>
+
+<p>Edit <em>$HBASE_CONF_HOME/conf/hbase-env.sh</em> to have the following lines</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td><td class="code"><pre><span class="nv">HBASE_JMX_OPTS</span><span class="o">=</span><span class="s2">"-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false"</span>
+
+<span class="c"># Need the following line to ensure listen in on ipv4 not ipv6</span>
+
+<span class="c"># JMX Options</span>
+
+<span class="nb">export </span><span class="nv">HBASE_CONF_HOME</span><span class="o">=</span>/etc/hbase/conf
+
+<span class="nv">HBASE_JMX_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HBASE_JMX_OPTS</span><span class="s2"> -Djava.net.preferIPv4Stack=true"</span>
+
+<span class="nv">HBASE_JMX_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HBASE_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.password.file=</span><span class="nv">$HBASE_CONF_HOME</span><span class="s2">/jmxremote.passwd"</span>
+
+<span class="nv">HBASE_JMX_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HBASE_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.access.file=</span><span class="nv">$HBASE_CONF_HOME</span><span class="s2">/jmxremote.access"</span>
+
+<span class="nb">export </span><span class="nv">HBASE_MASTER_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HBASE_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=10101"</span>
+
+<span class="nb">export </span><span class="nv">HBASE_REGIONSERVER_OPTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HBASE_JMX_OPTS</span><span class="s2"> -Dcom.sun.management.jmxremote.port=10102"</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Note the Master is set to listen on port 10101 and the RegionServer
+on 10102.</p>
+
+<h3 id="restart-the-hbase-daemons">Restart the HBase daemons</h3>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre></td><td class="code"><pre>service hbase-master restart
+service hbase-regionserver restart<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="check-the-hbase-daemons-are-listening">Check the HBase daemons are listening</h3>
+
+<p>To check the <em>HBase Master</em> is listening for example:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>netstat -antp | grep 10101<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>should display something like:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>tcp        0      0 0.0.0.0:10101           0.0.0.0:<span class="k">*</span>               LISTEN      -               <span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="browsing-the-beans">Browsing the beans</h2>
+
+<p>You should now be able to peruse the Hadoop and HBase JMX beans using the <em>jconsole</em>
+program distributed as part of the Java JDK:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre></td><td class="code"><pre>jconsole<span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>jconsole will put up a fairly intuitive  GUI.</p>
+
+
+  </article>
+  <hr />
+</div>
+
+
+<section class="pager">
+  <ul>
+    
+    <li class="previous"><a href="/ruby/constants/gotchas/2013/01/04/gotcha-constants-in-anonymous-ruby-classes-and-mixins.html" title="Gotcha: Constants in anonymous Ruby classes and mixins">&larr; Older</a></li>
+    
+    
+    <li class="next"><a href="/clojure/reducers/parallel/map/reduce/2013/08/25/some-trivial-examples-of-using-clojure-reducers.html" title="Some trivial examples of using Clojure Reducers">Newer &rarr;</a></li>
+    
+  </ul>
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+            
+        url = 'http://www.rumford.name/ruby/constants/gotchas/2013/01/04/gotcha-constants-in-anonymous-ruby-classes-and-mixins.html';
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        url = 'http://www.rumford.name/clojure/reducers/parallel/map/reduce/2013/08/25/some-trivial-examples-of-using-clojure-reducers.html';
+        
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+
+  var disqus_developer = 1;
+
+var disqus_shortname ='';
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+    <section class="pager">
+  
+  
+</section>
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    if (e.target.nodeName.toUpperCase() != 'BODY') return;
+    var url = false;
+        if (e.which == 37 || e.which == 74) {  // Left arrow and J
+        
+        }
+        else if (e.which == 39 || e.which == 75) {  // Right arrow and K
+            
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+
+
+
+  </div>
+  <div class="col-sm-2">
+<div class="sidebar-module about">
+  <h4>About Me</h4>
+  <img title="Whistlejacket" src="/images/whistlejacket-circle-128px-2.png" alt="Whistlejacket"/>
+  <span>Ian Rumford's whisperings</span>
+  <br />
+
+  
+
+  You can contact me via: <br />
+
+  
+  <a href="mailto:ian@rumford.name" title="mailto: ian@rumford.name"><i class="fa fa-envelope-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://github.com/ianrumford" title="GithubID: ianrumford"><i class="fa fa-github-square fa-3x"></i></a>&nbsp;
+  
+  
+  <a href="https://twitter.com/ianrumford" title="TwitterID: ianrumford"><i class="fa fa-twitter-square fa-3x"></i></a>
+  
+
+  
+
+</div>
+
+<div class="sidebar-module">
+  <h4>Site Search</h4>
+  <form onsubmit="search_google()" >
+    <input type="text" id="google-search" placeholder="Google search" />
+    <input type="submit" name="sa" value="Go" />
+  </form>
+</div>
+
+
+<div class="sidebar-module"> <!-- sidebar-module-inset">-->
+  <h4>Copyright Notice</h4>
+
+  
+
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+    <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png">
+  </a>
+  <br />
+  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike</a>
+
+  
+
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Recent Posts</h4>
+  
+  <li>
+  <a href="/elixir/doctest/individual/2017/11/20/testing-individual-elixir-doctests.html" title="Testing Individual Elixir Doctests" rel="bookmark">Testing Individual Elixir Doctests</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/metaprogramming/postwalk/2017/05/17/metaprogramming-without-macros.html" title="Metaprogramming Without Macros" rel="bookmark">Metaprogramming Without Macros</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/siariwyd/callback/function/share/reuse/2016/11/17/siariwyd.html" title="Sharing and Reusing Elixir Callback Functions between Modules" rel="bookmark">Sharing and Reusing Elixir Callback Functions between Modules</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/pattern/matching/runtime/polymorphism/2016/09/19/pattern-matching-to-polymorphism.html" title="Pattern Matching to Polymorphism - an Unexpected Journey" rel="bookmark">Pattern Matching to Polymorphism - an Unexpected Journey</a>
+  </li>
+  
+  <li>
+  <a href="/elixir/map/api/genserver/module/agent/state/2016/09/13/amlapio.html" title="Adding a Map API to a GenServer or Module with Agent-held State" rel="bookmark">Adding a Map API to a GenServer or Module with Agent-held State</a>
+  </li>
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Tags</h4>
+  
+    <a href="/tags/#hello world" title="hello world" rel="1">hello world</a> &nbsp;
+  
+    <a href="/tags/#octopress" title="octopress" rel="1">octopress</a> &nbsp;
+  
+    <a href="/tags/#jekyll" title="jekyll" rel="1">jekyll</a> &nbsp;
+  
+    <a href="/tags/#blog" title="blog" rel="1">blog</a> &nbsp;
+  
+    <a href="/tags/#emacs" title="emacs" rel="2">emacs</a> &nbsp;
+  
+    <a href="/tags/#Ubuntu" title="Ubuntu" rel="1">Ubuntu</a> &nbsp;
+  
+    <a href="/tags/#precise" title="precise" rel="2">precise</a> &nbsp;
+  
+    <a href="/tags/#pangolin" title="pangolin" rel="1">pangolin</a> &nbsp;
+  
+    <a href="/tags/#12.04" title="12.04" rel="1">12.04</a> &nbsp;
+  
+    <a href="/tags/#clojure" title="clojure" rel="1">clojure</a> &nbsp;
+  
+    <a href="/tags/#leinginen" title="leinginen" rel="1">leinginen</a> &nbsp;
+  
+    <a href="/tags/#slime" title="slime" rel="1">slime</a> &nbsp;
+  
+    <a href="/tags/#swank" title="swank" rel="1">swank</a> &nbsp;
+  
+    <a href="/tags/#ubuntu" title="ubuntu" rel="1">ubuntu</a> &nbsp;
+  
+    <a href="/tags/#ruby" title="ruby" rel="1">ruby</a> &nbsp;
+  
+    <a href="/tags/#windows" title="windows" rel="1">windows</a> &nbsp;
+  
+    <a href="/tags/#ole" title="ole" rel="1">ole</a> &nbsp;
+  
+    <a href="/tags/#property" title="property" rel="1">property</a> &nbsp;
+  
+    <a href="/tags/#values" title="values" rel="1">values</a> &nbsp;
+  
+</div>
+
+
+<div class="sidebar-module">
+  <h4>Archives</h4>
+
+  
+  
+  
+  
+  
+  <li id="2017" > <a href="/archives/#2017">2017</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2016" > <a href="/archives/#2016">2016</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2014" > <a href="/archives/#2014">2014</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2013" > <a href="/archives/#2013">2013</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li id="2012" > <a href="/archives/#2012">2012</a></li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+
+</div>
+
+
+
+  
+
+  <footer class="site-footer">
+
+  <p>Copyright &copy; <a href="/">An Ostler in IT</a></p>
+  <p>Powered by <a href="https://github.com/jekyll/jekyll">Jekyll</a> 
+  on 
+  
+  <a href="https://github.com/">Github</a>
+  
+  | Theme <a href="https://github.com/yulijia/freshman21/">Freshman21</a> Design by <a href="http://yulijia.net">Lijia Yu</a>
+  | Adapted by Ian Rumford  
+
+
+  <div id="totop" style="position:fixed;bottom:150px;right:50px;cursor: pointer;">
+    <a title="Back To Top"><img src="/images/topbutton.png"/></a>
+  </div>
+
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/totop.js"></script>  
+
+
+
+</footer>
+
+
+</div>
+
+</body>
+
+</html>
